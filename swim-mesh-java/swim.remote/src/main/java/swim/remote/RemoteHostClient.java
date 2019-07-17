@@ -58,12 +58,11 @@ public class RemoteHostClient extends RemoteHost {
   @Override
   public void setHostContext(HostContext hostContext) {
     super.setHostContext(hostContext);
-    connect();
   }
 
   public void connect() {
     final String scheme = this.baseUri.schemeName();
-    final boolean isSecure = "swims".equals(scheme);
+    final boolean isSecure = "warps".equals(scheme) || "swims".equals(scheme);
 
     final UriAuthority remoteAuthority = this.baseUri.authority();
     final String remoteAddress = remoteAuthority.host().address();
@@ -120,6 +119,12 @@ public class RemoteHostClient extends RemoteHost {
     }
     this.reconnectTimeout = 0.0;
     super.didConnect();
+  }
+
+  @Override
+  protected void willOpen() {
+    connect();
+    super.willOpen();
   }
 
   static final double MAX_RECONNECT_TIMEOUT = 15000.0;

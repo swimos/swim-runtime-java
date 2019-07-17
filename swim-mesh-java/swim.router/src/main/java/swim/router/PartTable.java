@@ -338,12 +338,13 @@ public class PartTable extends AbstractTierBinding implements PartBinding {
 
   @Override
   public void pushUp(PushRequest pushRequest) {
+    final Uri hostUri = pushRequest.hostUri();
     HostBinding hostBinding = null;
-    if (!pushRequest.hostUri().isDefined()) {
+    if (!hostUri.isDefined()) {
       hostBinding = this.master;
     }
     if (hostBinding == null) {
-      hostBinding = openHost(pushRequest.hostUri());
+      hostBinding = openHost(hostUri);
     }
     if (hostBinding != null) {
       hostBinding.pushUp(pushRequest);
