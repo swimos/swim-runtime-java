@@ -423,7 +423,7 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
       newUplinks = oldUplinks.updated(remoteNodeUri, nodeUplinks);
     } while (!UPLINKS.compareAndSet(this, oldUplinks, newUplinks));
 
-    if (this.warpSocketContext.isConnected()) {
+    if (isConnected()) {
       uplink.didConnect();
     }
   }

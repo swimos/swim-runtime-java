@@ -73,8 +73,9 @@ public class RemoteHostClient extends RemoteHost {
     if (this.client == null) {
       final Uri requestUri = Uri.from(UriScheme.from("http"), remoteAuthority, UriPath.slash(), this.baseUri.query());
       final WsRequest wsRequest = WsRequest.from(requestUri, PROTOCOL_LIST);
-      final WarpWebSocket warpWebSocket = new WarpWebSocket(this, this.warpSettings);
-      this.client = new RemoteHostClientBinding(this, warpWebSocket, wsRequest, this.warpSettings);
+      final WarpWebSocket webSocket = new WarpWebSocket(this, this.warpSettings);
+      this.client = new RemoteHostClientBinding(this, webSocket, wsRequest, this.warpSettings);
+      setWarpSocketContext(webSocket); // eagerly set
     }
     if (isSecure) {
       connectHttps(new InetSocketAddress(remoteAddress, requestPort), this.client, this.warpSettings.httpSettings());
@@ -136,15 +137,15 @@ public class RemoteHostClient extends RemoteHost {
 
 final class RemoteHostClientBinding extends AbstractWarpClient {
   final RemoteHostClient client;
-  final WarpWebSocket warpWebSocket;
+  final WarpWebSocket webSocket;
   final WsRequest wsRequest;
   final WarpSettings warpSettings;
 
-  RemoteHostClientBinding(RemoteHostClient client, WarpWebSocket warpWebSocket,
+  RemoteHostClientBinding(RemoteHostClient client, WarpWebSocket webSocket,
                           WsRequest wsRequest, WarpSettings warpSettings) {
     super(warpSettings);
     this.client = client;
-    this.warpWebSocket = warpWebSocket;
+    this.webSocket = webSocket;
     this.wsRequest = wsRequest;
     this.warpSettings = warpSettings;
   }
@@ -152,18 +153,18 @@ final class RemoteHostClientBinding extends AbstractWarpClient {
   @Override
   public void setHttpClientContext(HttpClientContext context) {
     super.setHttpClientContext(context);
-    this.warpWebSocket.setWebSocketContext(this);
+    this.webSocket.setWebSocketContext(this);
   }
 
   @Override
   public void didConnect() {
     super.didConnect();
-    doRequest(upgrade(this.warpWebSocket, this.wsRequest));
+    doRequest(upgrade(this.webSocket, this.wsRequest));
   }
 
   @Override
   public void didDisconnect() {
-    warpWebSocket.close();
+    webSocket.close();
     this.client.didDisconnect();
   }
 }
