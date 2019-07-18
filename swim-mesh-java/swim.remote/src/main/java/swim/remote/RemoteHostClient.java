@@ -42,6 +42,7 @@ public class RemoteHostClient extends RemoteHost {
   final IpInterface endpoint;
   final WarpSettings warpSettings;
 
+  HttpClient client;
   TimerRef reconnectTimer;
   double reconnectTimeout;
 
@@ -67,17 +68,18 @@ public class RemoteHostClient extends RemoteHost {
     final UriAuthority remoteAuthority = this.baseUri.authority();
     final String remoteAddress = remoteAuthority.host().address();
     final int remotePort = remoteAuthority.port().number();
-
-    final Uri requestUri = Uri.from(UriScheme.from("http"), remoteAuthority, UriPath.slash(), this.baseUri.query());
     final int requestPort = remotePort > 0 ? remotePort : isSecure ? 443 : 80;
-    final WsRequest wsRequest = WsRequest.from(requestUri, PROTOCOL_LIST);
 
-    final WarpWebSocket warpWebSocket = new WarpWebSocket(this, this.warpSettings);
-    final HttpClient client = new RemoteHostClientBinding(this, warpWebSocket, wsRequest, this.warpSettings);
+    if (this.client == null) {
+      final Uri requestUri = Uri.from(UriScheme.from("http"), remoteAuthority, UriPath.slash(), this.baseUri.query());
+      final WsRequest wsRequest = WsRequest.from(requestUri, PROTOCOL_LIST);
+      final WarpWebSocket warpWebSocket = new WarpWebSocket(this, this.warpSettings);
+      this.client = new RemoteHostClientBinding(this, warpWebSocket, wsRequest, this.warpSettings);
+    }
     if (isSecure) {
-      connectHttps(new InetSocketAddress(remoteAddress, requestPort), client, this.warpSettings.httpSettings());
+      connectHttps(new InetSocketAddress(remoteAddress, requestPort), this.client, this.warpSettings.httpSettings());
     } else {
-      connectHttp(new InetSocketAddress(remoteAddress, requestPort), client, this.warpSettings.httpSettings());
+      connectHttp(new InetSocketAddress(remoteAddress, requestPort), this.client, this.warpSettings.httpSettings());
     }
   }
 

@@ -275,12 +275,13 @@ public class PartTable extends AbstractTierBinding implements PartBinding {
 
   @Override
   public void openUplink(LinkBinding link) {
+    final Uri hostUri = link.hostUri();
     HostBinding hostBinding = null;
-    if (!link.hostUri().isDefined()) {
+    if (!hostUri.isDefined() || hostUri.equals(link.meshUri())) {
       hostBinding = this.master;
     }
     if (hostBinding == null) {
-      hostBinding = openHost(link.hostUri());
+      hostBinding = openHost(hostUri);
     }
     if (hostBinding != null) {
       hostBinding.openUplink(new PartTableUplink(this, link));
@@ -316,12 +317,13 @@ public class PartTable extends AbstractTierBinding implements PartBinding {
 
   @Override
   public void httpUplink(HttpBinding http) {
+    final Uri hostUri = http.hostUri();
     HostBinding hostBinding = null;
-    if (!http.hostUri().isDefined()) {
+    if (!hostUri.isDefined() || hostUri.equals(http.meshUri())) {
       hostBinding = this.master;
     }
     if (hostBinding == null) {
-      hostBinding = openHost(http.hostUri());
+      hostBinding = openHost(hostUri);
     }
     if (hostBinding != null) {
       hostBinding.httpUplink(http);
@@ -340,7 +342,7 @@ public class PartTable extends AbstractTierBinding implements PartBinding {
   public void pushUp(PushRequest pushRequest) {
     final Uri hostUri = pushRequest.hostUri();
     HostBinding hostBinding = null;
-    if (!hostUri.isDefined()) {
+    if (!hostUri.isDefined() || hostUri.equals(pushRequest.meshUri())) {
       hostBinding = this.master;
     }
     if (hostBinding == null) {
