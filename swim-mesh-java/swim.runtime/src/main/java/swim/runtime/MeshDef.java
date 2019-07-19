@@ -12,15 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.runtime;
 
+import java.util.Collection;
+import swim.structure.Value;
 import swim.uri.Uri;
-import swim.uri.UriPattern;
 
-public interface LaneDef extends CellDef {
-  Uri laneUri();
+public interface MeshDef extends CellDef {
+  Uri meshUri();
 
-  UriPattern lanePattern();
+  Collection<? extends PartDef> partDefs();
 
-  String laneType();
+  PartDef getPartDef(Value partKey);
+
+  Collection<? extends HostDef> hostDefs();
+
+  HostDef getHostDef(Uri hostUri);
+
+  Collection<? extends NodeDef> nodeDefs();
+
+  NodeDef getNodeDef(Uri nodeUri);
+
+  Collection<? extends LaneDef> laneDefs();
+
+  LaneDef getLaneDef(Uri laneUri);
 }

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.store;
 
-public interface StageDef {
-
+public interface StoreDef {
+  String storeName();
 }

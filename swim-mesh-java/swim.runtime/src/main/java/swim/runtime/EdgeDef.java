@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.runtime;
 
 import java.util.Collection;
 import swim.structure.Value;
 import swim.uri.Uri;
 
-public interface RootDef extends CellDef {
+public interface EdgeDef extends CellDef {
   Collection<? extends MeshDef> meshDefs();
 
   MeshDef getMeshDef(Uri meshUri);

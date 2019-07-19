@@ -12,8 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.agent;
 
-public interface ScheduleDef {
+import swim.uri.UriPattern;
 
+public interface AgentRouteDef extends AgentDef {
+  String routeName();
+
+  UriPattern pattern();
+
+  AgentRouteDef pattern(UriPattern pattern);
 }

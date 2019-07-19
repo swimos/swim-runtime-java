@@ -17,12 +17,16 @@ package swim.kernel;
 import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import swim.concurrent.Clock;
+import swim.concurrent.ClockDef;
 import swim.concurrent.MainStage;
 import swim.concurrent.Schedule;
+import swim.concurrent.ScheduleDef;
 import swim.concurrent.SideStage;
 import swim.concurrent.Stage;
 import swim.concurrent.StageClock;
+import swim.concurrent.StageDef;
 import swim.concurrent.Theater;
+import swim.concurrent.TheaterDef;
 import swim.io.IpService;
 import swim.io.IpServiceRef;
 import swim.io.IpSettings;
@@ -166,33 +170,8 @@ public class BootKernel extends KernelProxy implements IpStation {
 
   @Override
   public ScheduleDef defineSchedule(Item scheduleConfig) {
-    final ScheduleDef scheduleDef = defineClock(scheduleConfig);
+    final ScheduleDef scheduleDef = ScheduleDef.form().cast(scheduleConfig);
     return scheduleDef != null ? scheduleDef : super.defineSchedule(scheduleConfig);
-  }
-
-  public ClockDef defineClock(Item clockConfig) {
-    final Value value = clockConfig.toValue();
-    final Value header = value.getAttr("clock");
-    if (header.isDefined()) {
-      final String clockProvider = header.get("provider").stringValue(null);
-      if (clockProvider == null || Clock.class.getName().equals(clockProvider)) {
-        int tickMillis = Clock.TICK_MILLIS;
-        int tickCount = Clock.TICK_COUNT;
-        for (int i = 0, n = value.length(); i < n; i += 1) {
-          final Item item = value.getItem(i);
-          if (item.keyEquals("tickMillis")) {
-            tickMillis = item.toValue().intValue(tickMillis);
-            continue;
-          }
-          if (item.keyEquals("tickCount")) {
-            tickCount = item.toValue().intValue(tickCount);
-            continue;
-          }
-        }
-        return new ClockDef(tickMillis, tickCount);
-      }
-    }
-    return null;
   }
 
   @Override
@@ -206,44 +185,16 @@ public class BootKernel extends KernelProxy implements IpStation {
 
   public Clock createClock(ClockDef clockDef, Stage stage) {
     if (stage != null) {
-      return new StageClock(stage, clockDef.tickMillis, clockDef.tickCount);
+      return new StageClock(stage, clockDef);
     } else {
-      return new Clock(clockDef.tickMillis, clockDef.tickCount);
+      return new Clock(clockDef);
     }
   }
 
   @Override
   public StageDef defineStage(Item stageConfig) {
-    final StageDef stageDef = defineTheater(stageConfig);
+    final StageDef stageDef = StageDef.form().cast(stageConfig);
     return stageDef != null ? stageDef : super.defineStage(stageConfig);
-  }
-
-  public TheaterDef defineTheater(Item theaterConfig) {
-    final Value value = theaterConfig.toValue();
-    final Value header = value.getAttr("theater");
-    if (header.isDefined()) {
-      final String clockProvider = header.get("provider").stringValue(null);
-      if (clockProvider == null || Theater.class.getName().equals(clockProvider)) {
-        final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
-        final String name = theaterConfig.key().stringValue(null);
-        int parallelism = Runtime.getRuntime().availableProcessors();
-        ScheduleDef scheduleDef = null;
-        for (int i = 0, n = value.length(); i < n; i += 1) {
-          final Item item = value.getItem(i);
-          if (item.keyEquals("parallelism")) {
-            parallelism = item.toValue().intValue(parallelism);
-            continue;
-          }
-          final ScheduleDef newScheduleDef = kernel.defineSchedule(item);
-          if (newScheduleDef != null) {
-            scheduleDef = newScheduleDef;
-            continue;
-          }
-        }
-        return new TheaterDef(name, parallelism, scheduleDef);
-      }
-    }
-    return null;
   }
 
   @Override
@@ -256,18 +207,7 @@ public class BootKernel extends KernelProxy implements IpStation {
   }
 
   public Theater createTheater(TheaterDef theaterDef) {
-    final String name = theaterDef.name;
-    final int parallelism = theaterDef.parallelism;
-    final ScheduleDef scheduleDef = theaterDef.scheduleDef;
-    final Theater theater = new Theater(name, parallelism);
-    if (scheduleDef != null) {
-      final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
-      final Schedule schedule = kernel.createSchedule(scheduleDef, stage);
-      if (schedule != null) {
-        theater.setSchedule(stage);
-      }
-    }
-    return theater;
+    return new Theater(theaterDef);
   }
 
   @Override

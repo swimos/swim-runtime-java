@@ -12,8 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.runtime;
 
-public interface StoreDef {
-  String storeName();
+import java.util.Collection;
+import swim.uri.Uri;
+import swim.uri.UriPattern;
+
+public interface HostDef extends CellDef {
+  Uri hostUri();
+
+  UriPattern hostPattern();
+
+  boolean isPrimary();
+
+  boolean isReplica();
+
+  Collection<? extends NodeDef> nodeDefs();
+
+  NodeDef getNodeDef(Uri nodeUri);
+
+  Collection<? extends LaneDef> laneDefs();
+
+  LaneDef getLaneDef(Uri laneUri);
 }

@@ -18,9 +18,9 @@ import swim.io.IpInterface;
 import swim.io.http.HttpSettings;
 import swim.io.warp.WarpSettings;
 import swim.io.ws.WsSettings;
-import swim.kernel.HostDef;
 import swim.kernel.KernelProxy;
 import swim.runtime.HostBinding;
+import swim.runtime.HostDef;
 import swim.structure.Value;
 import swim.uri.Uri;
 

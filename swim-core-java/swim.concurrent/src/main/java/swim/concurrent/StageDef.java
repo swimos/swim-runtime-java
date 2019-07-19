@@ -12,55 +12,58 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.uri;
+package swim.concurrent;
 
-import swim.codec.ParserException;
 import swim.structure.Form;
 import swim.structure.Item;
-import swim.structure.Text;
-import swim.structure.Value;
+import swim.structure.Kind;
 
-public class UriForm extends Form<Uri> {
-  final Uri unit;
+/**
+ * Marker interface for a {@link Stage} definition.
+ */
+public interface StageDef {
+  @Kind
+  static Form<StageDef> form() {
+    return new StageForm(TheaterDef.standard());
+  }
+}
 
-  UriForm(Uri unit) {
+final class StageForm extends Form<StageDef> {
+  final StageDef unit;
+
+  StageForm(StageDef unit) {
     this.unit = unit;
   }
 
   @Override
-  public Uri unit() {
+  public StageDef unit() {
     return this.unit;
   }
 
   @Override
-  public Form<Uri> unit(Uri unit) {
-    return new UriForm(unit);
+  public Form<StageDef> unit(StageDef unit) {
+    return new StageForm(unit);
   }
 
   @Override
-  public Class<Uri> type() {
-    return Uri.class;
+  public Class<StageDef> type() {
+    return StageDef.class;
   }
 
   @Override
-  public Item mold(Uri value) {
-    if (value != null) {
-      return Text.from(value.toString());
+  public Item mold(StageDef stageDef) {
+    if (stageDef instanceof TheaterDef) {
+      return TheaterDef.theaterForm().mold((TheaterDef) stageDef);
     } else {
       return Item.extant();
     }
   }
 
   @Override
-  public Uri cast(Item item) {
-    final Value value = item.target();
-    try {
-      final String string = value.stringValue();
-      if (string != null) {
-        return Uri.parse(string);
-      }
-    } catch (UnsupportedOperationException | ParserException | UriException e) {
-      // swallow
+  public StageDef cast(Item item) {
+    final TheaterDef theaterDef = TheaterDef.theaterForm().cast(item);
+    if (theaterDef != null) {
+      return theaterDef;
     }
     return null;
   }

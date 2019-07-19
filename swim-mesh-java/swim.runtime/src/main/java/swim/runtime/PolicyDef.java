@@ -12,14 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.runtime;
 
-public interface CellDef {
-  LogDef logDef();
+public interface PolicyDef {
 
-  PolicyDef policyDef();
-
-  StageDef stageDef();
-
-  StoreDef storeDef();
 }

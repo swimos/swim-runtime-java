@@ -12,12 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.concurrent;
 
 import swim.codec.Debug;
 import swim.codec.Format;
 import swim.codec.Output;
-import swim.concurrent.Clock;
+import swim.structure.Form;
+import swim.structure.Item;
+import swim.structure.Kind;
+import swim.structure.Record;
+import swim.structure.Value;
 import swim.util.Murmur3;
 
 public class ClockDef implements ScheduleDef, Debug {
@@ -90,10 +94,72 @@ public class ClockDef implements ScheduleDef, Debug {
 
   private static ClockDef standard;
 
+  private static Form<ClockDef> clockForm;
+
   public static ClockDef standard() {
     if (standard == null) {
       standard = new ClockDef(Clock.TICK_MILLIS, Clock.TICK_COUNT);
     }
     return standard;
+  }
+
+  @Kind
+  public static Form<ClockDef> clockForm() {
+    if (clockForm == null) {
+      clockForm = new ClockForm(standard());
+    }
+    return clockForm;
+  }
+}
+
+final class ClockForm extends Form<ClockDef> {
+  final ClockDef unit;
+
+  ClockForm(ClockDef unit) {
+    this.unit = unit;
+  }
+
+  @Override
+  public String tag() {
+    return "clock";
+  }
+
+  @Override
+  public ClockDef unit() {
+    return this.unit;
+  }
+
+  @Override
+  public Form<ClockDef> unit(ClockDef unit) {
+    return new ClockForm(unit);
+  }
+
+  @Override
+  public Class<ClockDef> type() {
+    return ClockDef.class;
+  }
+
+  @Override
+  public Item mold(ClockDef clockDef) {
+    if (clockDef != null) {
+      final Record record = Record.create(3).attr(tag());
+      record.slot("tickMillis", clockDef.tickMillis);
+      record.slot("tickCount", clockDef.tickCount);
+      return record;
+    } else {
+      return Item.extant();
+    }
+  }
+
+  @Override
+  public ClockDef cast(Item item) {
+    final Value value = item.toValue();
+    final Value header = value.getAttr(tag());
+    if (header.isDefined()) {
+      final int tickMillis = value.get("tickMillis").intValue(Clock.TICK_MILLIS);
+      final int tickCount = value.get("tickCount").intValue(Clock.TICK_COUNT);
+      return new ClockDef(tickMillis, tickCount);
+    }
+    return null;
   }
 }

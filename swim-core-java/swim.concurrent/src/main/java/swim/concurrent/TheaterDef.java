@@ -12,11 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.concurrent;
 
 import swim.codec.Debug;
 import swim.codec.Format;
 import swim.codec.Output;
+import swim.structure.Form;
+import swim.structure.Item;
+import swim.structure.Kind;
+import swim.structure.Record;
+import swim.structure.Slot;
+import swim.structure.Value;
 import swim.util.Murmur3;
 
 public class TheaterDef implements StageDef, Debug {
@@ -86,7 +92,7 @@ public class TheaterDef implements StageDef, Debug {
     if (this.name != null) {
       output = output.write('.').write("name").write('(').debug(name).write(')');
     }
-    if (this.parallelism != 0) {
+    if (this.parallelism != Runtime.getRuntime().availableProcessors()) {
       output = output.write('.').write("parallelism").write('(').debug(parallelism).write(')');
     }
     if (this.scheduleDef != null) {
@@ -103,10 +109,93 @@ public class TheaterDef implements StageDef, Debug {
 
   private static TheaterDef standard;
 
+  private static Form<TheaterDef> theaterForm;
+
   public static TheaterDef standard() {
     if (standard == null) {
       standard = new TheaterDef(null, 0, null);
     }
     return standard;
+  }
+
+  public static Form<TheaterDef> theaterForm(Form<ScheduleDef> scheduleForm) {
+    return new TheaterForm(scheduleForm, standard());
+  }
+
+  @Kind
+  public static Form<TheaterDef> theaterForm() {
+    if (theaterForm == null) {
+      theaterForm = new TheaterForm(ScheduleDef.form(), standard());
+    }
+    return theaterForm;
+  }
+}
+
+final class TheaterForm extends Form<TheaterDef> {
+  final Form<ScheduleDef> scheduleForm;
+  final TheaterDef unit;
+
+  TheaterForm(Form<ScheduleDef> scheduleForm, TheaterDef unit) {
+    this.scheduleForm = scheduleForm;
+    this.unit = unit;
+  }
+
+  @Override
+  public String tag() {
+    return "theater";
+  }
+
+  @Override
+  public TheaterDef unit() {
+    return this.unit;
+  }
+
+  @Override
+  public Form<TheaterDef> unit(TheaterDef unit) {
+    return new TheaterForm(this.scheduleForm, unit);
+  }
+
+  @Override
+  public Class<TheaterDef> type() {
+    return TheaterDef.class;
+  }
+
+  @Override
+  public Item mold(TheaterDef theaterDef) {
+    if (theaterDef != null) {
+      final Record record = Record.create(3).attr(tag());
+      record.slot("parallelism", theaterDef.parallelism);
+      if (theaterDef.scheduleDef != null) {
+        record.add(this.scheduleForm.mold(theaterDef.scheduleDef));
+      }
+      return theaterDef.name != null ? Slot.of(theaterDef.name, record) : record;
+    } else {
+      return Item.extant();
+    }
+  }
+
+  @Override
+  public TheaterDef cast(Item item) {
+    final Value value = item.toValue();
+    final Value header = value.getAttr(tag());
+    if (header.isDefined()) {
+      final String name = item.key().stringValue(null);
+      int parallelism = Runtime.getRuntime().availableProcessors();
+      ScheduleDef scheduleDef = null;
+      for (int i = 0, n = value.length(); i < n; i += 1) {
+        final Item member = value.getItem(i);
+        if (member.keyEquals("parallelism")) {
+          parallelism = member.toValue().intValue(parallelism);
+          continue;
+        }
+        final ScheduleDef newScheduleDef = this.scheduleForm.cast(member);
+        if (newScheduleDef != null) {
+          scheduleDef = newScheduleDef;
+          continue;
+        }
+      }
+      return new TheaterDef(name, parallelism, scheduleDef);
+    }
+    return null;
   }
 }

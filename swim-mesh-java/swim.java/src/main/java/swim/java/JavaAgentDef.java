@@ -14,7 +14,7 @@
 
 package swim.java;
 
-import swim.kernel.AgentDef;
+import swim.agent.AgentDef;
 
 public interface JavaAgentDef extends AgentDef {
   String className();

@@ -15,30 +15,30 @@
 package swim.fabric;
 
 import java.util.Collection;
+import swim.agent.AgentRouteDef;
 import swim.codec.Debug;
 import swim.codec.Format;
 import swim.codec.Output;
 import swim.collections.HashTrieMap;
-import swim.kernel.AgentRouteDef;
+import swim.concurrent.StageDef;
 import swim.kernel.AuthenticatorDef;
-import swim.kernel.HostDef;
-import swim.kernel.LaneDef;
-import swim.kernel.LogDef;
-import swim.kernel.MeshDef;
-import swim.kernel.NodeDef;
-import swim.kernel.PartDef;
 import swim.kernel.PlaneDef;
-import swim.kernel.PolicyDef;
-import swim.kernel.RootDef;
 import swim.kernel.SpaceDef;
-import swim.kernel.StageDef;
-import swim.kernel.StoreDef;
+import swim.runtime.EdgeDef;
+import swim.runtime.HostDef;
+import swim.runtime.LaneDef;
+import swim.runtime.LogDef;
+import swim.runtime.MeshDef;
+import swim.runtime.NodeDef;
+import swim.runtime.PartDef;
+import swim.runtime.PolicyDef;
+import swim.store.StoreDef;
 import swim.structure.Value;
 import swim.uri.Uri;
 import swim.uri.UriMapper;
 import swim.util.Murmur3;
 
-public class FabricDef implements SpaceDef, RootDef, Debug {
+public class FabricDef implements SpaceDef, EdgeDef, Debug {
   final String spaceName;
   final HashTrieMap<String, PlaneDef> planeDefs;
   final HashTrieMap<String, AgentRouteDef> agentRouteDefs;

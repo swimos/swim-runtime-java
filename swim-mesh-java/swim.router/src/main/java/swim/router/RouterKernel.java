@@ -14,14 +14,14 @@
 
 package swim.router;
 
-import swim.kernel.HostDef;
 import swim.kernel.KernelProxy;
-import swim.kernel.MeshDef;
-import swim.kernel.PartDef;
 import swim.runtime.EdgeBinding;
 import swim.runtime.HostBinding;
+import swim.runtime.HostDef;
 import swim.runtime.MeshBinding;
+import swim.runtime.MeshDef;
 import swim.runtime.PartBinding;
+import swim.runtime.PartDef;
 import swim.structure.Value;
 import swim.uri.Uri;
 

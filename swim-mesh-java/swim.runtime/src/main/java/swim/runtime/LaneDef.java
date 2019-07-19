@@ -12,18 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.runtime;
 
-import java.util.Collection;
 import swim.uri.Uri;
 import swim.uri.UriPattern;
 
-public interface NodeDef extends CellDef {
-  Uri nodeUri();
+public interface LaneDef extends CellDef {
+  Uri laneUri();
 
-  UriPattern nodePattern();
+  UriPattern lanePattern();
 
-  Collection<? extends LaneDef> laneDefs();
-
-  LaneDef getLaneDef(Uri laneUri);
+  String laneType();
 }

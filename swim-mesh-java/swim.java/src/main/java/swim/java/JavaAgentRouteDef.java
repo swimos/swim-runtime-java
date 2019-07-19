@@ -14,10 +14,10 @@
 
 package swim.java;
 
+import swim.agent.AgentRouteDef;
 import swim.codec.Debug;
 import swim.codec.Format;
 import swim.codec.Output;
-import swim.kernel.AgentRouteDef;
 import swim.uri.UriPattern;
 import swim.util.Murmur3;
 

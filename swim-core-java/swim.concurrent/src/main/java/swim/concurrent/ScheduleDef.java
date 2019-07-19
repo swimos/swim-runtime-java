@@ -12,55 +12,58 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.uri;
+package swim.concurrent;
 
-import swim.codec.ParserException;
 import swim.structure.Form;
 import swim.structure.Item;
-import swim.structure.Text;
-import swim.structure.Value;
+import swim.structure.Kind;
 
-public class UriForm extends Form<Uri> {
-  final Uri unit;
+/**
+ * Marker interface for a {@link Schedule} definition.
+ */
+public interface ScheduleDef {
+  @Kind
+  static Form<ScheduleDef> form() {
+    return new ScheduleForm(ClockDef.standard());
+  }
+}
 
-  UriForm(Uri unit) {
+final class ScheduleForm extends Form<ScheduleDef> {
+  final ScheduleDef unit;
+
+  ScheduleForm(ScheduleDef unit) {
     this.unit = unit;
   }
 
   @Override
-  public Uri unit() {
+  public ScheduleDef unit() {
     return this.unit;
   }
 
   @Override
-  public Form<Uri> unit(Uri unit) {
-    return new UriForm(unit);
+  public Form<ScheduleDef> unit(ScheduleDef unit) {
+    return new ScheduleForm(unit);
   }
 
   @Override
-  public Class<Uri> type() {
-    return Uri.class;
+  public Class<ScheduleDef> type() {
+    return ScheduleDef.class;
   }
 
   @Override
-  public Item mold(Uri value) {
-    if (value != null) {
-      return Text.from(value.toString());
+  public Item mold(ScheduleDef scheduleDef) {
+    if (scheduleDef instanceof ClockDef) {
+      return ClockDef.clockForm().mold((ClockDef) scheduleDef);
     } else {
       return Item.extant();
     }
   }
 
   @Override
-  public Uri cast(Item item) {
-    final Value value = item.target();
-    try {
-      final String string = value.stringValue();
-      if (string != null) {
-        return Uri.parse(string);
-      }
-    } catch (UnsupportedOperationException | ParserException | UriException e) {
-      // swallow
+  public ScheduleDef cast(Item item) {
+    final ClockDef clockDef = ClockDef.clockForm().cast(item);
+    if (clockDef != null) {
+      return clockDef;
     }
     return null;
   }

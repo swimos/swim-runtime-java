@@ -14,7 +14,7 @@
 
 package swim.js;
 
-import swim.kernel.AgentDef;
+import swim.agent.AgentDef;
 import swim.uri.UriPath;
 
 public interface JsAgentDef extends AgentDef {

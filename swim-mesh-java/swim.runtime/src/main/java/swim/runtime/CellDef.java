@@ -12,26 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.runtime;
 
-import java.util.Collection;
-import swim.uri.Uri;
-import swim.uri.UriPattern;
+import swim.concurrent.StageDef;
+import swim.store.StoreDef;
 
-public interface HostDef extends CellDef {
-  Uri hostUri();
+public interface CellDef {
+  LogDef logDef();
 
-  UriPattern hostPattern();
+  PolicyDef policyDef();
 
-  boolean isPrimary();
+  StageDef stageDef();
 
-  boolean isReplica();
-
-  Collection<? extends NodeDef> nodeDefs();
-
-  NodeDef getNodeDef(Uri nodeUri);
-
-  Collection<? extends LaneDef> laneDefs();
-
-  LaneDef getLaneDef(Uri laneUri);
+  StoreDef storeDef();
 }

@@ -14,6 +14,7 @@
 
 package swim.java;
 
+import swim.agent.AgentRouteDef;
 import swim.api.agent.Agent;
 import swim.api.agent.AgentException;
 import swim.api.agent.AgentFactory;
@@ -21,7 +22,6 @@ import swim.api.agent.AgentRoute;
 import swim.api.plane.Plane;
 import swim.api.plane.PlaneException;
 import swim.api.plane.PlaneFactory;
-import swim.kernel.AgentRouteDef;
 import swim.kernel.KernelContext;
 import swim.kernel.KernelProxy;
 import swim.kernel.PlaneDef;
