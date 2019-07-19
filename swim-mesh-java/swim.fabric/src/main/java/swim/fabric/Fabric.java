@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import swim.agent.AgentModel;
 import swim.api.SwimContext;
 import swim.api.agent.Agent;
+import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
 import swim.api.agent.AgentRoute;
 import swim.api.agent.AgentRouteContext;
@@ -309,6 +310,11 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   }
 
   @Override
+  public AgentFactory<?> createAgentFactory(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, AgentDef agentDef) {
+    return this.kernel.createAgentFactory(this.spaceName, meshUri, partKey, hostUri, nodeUri, agentDef);
+  }
+
+  @Override
   public <A extends Agent> AgentFactory<A> createAgentFactory(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri,
                                                               Class<? extends A> agentClass) {
     return this.kernel.createAgentFactory(this.spaceName, meshUri, partKey, hostUri, nodeUri, agentClass);
@@ -318,6 +324,20 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   public void openAgents(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node) {
     this.kernel.openAgents(this.spaceName, meshUri, partKey, hostUri, nodeUri, node);
     if (!meshUri.isDefined()) {
+      final NodeDef nodeDef = this.fabricDef.getNodeDef(nodeUri);
+      if (nodeDef != null && node instanceof AgentModel) {
+        final AgentModel agentModel = (AgentModel) node;
+        for (AgentDef agentDef : nodeDef.agentDefs()) {
+          final AgentFactory<?> agentFactory = createAgentFactory(meshUri, partKey, hostUri, nodeUri, agentDef);
+          if (agentDef != null) {
+            Value props = agentDef.props();
+            if (!props.isDefined()) {
+              props = agentModel.props();
+            }
+            agentModel.addAgentView(agentModel.createAgent(agentFactory, props));
+          }
+        }
+      }
       final AgentFactory<?> agentFactory = this.agentFactories.get(nodeUri);
       if (agentFactory != null && node instanceof AgentModel) {
         final AgentModel agentModel = (AgentModel) node;
@@ -678,14 +698,25 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
 
   @Override
   public NodeBinding createNode(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri) {
+    NodeBinding node = null;
     if (!meshUri.isDefined()) {
       final AgentFactory<?> agentFactory = this.agentFactories.get(nodeUri);
       if (agentFactory != null) {
-        final Value props = agentFactory.createProps(nodeUri);
-        return new AgentModel(props);
+        final Value props = agentFactory.props(nodeUri);
+        node = new AgentModel(props);
       }
     }
-    return this.kernel.createNode(this.spaceName, meshUri, partKey, hostUri, nodeUri);
+    if (node == null) {
+      node = this.kernel.createNode(this.spaceName, meshUri, partKey, hostUri, nodeUri);
+    }
+    if (node == null && !meshUri.isDefined()) {
+      final NodeDef nodeDef = this.fabricDef.getNodeDef(nodeUri);
+      if (nodeDef != null) {
+        final Value props = nodeDef.props(nodeUri);
+        node = new AgentModel(props);
+      }
+    }
+    return node;
   }
 
   @Override

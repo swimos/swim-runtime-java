@@ -15,6 +15,7 @@
 package swim.runtime;
 
 import swim.api.agent.Agent;
+import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
 import swim.collections.HashTrieMap;
 import swim.structure.Value;
@@ -40,6 +41,8 @@ public interface NodeBinding extends TierBinding, CellBinding {
   Uri nodeUri();
 
   long createdTime();
+
+  AgentFactory<?> createAgentFactory(AgentDef agentDef);
 
   <A extends Agent> AgentFactory<A> createAgentFactory(Class<? extends A> agentClass);
 

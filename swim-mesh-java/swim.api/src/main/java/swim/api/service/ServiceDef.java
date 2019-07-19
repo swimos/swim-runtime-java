@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.agent;
+package swim.api.service;
 
-import swim.uri.UriPattern;
+import swim.uri.UriScheme;
 
-public interface AgentRouteDef extends AgentDef {
-  String routeName();
+public interface ServiceDef {
+  String serviceName();
 
-  UriPattern pattern();
-
-  AgentRouteDef pattern(UriPattern pattern);
+  UriScheme scheme();
 }

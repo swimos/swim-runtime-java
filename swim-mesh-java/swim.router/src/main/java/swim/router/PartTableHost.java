@@ -15,6 +15,7 @@
 package swim.router;
 
 import swim.api.agent.Agent;
+import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
 import swim.api.auth.Credentials;
 import swim.api.auth.Identity;
@@ -116,6 +117,11 @@ public class PartTableHost implements HostContext {
   @Override
   public LaneBinding injectLane(Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return this.part.partContext().injectLane(this.hostUri, nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public AgentFactory<?> createAgentFactory(Uri nodeUri, AgentDef agentDef) {
+    return this.part.partContext().createAgentFactory(this.hostUri, nodeUri, agentDef);
   }
 
   @Override

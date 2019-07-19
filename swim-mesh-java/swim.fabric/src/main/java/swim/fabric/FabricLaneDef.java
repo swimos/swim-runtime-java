@@ -171,7 +171,15 @@ public class FabricLaneDef implements LaneDef, Debug {
     return new FabricLaneDef(UriPattern.from(laneUri), null, null, null, null, null);
   }
 
+  public static FabricLaneDef fromLaneUri(String laneUri) {
+    return fromLaneUri(Uri.parse(laneUri));
+  }
+
   public static FabricLaneDef fromLanePattern(UriPattern lanePattern) {
     return new FabricLaneDef(lanePattern, null, null, null, null, null);
+  }
+
+  public static FabricLaneDef fromLanePattern(String lanePattern) {
+    return fromLanePattern(UriPattern.parse(lanePattern));
   }
 }

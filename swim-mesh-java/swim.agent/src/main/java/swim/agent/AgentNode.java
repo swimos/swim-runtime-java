@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import swim.api.agent.Agent;
+import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
 import swim.api.downlink.Downlink;
 import swim.api.lane.CommandLane;
@@ -168,6 +169,11 @@ public class AgentNode extends AbstractTierBinding implements NodeBinding, CellC
   @Override
   public long createdTime() {
     return this.createdTime;
+  }
+
+  @Override
+  public AgentFactory<?> createAgentFactory(AgentDef agentDef) {
+    return this.nodeContext.createAgentFactory(agentDef);
   }
 
   @Override

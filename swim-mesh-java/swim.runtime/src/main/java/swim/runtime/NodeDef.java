@@ -15,6 +15,10 @@
 package swim.runtime;
 
 import java.util.Collection;
+import swim.api.agent.AgentDef;
+import swim.collections.HashTrieMap;
+import swim.structure.Record;
+import swim.structure.Value;
 import swim.uri.Uri;
 import swim.uri.UriPattern;
 
@@ -22,6 +26,22 @@ public interface NodeDef extends CellDef {
   Uri nodeUri();
 
   UriPattern nodePattern();
+
+  default Value props(Uri nodeUri) {
+    final Record props = Record.create();
+    final UriPattern pattern = nodePattern();
+    if (pattern != null) {
+      final HashTrieMap<String, String> params = pattern.unapply(nodeUri);
+      for (HashTrieMap.Entry<String, String> param : params) {
+        props.slot(param.getKey(), param.getValue());
+      }
+    }
+    return props;
+  }
+
+  Collection<? extends AgentDef> agentDefs();
+
+  AgentDef getAgentDef(String agentName);
 
   Collection<? extends LaneDef> laneDefs();
 

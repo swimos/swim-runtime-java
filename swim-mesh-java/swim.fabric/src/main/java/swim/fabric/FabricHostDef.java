@@ -248,8 +248,16 @@ public class FabricHostDef implements HostDef, Debug {
                              UriMapper.empty(), null, null, null, null);
   }
 
+  public static FabricHostDef fromHostUri(String hostUri) {
+    return fromHostUri(Uri.parse(hostUri));
+  }
+
   public static FabricHostDef fromHostPattern(UriPattern hostPattern) {
     return new FabricHostDef(hostPattern, false, false, UriMapper.empty(),
                              UriMapper.empty(), null, null, null, null);
+  }
+
+  public static FabricHostDef fromHostPattern(String hostPattern) {
+    return fromHostPattern(UriPattern.parse(hostPattern));
   }
 }

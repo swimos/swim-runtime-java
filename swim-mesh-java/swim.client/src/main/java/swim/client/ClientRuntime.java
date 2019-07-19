@@ -15,6 +15,7 @@
 package swim.client;
 
 import swim.api.agent.Agent;
+import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
 import swim.api.auth.Credentials;
 import swim.api.auth.Identity;
@@ -173,6 +174,11 @@ public class ClientRuntime extends AbstractSwimRef implements Client, EdgeContex
   @Override
   public LaneBinding injectLane(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return lane;
+  }
+
+  @Override
+  public AgentFactory<?> createAgentFactory(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, AgentDef agentDef) {
+    return null;
   }
 
   @Override

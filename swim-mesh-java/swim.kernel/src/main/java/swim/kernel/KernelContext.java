@@ -15,17 +15,21 @@
 package swim.kernel;
 
 import java.net.InetSocketAddress;
-import swim.agent.AgentRouteDef;
 import swim.api.agent.Agent;
+import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
 import swim.api.agent.AgentRoute;
 import swim.api.auth.Authenticator;
+import swim.api.auth.AuthenticatorDef;
 import swim.api.plane.Plane;
+import swim.api.plane.PlaneDef;
 import swim.api.plane.PlaneFactory;
 import swim.api.policy.Policy;
 import swim.api.service.Service;
+import swim.api.service.ServiceDef;
 import swim.api.service.ServiceFactory;
 import swim.api.space.Space;
+import swim.api.space.SpaceDef;
 import swim.collections.FingerTrieSeq;
 import swim.concurrent.Schedule;
 import swim.concurrent.ScheduleDef;
@@ -170,14 +174,20 @@ public interface KernelContext extends Kernel, IpInterface, Log {
 
   Plane injectPlane(Plane plane);
 
-  AgentRouteDef defineAgentRoute(Item agentRouteConfig);
+  @Override
+  AgentDef defineAgent(Item agentConfig);
 
-  AgentRoute<?> createAgentRoute(AgentRouteDef agentRouteDef, ClassLoader classLoader);
+  @Override
+  AgentFactory<?> createAgentFactory(AgentDef agentDef, ClassLoader classLoader);
 
-  <A extends Agent> AgentRoute<A> createAgentRoute(String edgeName, Class<? extends A> agentClass);
+  AgentFactory<?> createAgentFactory(String edgeName, Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, AgentDef agentDef);
+
+  <A extends Agent> AgentFactory<A> createAgentFactory(Class<? extends A> agentClass);
 
   <A extends Agent> AgentFactory<A> createAgentFactory(String edgeName, Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri,
                                                        Class<? extends A> agentClass);
+
+  <A extends Agent> AgentRoute<A> createAgentRoute(String edgeName, Class<? extends A> agentClass);
 
   void openAgents(String edgeName, Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node);
 

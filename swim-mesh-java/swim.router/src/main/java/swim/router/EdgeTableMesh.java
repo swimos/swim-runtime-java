@@ -15,6 +15,7 @@
 package swim.router;
 
 import swim.api.agent.Agent;
+import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
 import swim.api.auth.Credentials;
 import swim.api.auth.Identity;
@@ -128,6 +129,11 @@ public class EdgeTableMesh implements MeshContext {
   @Override
   public LaneBinding injectLane(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return this.edge.edgeContext().injectLane(this.meshUri, partKey, hostUri, nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public AgentFactory<?> createAgentFactory(Value partKey, Uri hostUri, Uri nodeUri, AgentDef agentDef) {
+    return this.edge.edgeContext().createAgentFactory(this.meshUri, partKey, hostUri, nodeUri, agentDef);
   }
 
   @Override

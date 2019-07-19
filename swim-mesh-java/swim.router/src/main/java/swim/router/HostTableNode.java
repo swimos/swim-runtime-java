@@ -15,6 +15,7 @@
 package swim.router;
 
 import swim.api.agent.Agent;
+import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
 import swim.api.auth.Identity;
 import swim.api.downlink.Downlink;
@@ -118,6 +119,11 @@ public class HostTableNode implements NodeContext {
   @Override
   public LaneBinding injectLane(Uri laneUri, LaneBinding lane) {
     return this.host.hostContext().injectLane(this.nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public AgentFactory<?> createAgentFactory(AgentDef agentDef) {
+    return this.host.hostContext().createAgentFactory(this.nodeUri, agentDef);
   }
 
   @Override

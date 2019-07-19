@@ -16,17 +16,21 @@ package swim.kernel;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
-import swim.agent.AgentRouteDef;
 import swim.api.agent.Agent;
+import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
 import swim.api.agent.AgentRoute;
 import swim.api.auth.Authenticator;
+import swim.api.auth.AuthenticatorDef;
 import swim.api.plane.Plane;
+import swim.api.plane.PlaneDef;
 import swim.api.plane.PlaneFactory;
 import swim.api.policy.Policy;
 import swim.api.service.Service;
+import swim.api.service.ServiceDef;
 import swim.api.service.ServiceFactory;
 import swim.api.space.Space;
+import swim.api.space.SpaceDef;
 import swim.collections.FingerTrieSeq;
 import swim.concurrent.Schedule;
 import swim.concurrent.ScheduleDef;
@@ -401,21 +405,27 @@ public abstract class KernelProxy implements KernelBinding, KernelContext {
   }
 
   @Override
-  public AgentRouteDef defineAgentRoute(Item agentRouteConfig) {
+  public AgentDef defineAgent(Item agentConfig) {
     final KernelContext kernelContext = this.kernelContext;
-    return kernelContext != null ? kernelContext.defineAgentRoute(agentRouteConfig) : null;
+    return kernelContext != null ? kernelContext.defineAgent(agentConfig) : null;
   }
 
   @Override
-  public AgentRoute<?> createAgentRoute(AgentRouteDef agentRouteDef, ClassLoader classLoader) {
+  public AgentFactory<?> createAgentFactory(AgentDef agentDef, ClassLoader classLoader) {
     final KernelContext kernelContext = this.kernelContext;
-    return kernelContext != null ? kernelContext.createAgentRoute(agentRouteDef, classLoader) : null;
+    return kernelContext != null ? kernelContext.createAgentFactory(agentDef, classLoader) : null;
   }
 
   @Override
-  public <A extends Agent> AgentRoute<A> createAgentRoute(String edgeName, Class<? extends A> agentClass) {
+  public AgentFactory<?> createAgentFactory(String edgeName, Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, AgentDef agentDef) {
     final KernelContext kernelContext = this.kernelContext;
-    return kernelContext != null ? kernelContext.createAgentRoute(edgeName, agentClass) : null;
+    return kernelContext != null ? kernelContext.createAgentFactory(edgeName, meshUri, partKey, hostUri, nodeUri, agentDef) : null;
+  }
+
+  @Override
+  public <A extends Agent> AgentFactory<A> createAgentFactory(Class<? extends A> agentClass) {
+    final KernelContext kernelContext = this.kernelContext;
+    return kernelContext != null ? kernelContext.createAgentFactory(agentClass) : null;
   }
 
   @Override
@@ -423,6 +433,12 @@ public abstract class KernelProxy implements KernelBinding, KernelContext {
                                                               Class<? extends A> agentClass) {
     final KernelContext kernelContext = this.kernelContext;
     return kernelContext != null ? kernelContext.createAgentFactory(edgeName, meshUri, partKey, hostUri, nodeUri, agentClass) : null;
+  }
+
+  @Override
+  public <A extends Agent> AgentRoute<A> createAgentRoute(String edgeName, Class<? extends A> agentClass) {
+    final KernelContext kernelContext = this.kernelContext;
+    return kernelContext != null ? kernelContext.createAgentRoute(edgeName, agentClass) : null;
   }
 
   @Override

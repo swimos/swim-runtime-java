@@ -254,4 +254,8 @@ public class FabricMeshDef implements MeshDef, Debug {
                              UriMapper.empty(), UriMapper.empty(),
                              null, null, null, null);
   }
+
+  public static FabricMeshDef fromMeshUri(String meshUri) {
+    return fromMeshUri(Uri.parse(meshUri));
+  }
 }

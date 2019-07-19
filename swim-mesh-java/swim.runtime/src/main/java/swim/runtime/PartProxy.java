@@ -15,6 +15,7 @@
 package swim.runtime;
 
 import swim.api.agent.Agent;
+import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
 import swim.api.auth.Credentials;
 import swim.api.auth.Identity;
@@ -179,6 +180,11 @@ public class PartProxy implements PartBinding, PartContext {
   @Override
   public LaneBinding injectLane(Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return this.partContext.injectLane(hostUri, nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public AgentFactory<?> createAgentFactory(Uri hostUri, Uri nodeUri, AgentDef agentDef) {
+    return this.partContext.createAgentFactory(hostUri, nodeUri, agentDef);
   }
 
   @Override

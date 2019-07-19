@@ -15,6 +15,7 @@
 package swim.fabric;
 
 import swim.api.agent.Agent;
+import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
 import swim.api.auth.Identity;
 import swim.api.policy.Policy;
@@ -297,6 +298,11 @@ public class FabricNode extends FabricTier implements NodeBinding, NodeContext {
   public StoreBinding openLaneStore(Uri laneUri) {
     final FabricHost host = fabricHost();
     return host != null ? host.openLaneStore(nodeUri(), laneUri) : null;
+  }
+
+  @Override
+  public AgentFactory<?> createAgentFactory(AgentDef agentDef) {
+    return this.nodeContext.createAgentFactory(agentDef);
   }
 
   @Override

@@ -20,7 +20,6 @@ module swim.kernel {
   requires transitive swim.io;
   requires transitive swim.api;
   requires transitive swim.runtime;
-  requires transitive swim.agent;
 
   exports swim.kernel;
 

@@ -12,8 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.api.space;
 
-public interface PlaneDef {
-  String planeName();
+import java.util.Collection;
+import swim.api.plane.PlaneDef;
+
+public interface SpaceDef {
+  String spaceName();
+
+  Collection<? extends PlaneDef> planeDefs();
+
+  PlaneDef getPlaneDef(String planeName);
 }

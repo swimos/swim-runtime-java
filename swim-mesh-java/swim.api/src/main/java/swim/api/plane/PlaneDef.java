@@ -12,12 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.kernel;
+package swim.api.plane;
 
-import swim.uri.UriScheme;
-
-public interface ServiceDef {
-  String serviceName();
-
-  UriScheme scheme();
+public interface PlaneDef {
+  String planeName();
 }
