@@ -430,11 +430,11 @@ public class FabricKernel extends KernelProxy {
             hostPattern = item.toValue().cast(UriPattern.form(), hostPattern);
             continue;
           }
-          if (item.keyEquals("isPrimary")) {
+          if (item.keyEquals("primary") || item.keyEquals("isPrimary")) {
             isPrimary = item.toValue().booleanValue(isPrimary);
             continue;
           }
-          if (item.keyEquals("isReplica")) {
+          if (item.keyEquals("replica") || item.keyEquals("isReplica")) {
             isReplica = item.toValue().booleanValue(isReplica);
             continue;
           }
