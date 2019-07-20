@@ -235,7 +235,8 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
           final NodeContext nodeContext = createNodeContext(nodeBinding, nodeUri);
           nodeBinding.setNodeContext(nodeContext);
           nodeBinding = nodeBinding.nodeWrapper();
-          this.hostContext.openAgents(nodeUri, nodeBinding);
+          nodeBinding.openLanes(nodeBinding);
+          nodeBinding.openAgents(nodeBinding);
           newNodes = oldNodes.updated(nodeUri, nodeBinding);
         } else {
           newNodes = oldNodes;
@@ -268,7 +269,8 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
           final NodeContext nodeContext = createNodeContext(nodeBinding, nodeUri);
           nodeBinding.setNodeContext(nodeContext);
           nodeBinding = nodeBinding.nodeWrapper();
-          this.hostContext.openAgents(nodeUri, nodeBinding);
+          nodeBinding.openLanes(nodeBinding);
+          nodeBinding.openAgents(nodeBinding);
         }
         newNodes = oldNodes.updated(nodeUri, nodeBinding);
       }

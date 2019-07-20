@@ -198,8 +198,23 @@ public class HostProxy implements HostBinding, HostContext {
   }
 
   @Override
+  public LaneBinding createLane(Uri nodeUri, LaneDef laneDef) {
+    return this.hostContext.createLane(nodeUri, laneDef);
+  }
+
+  @Override
+  public LaneBinding createLane(Uri nodeUri, Uri laneUri) {
+    return this.hostContext.createLane(nodeUri, laneUri);
+  }
+
+  @Override
   public LaneBinding injectLane(Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return this.hostContext.injectLane(nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public void openLanes(Uri nodeUri, NodeBinding node) {
+    this.hostContext.openLanes(nodeUri, node);
   }
 
   @Override

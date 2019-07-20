@@ -41,7 +41,13 @@ public interface HostContext extends TierContext, CellContext {
 
   NodeBinding injectNode(Uri nodeUri, NodeBinding node);
 
+  LaneBinding createLane(Uri nodeUri, LaneDef laneDef);
+
+  LaneBinding createLane(Uri nodeUri, Uri laneUri);
+
   LaneBinding injectLane(Uri nodeUri, Uri laneUri, LaneBinding lane);
+
+  void openLanes(Uri nodeUri, NodeBinding node);
 
   AgentFactory<?> createAgentFactory(Uri nodeUri, AgentDef agentDef);
 

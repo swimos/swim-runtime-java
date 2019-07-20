@@ -555,8 +555,8 @@ public class FabricKernel extends KernelProxy {
       final String fabricProvider = header.get("provider").stringValue(null);
       if (fabricProvider == null || FabricKernel.class.getName().equals(fabricProvider)) {
         final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
+        final String laneType = header.get("type").stringValue(null);
         UriPattern lanePattern = null;
-        String laneType = null;
         LogDef logDef = null;
         PolicyDef policyDef = null;
         StageDef stageDef = null;
@@ -565,10 +565,6 @@ public class FabricKernel extends KernelProxy {
           final Item item = value.getItem(i);
           if (item.keyEquals("uri") || item.keyEquals("pattern")) {
             lanePattern = item.toValue().cast(UriPattern.form(), lanePattern);
-            continue;
-          }
-          if (item.keyEquals("type")) {
-            laneType = item.toValue().stringValue(laneType);
             continue;
           }
           final LogDef newLogDef = kernel.defineLog(item);

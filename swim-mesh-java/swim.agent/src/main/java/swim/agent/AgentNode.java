@@ -172,6 +172,11 @@ public class AgentNode extends AbstractTierBinding implements NodeBinding, CellC
   }
 
   @Override
+  public void openLanes(NodeBinding node) {
+    this.nodeContext.openLanes(node);
+  }
+
+  @Override
   public AgentFactory<?> createAgentFactory(AgentDef agentDef) {
     return this.nodeContext.createAgentFactory(agentDef);
   }
@@ -181,7 +186,12 @@ public class AgentNode extends AbstractTierBinding implements NodeBinding, CellC
     return this.nodeContext.createAgentFactory(agentClass);
   }
 
-  protected static Uri normalizeLaneUri(Uri laneUri) {
+  @Override
+  public void openAgents(NodeBinding node) {
+    this.nodeContext.openAgents(node);
+  }
+
+  protected static Uri normalizezLaneUri(Uri laneUri) {
     if (laneUri.query().isDefined() || laneUri.fragment().isDefined()) {
       laneUri = Uri.from(laneUri.scheme(), laneUri.authority(), laneUri.path());
     }
@@ -195,12 +205,12 @@ public class AgentNode extends AbstractTierBinding implements NodeBinding, CellC
 
   @Override
   public LaneBinding getLane(Uri laneUri) {
-    laneUri = normalizeLaneUri(laneUri);
+    laneUri = normalizezLaneUri(laneUri);
     return this.lanes.get(laneUri);
   }
 
   public LaneBinding openLaneView(Uri laneUri, LaneView laneView) {
-    laneUri = normalizeLaneUri(laneUri);
+    laneUri = normalizezLaneUri(laneUri);
     HashTrieMap<Uri, LaneBinding> oldLanes;
     HashTrieMap<Uri, LaneBinding> newLanes;
     LaneBinding laneBinding = null;
@@ -228,13 +238,51 @@ public class AgentNode extends AbstractTierBinding implements NodeBinding, CellC
   }
 
   public LaneBinding openLane(Uri laneUri, Lane lane) {
-    laneUri = normalizeLaneUri(laneUri);
     return openLaneView(laneUri, (LaneView) lane);
   }
 
   @Override
+  public LaneBinding openLane(Uri laneUri) {
+    laneUri = normalizezLaneUri(laneUri);
+    HashTrieMap<Uri, LaneBinding> oldLanes;
+    HashTrieMap<Uri, LaneBinding> newLanes;
+    LaneBinding laneBinding = null;
+    do {
+      oldLanes = this.lanes;
+      final LaneBinding lane = oldLanes.get(laneUri);
+      if (lane != null) {
+        if (laneBinding != null) {
+          // Lost creation race.
+          laneBinding.close();
+        }
+        laneBinding = lane;
+        newLanes = oldLanes;
+        break;
+      } else if (laneBinding == null) {
+        laneBinding = this.nodeContext.createLane(laneUri);
+        if (laneBinding != null) {
+          laneBinding = this.nodeContext.injectLane(laneUri, laneBinding);
+          final LaneContext laneContext = createLaneContext(laneBinding, laneUri);
+          laneBinding.setLaneContext(laneContext);
+          laneBinding = laneBinding.laneWrapper();
+          newLanes = oldLanes.updated(laneUri, laneBinding);
+        } else {
+          newLanes = oldLanes;
+          break;
+        }
+      } else {
+        newLanes = oldLanes.updated(laneUri, laneBinding);
+      }
+    } while (oldLanes != newLanes && !LANES.compareAndSet(this, oldLanes, newLanes));
+    if (laneBinding != null) {
+      activate(laneBinding);
+    }
+    return laneBinding;
+  }
+
+  @Override
   public LaneBinding openLane(Uri laneUri, LaneBinding lane) {
-    laneUri = normalizeLaneUri(laneUri);
+    laneUri = normalizezLaneUri(laneUri);
     HashTrieMap<Uri, LaneBinding> oldLanes;
     HashTrieMap<Uri, LaneBinding> newLanes;
     LaneBinding laneBinding = null;
@@ -261,7 +309,7 @@ public class AgentNode extends AbstractTierBinding implements NodeBinding, CellC
   }
 
   public void closeLane(Uri laneUri) {
-    laneUri = normalizeLaneUri(laneUri);
+    laneUri = normalizezLaneUri(laneUri);
     HashTrieMap<Uri, LaneBinding> oldLanes;
     HashTrieMap<Uri, LaneBinding> newLanes;
     LaneBinding laneBinding = null;
@@ -344,7 +392,7 @@ public class AgentNode extends AbstractTierBinding implements NodeBinding, CellC
 
   @Override
   public void openUplink(LinkBinding link) {
-    final Uri laneUri = normalizeLaneUri(link.laneUri());
+    final Uri laneUri = normalizezLaneUri(link.laneUri());
     final LaneBinding laneBinding = getLane(laneUri);
     if (laneBinding != null) {
       laneBinding.openUplink(link);

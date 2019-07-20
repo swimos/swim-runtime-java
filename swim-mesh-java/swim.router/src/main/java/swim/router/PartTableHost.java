@@ -28,6 +28,7 @@ import swim.runtime.HostBinding;
 import swim.runtime.HostContext;
 import swim.runtime.HttpBinding;
 import swim.runtime.LaneBinding;
+import swim.runtime.LaneDef;
 import swim.runtime.LinkBinding;
 import swim.runtime.NodeBinding;
 import swim.runtime.PartBinding;
@@ -115,8 +116,23 @@ public class PartTableHost implements HostContext {
   }
 
   @Override
+  public LaneBinding createLane(Uri nodeUri, LaneDef laneDef) {
+    return this.part.partContext().createLane(this.hostUri, nodeUri, laneDef);
+  }
+
+  @Override
+  public LaneBinding createLane(Uri nodeUri, Uri laneUri) {
+    return this.part.partContext().createLane(this.hostUri, nodeUri, laneUri);
+  }
+
+  @Override
   public LaneBinding injectLane(Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return this.part.partContext().injectLane(this.hostUri, nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public void openLanes(Uri nodeUri, NodeBinding node) {
+    this.part.partContext().openLanes(this.hostUri, nodeUri, node);
   }
 
   @Override

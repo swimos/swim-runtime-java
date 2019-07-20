@@ -41,9 +41,17 @@ public interface NodeContext extends TierContext, CellContext {
 
   Identity identity();
 
+  LaneBinding createLane(LaneDef laneDef);
+
+  LaneBinding createLane(Uri laneUri);
+
   LaneBinding injectLane(Uri laneUri, LaneBinding lane);
+
+  void openLanes(NodeBinding node);
 
   AgentFactory<?> createAgentFactory(AgentDef agentDef);
 
   <A extends Agent> AgentFactory<A> createAgentFactory(Class<? extends A> agentClass);
+
+  void openAgents(NodeBinding node);
 }

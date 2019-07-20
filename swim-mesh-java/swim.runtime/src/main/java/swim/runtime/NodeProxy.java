@@ -136,13 +136,33 @@ public class NodeProxy implements NodeBinding, NodeContext {
   }
 
   @Override
+  public LaneBinding openLane(Uri laneUri) {
+    return this.nodeBinding.openLane(laneUri);
+  }
+
+  @Override
   public LaneBinding openLane(Uri laneUri, LaneBinding lane) {
     return this.nodeBinding.openLane(laneUri, lane);
   }
 
   @Override
+  public LaneBinding createLane(LaneDef laneDef) {
+    return this.nodeContext.createLane(laneDef);
+  }
+
+  @Override
+  public LaneBinding createLane(Uri laneUri) {
+    return this.nodeContext.createLane(laneUri);
+  }
+
+  @Override
   public LaneBinding injectLane(Uri laneUri, LaneBinding lane) {
     return this.nodeContext.injectLane(laneUri, lane);
+  }
+
+  @Override
+  public void openLanes(NodeBinding node) {
+    this.nodeContext.openLanes(node);
   }
 
   @Override
@@ -153,6 +173,11 @@ public class NodeProxy implements NodeBinding, NodeContext {
   @Override
   public <A extends Agent> AgentFactory<A> createAgentFactory(Class<? extends A> agentClass) {
     return this.nodeContext.createAgentFactory(agentClass);
+  }
+
+  @Override
+  public void openAgents(NodeBinding node) {
+    this.nodeContext.openAgents(node);
   }
 
   @Override

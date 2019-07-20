@@ -417,8 +417,23 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
   }
 
   @Override
+  public LaneBinding createLane(Value partKey, Uri hostUri, Uri nodeUri, LaneDef laneDef) {
+    return this.meshContext.createLane(partKey, hostUri, nodeUri, laneDef);
+  }
+
+  @Override
+  public LaneBinding createLane(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {
+    return this.meshContext.createLane(partKey, hostUri, nodeUri, laneUri);
+  }
+
+  @Override
   public LaneBinding injectLane(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return this.meshContext.injectLane(partKey, hostUri, nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public void openLanes(Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node) {
+    this.meshContext.openLanes(partKey, hostUri, nodeUri, node);
   }
 
   public Log openLaneLog(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {

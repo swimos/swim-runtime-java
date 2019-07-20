@@ -178,8 +178,23 @@ public class PartProxy implements PartBinding, PartContext {
   }
 
   @Override
+  public LaneBinding createLane(Uri hostUri, Uri nodeUri, LaneDef laneDef) {
+    return this.partContext.createLane(hostUri, nodeUri, laneDef);
+  }
+
+  @Override
+  public LaneBinding createLane(Uri hostUri, Uri nodeUri, Uri laneUri) {
+    return this.partContext.createLane(hostUri, nodeUri, laneUri);
+  }
+
+  @Override
   public LaneBinding injectLane(Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return this.partContext.injectLane(hostUri, nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public void openLanes(Uri hostUri, Uri nodeUri, NodeBinding node) {
+    this.partContext.openLanes(hostUri, nodeUri, node);
   }
 
   @Override

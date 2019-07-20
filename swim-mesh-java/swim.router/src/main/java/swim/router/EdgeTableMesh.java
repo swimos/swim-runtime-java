@@ -28,6 +28,7 @@ import swim.runtime.EdgeBinding;
 import swim.runtime.HostBinding;
 import swim.runtime.HttpBinding;
 import swim.runtime.LaneBinding;
+import swim.runtime.LaneDef;
 import swim.runtime.LinkBinding;
 import swim.runtime.MeshBinding;
 import swim.runtime.MeshContext;
@@ -127,8 +128,23 @@ public class EdgeTableMesh implements MeshContext {
   }
 
   @Override
+  public LaneBinding createLane(Value partKey, Uri hostUri, Uri nodeUri, LaneDef laneDef) {
+    return this.edge.edgeContext().createLane(this.meshUri, partKey, hostUri, nodeUri, laneDef);
+  }
+
+  @Override
+  public LaneBinding createLane(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {
+    return this.edge.edgeContext().createLane(this.meshUri, partKey, hostUri, nodeUri, laneUri);
+  }
+
+  @Override
   public LaneBinding injectLane(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return this.edge.edgeContext().injectLane(this.meshUri, partKey, hostUri, nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public void openLanes(Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node) {
+    this.edge.edgeContext().openLanes(this.meshUri, partKey, hostUri, nodeUri, node);
   }
 
   @Override

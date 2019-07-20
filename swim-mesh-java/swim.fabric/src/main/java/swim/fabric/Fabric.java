@@ -516,8 +516,9 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
     final Uri meshUri = mesh.meshUri();
     final Value partKey = part.partKey();
     final Uri hostUri = hostDef.hostUri();
+    HostBinding host = null;
     if (hostUri != null) {
-      HostBinding host = this.kernel.createHost(this.spaceName, meshUri, partKey, hostDef);
+      host = this.kernel.createHost(this.spaceName, meshUri, partKey, hostDef);
       if (host != null) {
         host = part.openHost(hostUri, host);
         if (host != null) {
@@ -534,9 +535,8 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
           }
         }
       }
-      return host;
     }
-    return null;
+    return host;
   }
 
   protected NodeBinding createNode(EdgeBinding edge, MeshBinding mesh, PartBinding part,
@@ -545,8 +545,9 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
     final Value partKey = part.partKey();
     final Uri hostUri = host.hostUri();
     final Uri nodeUri = nodeDef.nodeUri();
+    NodeBinding node = null;
     if (nodeUri != null) {
-      NodeBinding node = this.kernel.createNode(this.spaceName, meshUri, partKey, hostUri, nodeDef);
+      node = this.kernel.createNode(this.spaceName, meshUri, partKey, hostUri, nodeDef);
       if (node != null) {
         node = host.openNode(nodeUri, node);
         if (node != null) {
@@ -555,14 +556,25 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
           }
         }
       }
-      return node;
     }
-    return null;
+    return node;
   }
 
   protected LaneBinding createLane(EdgeBinding edge, MeshBinding mesh, PartBinding part,
-                                   HostBinding host, NodeBinding node, LaneDef lane) {
-    return null; // TODO
+                                   HostBinding host, NodeBinding node, LaneDef laneDef) {
+    final Uri meshUri = mesh.meshUri();
+    final Value partKey = part.partKey();
+    final Uri hostUri = host.hostUri();
+    final Uri nodeUri = node.nodeUri();
+    final Uri laneUri = laneDef.laneUri();
+    LaneBinding lane = null;
+    if (laneUri != null) {
+      lane = this.kernel.createLane(this.spaceName, meshUri, partKey, hostUri, nodeUri, laneDef);
+      if (lane != null) {
+        lane = node.openLane(laneUri, lane);
+      }
+    }
+    return lane;
   }
 
   protected EdgeBinding injectEdge(EdgeBinding edge) {
@@ -749,8 +761,23 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   }
 
   @Override
+  public LaneBinding createLane(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, LaneDef laneDef) {
+    return this.kernel.createLane(this.spaceName, meshUri, partKey, hostUri, nodeUri, laneDef);
+  }
+
+  @Override
+  public LaneBinding createLane(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {
+    return this.kernel.createLane(this.spaceName, meshUri, partKey, hostUri, nodeUri, laneUri);
+  }
+
+  @Override
   public LaneBinding injectLane(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return this.kernel.injectLane(this.spaceName, meshUri, partKey, hostUri, nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public void openLanes(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node) {
+    this.kernel.openLanes(this.spaceName, meshUri, partKey, hostUri, nodeUri, node);
   }
 
   public Log openLaneLog(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {

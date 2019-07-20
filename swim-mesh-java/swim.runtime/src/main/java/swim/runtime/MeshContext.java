@@ -45,7 +45,13 @@ public interface MeshContext extends TierContext, CellContext {
 
   NodeBinding injectNode(Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node);
 
+  LaneBinding createLane(Value partKey, Uri hostUri, Uri nodeUri, LaneDef laneDef);
+
+  LaneBinding createLane(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri);
+
   LaneBinding injectLane(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane);
+
+  void openLanes(Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node);
 
   AgentFactory<?> createAgentFactory(Value partKey, Uri hostUri, Uri nodeUri, AgentDef agentDef);
 

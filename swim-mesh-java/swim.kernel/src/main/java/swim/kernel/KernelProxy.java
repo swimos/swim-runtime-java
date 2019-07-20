@@ -720,9 +720,23 @@ public abstract class KernelProxy implements KernelBinding, KernelContext {
   }
 
   @Override
+  public LaneBinding createLane(String edgeName, Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {
+    final KernelContext kernelContext = this.kernelContext;
+    return kernelContext != null ? kernelContext.createLane(edgeName, meshUri, partKey, hostUri, nodeUri, laneUri) : null;
+  }
+
+  @Override
   public LaneBinding injectLane(String edgeName, Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane) {
     final KernelContext kernelContext = this.kernelContext;
     return kernelContext != null ? kernelContext.injectLane(edgeName, meshUri, partKey, hostUri, nodeUri, laneUri, lane) : lane;
+  }
+
+  @Override
+  public void openLanes(String edgeName, Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node) {
+    final KernelContext kernelContext = this.kernelContext;
+    if (kernelContext != null) {
+      kernelContext.openLanes(edgeName, meshUri, partKey, hostUri, nodeUri, node);
+    }
   }
 
   @Override

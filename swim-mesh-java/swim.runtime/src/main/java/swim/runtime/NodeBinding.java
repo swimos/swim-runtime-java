@@ -42,13 +42,19 @@ public interface NodeBinding extends TierBinding, CellBinding {
 
   long createdTime();
 
+  void openLanes(NodeBinding node);
+
   AgentFactory<?> createAgentFactory(AgentDef agentDef);
 
   <A extends Agent> AgentFactory<A> createAgentFactory(Class<? extends A> agentClass);
 
+  void openAgents(NodeBinding node);
+
   HashTrieMap<Uri, LaneBinding> lanes();
 
   LaneBinding getLane(Uri laneUri);
+
+  LaneBinding openLane(Uri laneUri);
 
   LaneBinding openLane(Uri laneUri, LaneBinding lane);
 }

@@ -44,7 +44,13 @@ public interface EdgeContext extends TierContext, CellContext {
 
   NodeBinding injectNode(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node);
 
+  LaneBinding createLane(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, LaneDef laneDef);
+
+  LaneBinding createLane(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri);
+
   LaneBinding injectLane(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane);
+
+  void openLanes(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node);
 
   AgentFactory<?> createAgentFactory(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, AgentDef agentDef);
 

@@ -40,6 +40,7 @@ import swim.runtime.EdgeContext;
 import swim.runtime.HostBinding;
 import swim.runtime.HttpBinding;
 import swim.runtime.LaneBinding;
+import swim.runtime.LaneDef;
 import swim.runtime.LinkBinding;
 import swim.runtime.MeshBinding;
 import swim.runtime.NodeBinding;
@@ -172,8 +173,23 @@ public class ClientRuntime extends AbstractSwimRef implements Client, EdgeContex
   }
 
   @Override
+  public LaneBinding createLane(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, LaneDef laneDef) {
+    return null;
+  }
+
+  @Override
+  public LaneBinding createLane(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {
+    return null;
+  }
+
+  @Override
   public LaneBinding injectLane(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return lane;
+  }
+
+  @Override
+  public void openLanes(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node) {
+    // nop
   }
 
   @Override

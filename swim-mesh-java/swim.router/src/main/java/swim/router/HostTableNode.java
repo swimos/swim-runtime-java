@@ -25,6 +25,7 @@ import swim.concurrent.Stage;
 import swim.runtime.HostBinding;
 import swim.runtime.HttpBinding;
 import swim.runtime.LaneBinding;
+import swim.runtime.LaneDef;
 import swim.runtime.LinkBinding;
 import swim.runtime.NodeBinding;
 import swim.runtime.NodeContext;
@@ -117,8 +118,23 @@ public class HostTableNode implements NodeContext {
   }
 
   @Override
+  public LaneBinding createLane(LaneDef laneDef) {
+    return this.host.hostContext().createLane(this.nodeUri, laneDef);
+  }
+
+  @Override
+  public LaneBinding createLane(Uri laneUri) {
+    return this.host.hostContext().createLane(this.nodeUri, laneUri);
+  }
+
+  @Override
   public LaneBinding injectLane(Uri laneUri, LaneBinding lane) {
     return this.host.hostContext().injectLane(this.nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public void openLanes(NodeBinding node) {
+    this.host.hostContext().openLanes(this.nodeUri, node);
   }
 
   @Override
@@ -129,6 +145,11 @@ public class HostTableNode implements NodeContext {
   @Override
   public <A extends Agent> AgentFactory<A> createAgentFactory(Class<? extends A> agentClass) {
     return this.host.hostContext().createAgentFactory(this.nodeUri, agentClass);
+  }
+
+  @Override
+  public void openAgents(NodeBinding node) {
+    this.host.hostContext().openAgents(this.nodeUri, node);
   }
 
   @Override

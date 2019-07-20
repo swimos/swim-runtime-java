@@ -27,6 +27,7 @@ import swim.concurrent.Stage;
 import swim.runtime.HostBinding;
 import swim.runtime.HttpBinding;
 import swim.runtime.LaneBinding;
+import swim.runtime.LaneDef;
 import swim.runtime.LinkBinding;
 import swim.runtime.MeshBinding;
 import swim.runtime.NodeBinding;
@@ -121,8 +122,23 @@ public class MeshTablePart implements PartContext {
   }
 
   @Override
+  public LaneBinding createLane(Uri hostUri, Uri nodeUri, LaneDef laneDef) {
+    return this.mesh.meshContext().createLane(this.partKey, hostUri, nodeUri, laneDef);
+  }
+
+  @Override
+  public LaneBinding createLane(Uri hostUri, Uri nodeUri, Uri laneUri) {
+    return this.mesh.meshContext().createLane(this.partKey, hostUri, nodeUri, laneUri);
+  }
+
+  @Override
   public LaneBinding injectLane(Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane) {
     return this.mesh.meshContext().injectLane(this.partKey, hostUri, nodeUri, laneUri, lane);
+  }
+
+  @Override
+  public void openLanes(Uri hostUri, Uri nodeUri, NodeBinding node) {
+    this.mesh.meshContext().openLanes(this.partKey, hostUri, nodeUri, node);
   }
 
   @Override
