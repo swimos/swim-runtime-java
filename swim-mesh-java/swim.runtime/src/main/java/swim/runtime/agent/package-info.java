@@ -13,13 +13,6 @@
 // limitations under the License.
 
 /**
- * Web Agent router.
+ * Web Agent runtime implementation.
  */
-module swim.router {
-  requires transitive swim.runtime;
-  requires transitive swim.kernel;
-
-  exports swim.router;
-
-  provides swim.kernel.Kernel with swim.router.RouterKernel;
-}
+package swim.runtime.agent;

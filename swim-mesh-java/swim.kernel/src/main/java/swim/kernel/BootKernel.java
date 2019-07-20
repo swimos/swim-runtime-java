@@ -36,14 +36,25 @@ import swim.io.IpStation;
 import swim.io.Station;
 import swim.io.TransportSettings;
 import swim.math.R2Shape;
+import swim.runtime.EdgeBinding;
+import swim.runtime.HostBinding;
+import swim.runtime.HostDef;
 import swim.runtime.LaneBinding;
 import swim.runtime.LaneDef;
+import swim.runtime.MeshBinding;
+import swim.runtime.MeshDef;
+import swim.runtime.PartBinding;
+import swim.runtime.PartDef;
 import swim.runtime.lane.CommandLaneModel;
 import swim.runtime.lane.ListLaneModel;
 import swim.runtime.lane.MapLaneModel;
 import swim.runtime.lane.SpatialLaneModel;
 import swim.runtime.lane.SupplyLaneModel;
 import swim.runtime.lane.ValueLaneModel;
+import swim.runtime.router.EdgeTable;
+import swim.runtime.router.HostTable;
+import swim.runtime.router.MeshTable;
+import swim.runtime.router.PartTable;
 import swim.spatial.GeoProjection;
 import swim.structure.Item;
 import swim.structure.Value;
@@ -222,6 +233,18 @@ public class BootKernel extends KernelProxy implements IpStation {
   }
 
   @Override
+  public Stage openStoreStage(String storeName) {
+    Stage stage = super.openStoreStage(storeName);
+    if (stage == null) {
+      stage = stage();
+      if (stage instanceof MainStage) {
+        stage = new SideStage(stage); // isolate stage lifecycle
+      }
+    }
+    return stage;
+  }
+
+  @Override
   public IpSettings ipSettings() {
     IpSettings ipSettings = super.ipSettings();
     if (ipSettings == null) {
@@ -251,15 +274,12 @@ public class BootKernel extends KernelProxy implements IpStation {
   }
 
   @Override
-  public Stage openStoreStage(String storeName) {
-    Stage stage = super.openStoreStage(storeName);
-    if (stage == null) {
-      stage = stage();
-      if (stage instanceof MainStage) {
-        stage = new SideStage(stage); // isolate stage lifecycle
-      }
+  public EdgeBinding createEdge(String edgeName) {
+    EdgeBinding edge = super.createEdge(edgeName);
+    if (edge == null) {
+      edge = new EdgeTable();
     }
-    return stage;
+    return edge;
   }
 
   @Override
@@ -272,6 +292,60 @@ public class BootKernel extends KernelProxy implements IpStation {
       }
     }
     return stage;
+  }
+
+  @Override
+  public MeshBinding createMesh(String edgeName, MeshDef meshDef) {
+    MeshBinding mesh = super.createMesh(edgeName, meshDef);
+    if (mesh == null) {
+      mesh = new MeshTable();
+    }
+    return mesh;
+  }
+
+  @Override
+  public MeshBinding createMesh(String edgeName, Uri meshUri) {
+    MeshBinding mesh = super.createMesh(edgeName, meshUri);
+    if (mesh == null) {
+      mesh = new MeshTable();
+    }
+    return mesh;
+  }
+
+  @Override
+  public PartBinding createPart(String edgeName, Uri meshUri, PartDef partDef) {
+    PartBinding part = super.createPart(edgeName, meshUri, partDef);
+    if (part == null) {
+      part = new PartTable(partDef.predicate());
+    }
+    return part;
+  }
+
+  @Override
+  public PartBinding createPart(String edgeName, Uri meshUri, Value partKey) {
+    PartBinding part = super.createPart(edgeName, meshUri, partKey);
+    if (part == null) {
+      part = new PartTable();
+    }
+    return part;
+  }
+
+  @Override
+  public HostBinding createHost(String edgeName, Uri meshUri, Value partKey, HostDef hostDef) {
+    HostBinding host = super.createHost(edgeName, meshUri, partKey, hostDef);
+    if (host == null) {
+      host = new HostTable();
+    }
+    return host;
+  }
+
+  @Override
+  public HostBinding createHost(String edgeName, Uri meshUri, Value partKey, Uri hostUri) {
+    HostBinding host = super.createHost(edgeName, meshUri, partKey, hostUri);
+    if (host == null) {
+      host = new HostTable();
+    }
+    return host;
   }
 
   @Override

@@ -15,7 +15,6 @@
 package swim.fabric;
 
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
-import swim.agent.AgentModel;
 import swim.api.SwimContext;
 import swim.api.agent.Agent;
 import swim.api.agent.AgentDef;
@@ -59,6 +58,7 @@ import swim.runtime.PartDef;
 import swim.runtime.PolicyDef;
 import swim.runtime.PushRequest;
 import swim.runtime.TierContext;
+import swim.runtime.agent.AgentModel;
 import swim.store.StoreBinding;
 import swim.store.StoreDef;
 import swim.structure.Value;

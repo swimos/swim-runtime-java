@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.router;
+package swim.runtime.router;
 
 import swim.api.agent.Agent;
 import swim.api.agent.AgentDef;

@@ -26,7 +26,6 @@ import swim.kernel.Kernel;
 import swim.kernel.KernelException;
 import swim.kernel.KernelLoader;
 import swim.remote.RemoteKernel;
-import swim.router.RouterKernel;
 import swim.service.ServiceKernel;
 import swim.service.warp.WarpServiceKernel;
 import swim.store.mem.MemStoreKernel;
@@ -82,9 +81,6 @@ public final class ServerLoader {
     }
     if (kernel.unwrapKernel(MemStoreKernel.class) == null) {
       kernel = kernel.injectKernel(new MemStoreKernel());
-    }
-    if (kernel.unwrapKernel(RouterKernel.class) == null) {
-      kernel = kernel.injectKernel(new RouterKernel());
     }
     if (kernel.unwrapKernel(RemoteKernel.class) == null) {
       kernel = kernel.injectKernel(new RemoteKernel());

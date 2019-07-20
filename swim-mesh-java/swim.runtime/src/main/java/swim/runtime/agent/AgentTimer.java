@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.agent;
+package swim.runtime.agent;
 
 import swim.concurrent.Conts;
 import swim.concurrent.Schedule;

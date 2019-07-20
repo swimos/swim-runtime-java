@@ -12,55 +12,50 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.router;
+package swim.runtime.agent;
 
-import swim.api.agent.Agent;
-import swim.api.agent.AgentDef;
-import swim.api.agent.AgentFactory;
 import swim.api.auth.Identity;
 import swim.api.downlink.Downlink;
 import swim.api.policy.Policy;
 import swim.concurrent.Schedule;
 import swim.concurrent.Stage;
-import swim.runtime.HostBinding;
 import swim.runtime.HttpBinding;
 import swim.runtime.LaneBinding;
-import swim.runtime.LaneDef;
+import swim.runtime.LaneContext;
 import swim.runtime.LinkBinding;
 import swim.runtime.NodeBinding;
-import swim.runtime.NodeContext;
 import swim.runtime.PushRequest;
 import swim.store.StoreBinding;
 import swim.structure.Value;
 import swim.uri.Uri;
 
-public class HostTableNode implements NodeContext {
-  protected final HostTable host;
+public class AgentLane implements LaneContext {
+  protected final AgentNode node;
 
-  protected final NodeBinding node;
+  protected final LaneBinding lane;
 
-  protected final Uri nodeUri;
+  protected final Uri laneUri;
 
-  public HostTableNode(HostTable host, NodeBinding node, Uri nodeUri) {
-    this.host = host;
+  public AgentLane(AgentNode node, LaneBinding lane, Uri laneUri) {
     this.node = node;
-    this.nodeUri = nodeUri;
+    this.lane = lane;
+    this.laneUri = laneUri;
   }
 
   @Override
-  public final HostBinding host() {
-    return this.host;
+  public final NodeBinding node() {
+    return this.node;
   }
 
   @Override
-  public final NodeBinding nodeWrapper() {
-    return this.node.nodeWrapper();
+  public final LaneBinding laneWrapper() {
+    return this.lane.laneWrapper();
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T> T unwrapNode(Class<T> nodeClass) {
-    if (nodeClass.isAssignableFrom(getClass())) {
+  public <T> T unwrapLane(Class<T> laneClass) {
+    if (laneClass.isAssignableFrom(getClass())) {
       return (T) this;
     } else {
       return null;
@@ -69,146 +64,112 @@ public class HostTableNode implements NodeContext {
 
   @Override
   public final Uri meshUri() {
-    return this.host.meshUri();
+    return this.node.meshUri();
   }
 
   @Override
   public final Value partKey() {
-    return this.host.partKey();
+    return this.node.partKey();
   }
 
   @Override
   public final Uri hostUri() {
-    return this.host.hostUri();
+    return this.node.hostUri();
   }
 
   @Override
   public final Uri nodeUri() {
-    return this.nodeUri;
+    return this.node.nodeUri();
   }
 
   @Override
-  public long createdTime() {
-    return this.node.createdTime();
+  public final Uri laneUri() {
+    return this.laneUri;
   }
 
   @Override
   public final Identity identity() {
-    return null; // TODO
+    return this.node.nodeContext().identity();
   }
 
   @Override
   public Policy policy() {
-    return this.host.policy();
+    return this.node.policy();
   }
 
   @Override
   public Schedule schedule() {
-    return this.host.schedule();
+    return this.node;
   }
 
   @Override
   public Stage stage() {
-    return this.host.stage();
+    return this.node;
   }
 
   @Override
   public StoreBinding store() {
-    return this.host.store();
-  }
-
-  @Override
-  public LaneBinding createLane(LaneDef laneDef) {
-    return this.host.hostContext().createLane(this.nodeUri, laneDef);
-  }
-
-  @Override
-  public LaneBinding createLane(Uri laneUri) {
-    return this.host.hostContext().createLane(this.nodeUri, laneUri);
-  }
-
-  @Override
-  public LaneBinding injectLane(Uri laneUri, LaneBinding lane) {
-    return this.host.hostContext().injectLane(this.nodeUri, laneUri, lane);
-  }
-
-  @Override
-  public void openLanes(NodeBinding node) {
-    this.host.hostContext().openLanes(this.nodeUri, node);
-  }
-
-  @Override
-  public AgentFactory<?> createAgentFactory(AgentDef agentDef) {
-    return this.host.hostContext().createAgentFactory(this.nodeUri, agentDef);
-  }
-
-  @Override
-  public <A extends Agent> AgentFactory<A> createAgentFactory(Class<? extends A> agentClass) {
-    return this.host.hostContext().createAgentFactory(this.nodeUri, agentClass);
-  }
-
-  @Override
-  public void openAgents(NodeBinding node) {
-    this.host.hostContext().openAgents(this.nodeUri, node);
+    return this.node.store();
   }
 
   @Override
   public LinkBinding bindDownlink(Downlink downlink) {
-    return this.host.bindDownlink(downlink);
+    return this.node.bindDownlink(downlink);
   }
 
   @Override
   public void openDownlink(LinkBinding link) {
-    this.host.openDownlink(link);
+    this.node.openDownlink(link);
   }
 
   @Override
   public void closeDownlink(LinkBinding link) {
+    // nop
   }
 
   @Override
   public void httpDownlink(HttpBinding http) {
-    this.host.httpDownlink(http);
+    this.node.httpDownlink(http);
   }
 
   @Override
   public void pushDown(PushRequest pushRequest) {
-    this.host.pushDown(pushRequest);
+    this.node.pushDown(pushRequest);
   }
 
   @Override
   public void trace(Object message) {
-    this.host.trace(message);
+    this.node.trace(message);
   }
 
   @Override
   public void debug(Object message) {
-    this.host.debug(message);
+    this.node.debug(message);
   }
 
   @Override
   public void info(Object message) {
-    this.host.info(message);
+    this.node.info(message);
   }
 
   @Override
   public void warn(Object message) {
-    this.host.warn(message);
+    this.node.warn(message);
   }
 
   @Override
   public void error(Object message) {
-    this.host.error(message);
+    this.node.error(message);
   }
 
   @Override
   public void close() {
-    this.host.closeNode(this.nodeUri);
+    this.node.closeLane(this.laneUri);
   }
 
   @Override
   public void willOpen() {
-    // nop
+    this.lane.open();
   }
 
   @Override
@@ -218,7 +179,7 @@ public class HostTableNode implements NodeContext {
 
   @Override
   public void willLoad() {
-    // nop
+    this.lane.load();
   }
 
   @Override
@@ -228,7 +189,7 @@ public class HostTableNode implements NodeContext {
 
   @Override
   public void willStart() {
-    // nop
+    this.lane.start();
   }
 
   @Override
@@ -238,7 +199,7 @@ public class HostTableNode implements NodeContext {
 
   @Override
   public void willStop() {
-    // nop
+    this.lane.stop();
   }
 
   @Override
@@ -248,7 +209,7 @@ public class HostTableNode implements NodeContext {
 
   @Override
   public void willUnload() {
-    // nop
+    this.lane.unload();
   }
 
   @Override
@@ -258,6 +219,6 @@ public class HostTableNode implements NodeContext {
 
   @Override
   public void willClose() {
-    // nop
+    this.lane.close();
   }
 }

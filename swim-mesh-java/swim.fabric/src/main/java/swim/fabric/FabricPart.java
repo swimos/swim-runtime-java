@@ -14,7 +14,6 @@
 
 package swim.fabric;
 
-import swim.agent.AgentModel;
 import swim.api.agent.Agent;
 import swim.api.agent.AgentDef;
 import swim.api.agent.AgentFactory;
@@ -40,6 +39,7 @@ import swim.runtime.PartContext;
 import swim.runtime.PartDef;
 import swim.runtime.PartPredicate;
 import swim.runtime.PolicyDef;
+import swim.runtime.agent.AgentModel;
 import swim.store.StoreBinding;
 import swim.store.StoreDef;
 import swim.structure.Value;

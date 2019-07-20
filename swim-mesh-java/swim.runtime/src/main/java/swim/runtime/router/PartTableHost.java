@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.router;
+package swim.runtime.router;
 
 import swim.api.agent.Agent;
 import swim.api.agent.AgentDef;
@@ -25,46 +25,45 @@ import swim.api.policy.PolicyDirective;
 import swim.concurrent.Schedule;
 import swim.concurrent.Stage;
 import swim.runtime.HostBinding;
+import swim.runtime.HostContext;
 import swim.runtime.HttpBinding;
 import swim.runtime.LaneBinding;
 import swim.runtime.LaneDef;
 import swim.runtime.LinkBinding;
-import swim.runtime.MeshBinding;
 import swim.runtime.NodeBinding;
 import swim.runtime.PartBinding;
-import swim.runtime.PartContext;
 import swim.runtime.PushRequest;
 import swim.store.StoreBinding;
 import swim.structure.Value;
 import swim.uri.Uri;
 
-public class MeshTablePart implements PartContext {
-  protected final MeshTable mesh;
+public class PartTableHost implements HostContext {
+  protected final PartTable part;
 
-  protected final PartBinding part;
+  protected final HostBinding host;
 
-  protected final Value partKey;
+  protected final Uri hostUri;
 
-  public MeshTablePart(MeshTable mesh, PartBinding part, Value partKey) {
-    this.mesh = mesh;
+  public PartTableHost(PartTable part, HostBinding host, Uri hostUri) {
     this.part = part;
-    this.partKey = partKey.commit();
+    this.host = host;
+    this.hostUri = hostUri;
   }
 
   @Override
-  public final MeshBinding mesh() {
-    return this.mesh;
+  public final PartBinding part() {
+    return this.part;
   }
 
   @Override
-  public final PartBinding partWrapper() {
-    return this.part.partWrapper();
+  public final HostBinding hostWrapper() {
+    return this.host.hostWrapper();
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T> T unwrapPart(Class<T> partClass) {
-    if (partClass.isAssignableFrom(getClass())) {
+  public <T> T unwrapHost(Class<T> hostClass) {
+    if (hostClass.isAssignableFrom(getClass())) {
       return (T) this;
     } else {
       return null;
@@ -73,113 +72,97 @@ public class MeshTablePart implements PartContext {
 
   @Override
   public final Uri meshUri() {
-    return this.mesh.meshUri();
+    return this.part.meshUri();
   }
 
   @Override
   public final Value partKey() {
-    return this.partKey;
+    return this.part.partKey();
+  }
+
+  @Override
+  public final Uri hostUri() {
+    return this.hostUri;
   }
 
   @Override
   public Policy policy() {
-    return this.mesh.policy();
+    return this.part.policy();
   }
 
   @Override
   public Schedule schedule() {
-    return this.mesh.schedule();
+    return this.part.schedule();
   }
 
   @Override
   public Stage stage() {
-    return this.mesh.stage();
+    return this.part.stage();
   }
 
   @Override
   public StoreBinding store() {
-    return this.mesh.store();
+    return this.part.store();
   }
 
   @Override
-  public HostBinding createHost(Uri hostUri) {
-    return this.mesh.meshContext().createHost(this.partKey, hostUri);
+  public NodeBinding createNode(Uri nodeUri) {
+    return this.part.partContext().createNode(this.hostUri, nodeUri);
   }
 
   @Override
-  public HostBinding injectHost(Uri hostUri, HostBinding host) {
-    return this.mesh.meshContext().injectHost(this.partKey, hostUri, host);
+  public NodeBinding injectNode(Uri nodeUri, NodeBinding node) {
+    return this.part.partContext().injectNode(this.hostUri, nodeUri, node);
   }
 
   @Override
-  public NodeBinding createNode(Uri hostUri, Uri nodeUri) {
-    return this.mesh.meshContext().createNode(this.partKey, hostUri, nodeUri);
+  public LaneBinding createLane(Uri nodeUri, LaneDef laneDef) {
+    return this.part.partContext().createLane(this.hostUri, nodeUri, laneDef);
   }
 
   @Override
-  public NodeBinding injectNode(Uri hostUri, Uri nodeUri, NodeBinding node) {
-    return this.mesh.meshContext().injectNode(this.partKey, hostUri, nodeUri, node);
+  public LaneBinding createLane(Uri nodeUri, Uri laneUri) {
+    return this.part.partContext().createLane(this.hostUri, nodeUri, laneUri);
   }
 
   @Override
-  public LaneBinding createLane(Uri hostUri, Uri nodeUri, LaneDef laneDef) {
-    return this.mesh.meshContext().createLane(this.partKey, hostUri, nodeUri, laneDef);
+  public LaneBinding injectLane(Uri nodeUri, Uri laneUri, LaneBinding lane) {
+    return this.part.partContext().injectLane(this.hostUri, nodeUri, laneUri, lane);
   }
 
   @Override
-  public LaneBinding createLane(Uri hostUri, Uri nodeUri, Uri laneUri) {
-    return this.mesh.meshContext().createLane(this.partKey, hostUri, nodeUri, laneUri);
+  public void openLanes(Uri nodeUri, NodeBinding node) {
+    this.part.partContext().openLanes(this.hostUri, nodeUri, node);
   }
 
   @Override
-  public LaneBinding injectLane(Uri hostUri, Uri nodeUri, Uri laneUri, LaneBinding lane) {
-    return this.mesh.meshContext().injectLane(this.partKey, hostUri, nodeUri, laneUri, lane);
+  public AgentFactory<?> createAgentFactory(Uri nodeUri, AgentDef agentDef) {
+    return this.part.partContext().createAgentFactory(this.hostUri, nodeUri, agentDef);
   }
 
   @Override
-  public void openLanes(Uri hostUri, Uri nodeUri, NodeBinding node) {
-    this.mesh.meshContext().openLanes(this.partKey, hostUri, nodeUri, node);
+  public <A extends Agent> AgentFactory<A> createAgentFactory(Uri nodeUri, Class<? extends A> agentClass) {
+    return this.part.partContext().createAgentFactory(this.hostUri, nodeUri, agentClass);
   }
 
   @Override
-  public AgentFactory<?> createAgentFactory(Uri hostUri, Uri nodeUri, AgentDef agentDef) {
-    return this.mesh.meshContext().createAgentFactory(this.partKey, hostUri, nodeUri, agentDef);
-  }
-
-  @Override
-  public <A extends Agent> AgentFactory<A> createAgentFactory(Uri hostUri, Uri nodeUri,
-                                                              Class<? extends A> agentClass) {
-    return this.mesh.meshContext().createAgentFactory(this.partKey, hostUri, nodeUri, agentClass);
-  }
-
-  @Override
-  public void openAgents(Uri hostUri, Uri nodeUri, NodeBinding node) {
-    this.mesh.meshContext().openAgents(this.partKey, hostUri, nodeUri, node);
+  public void openAgents(Uri nodeUri, NodeBinding node) {
+    this.part.partContext().openAgents(this.hostUri, nodeUri, node);
   }
 
   @Override
   public PolicyDirective<Identity> authenticate(Credentials credentials) {
-    return this.mesh.meshContext().authenticate(credentials);
-  }
-
-  @Override
-  public void hostDidConnect(Uri hostUri) {
-    // nop
-  }
-
-  @Override
-  public void hostDidDisconnect(Uri hostUri) {
-    // nop
+    return this.part.partContext().authenticate(credentials);
   }
 
   @Override
   public LinkBinding bindDownlink(Downlink downlink) {
-    return this.mesh.bindDownlink(downlink);
+    return this.part.bindDownlink(downlink);
   }
 
   @Override
   public void openDownlink(LinkBinding link) {
-    this.mesh.openDownlink(link);
+    this.part.openDownlink(link);
   }
 
   @Override
@@ -189,42 +172,42 @@ public class MeshTablePart implements PartContext {
 
   @Override
   public void httpDownlink(HttpBinding http) {
-    // TODO
+    this.part.httpDownlink(http);
   }
 
   @Override
   public void pushDown(PushRequest pushRequest) {
-    this.mesh.pushDown(pushRequest);
+    this.part.pushDown(pushRequest);
   }
 
   @Override
   public void trace(Object message) {
-    this.mesh.trace(message);
+    this.part.trace(message);
   }
 
   @Override
   public void debug(Object message) {
-    this.mesh.debug(message);
+    this.part.debug(message);
   }
 
   @Override
   public void info(Object message) {
-    this.mesh.info(message);
+    this.part.info(message);
   }
 
   @Override
   public void warn(Object message) {
-    this.mesh.warn(message);
+    this.part.warn(message);
   }
 
   @Override
   public void error(Object message) {
-    this.mesh.error(message);
+    this.part.error(message);
   }
 
   @Override
   public void close() {
-    this.mesh.closePart(this.partKey);
+    this.part.closeHost(this.hostUri);
   }
 
   @Override
@@ -255,6 +238,16 @@ public class MeshTablePart implements PartContext {
   @Override
   public void didStart() {
     // nop
+  }
+
+  @Override
+  public void didConnect() {
+    this.part.hostDidConnect(this.hostUri);
+  }
+
+  @Override
+  public void didDisconnect() {
+    this.part.hostDidDisconnect(this.hostUri);
   }
 
   @Override

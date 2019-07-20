@@ -13,10 +13,6 @@
 // limitations under the License.
 
 /**
- * Web Agent runtime.
+ * Table-based router implementation.
  */
-module swim.agent {
-  requires transitive swim.runtime;
-
-  exports swim.agent;
-}
+package swim.runtime.router;
