@@ -38,9 +38,6 @@ public interface SupplyLane<V> extends Lane {
   <V2> SupplyLane<V2> valueClass(Class<V2> valueClass);
 
   @Override
-  SupplyLane<V> isSigned(boolean isSigned);
-
-  @Override
   SupplyLane<V> observe(Object observer);
 
   @Override

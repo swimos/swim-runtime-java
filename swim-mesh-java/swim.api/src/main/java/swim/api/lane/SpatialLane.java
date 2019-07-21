@@ -62,9 +62,6 @@ public interface SpatialLane<K, S, V> extends Lane, ObservableSpatialMap<K, S, V
   SpatialLane<K, S, V> isTransient(boolean isTransient);
 
   @Override
-  SpatialLane<K, S, V> isSigned(boolean isSigned);
-
-  @Override
   SpatialLane<K, S, V> observe(Object observer);
 
   @Override

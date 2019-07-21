@@ -39,9 +39,6 @@ public interface DemandLane<V> extends Lane {
   <V2> DemandLane<V2> valueClass(Class<V2> valueClass);
 
   @Override
-  DemandLane<V> isSigned(boolean isSigned);
-
-  @Override
   DemandLane<V> observe(Object observer);
 
   @Override

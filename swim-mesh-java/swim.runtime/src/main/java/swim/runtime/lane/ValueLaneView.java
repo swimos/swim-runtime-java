@@ -169,33 +169,6 @@ public class ValueLaneView<V> extends LaneView implements ValueLane<V> {
   }
 
   @Override
-  public final boolean isSigned() {
-    return (this.flags & SIGNED) != 0;
-  }
-
-  @Override
-  public ValueLaneView<V> isSigned(boolean isSigned) {
-    didSetSigned(isSigned);
-
-    // note: marked final given access of concurrently accessed volatile objects
-    final ValueLaneModel laneBinding = this.laneBinding;
-
-    if (laneBinding != null) {
-      laneBinding.isSigned(isSigned);
-    }
-
-    return this;
-  }
-
-  void didSetSigned(boolean isSigned) {
-    if (isSigned) {
-      this.flags |= SIGNED;
-    } else {
-      this.flags &= ~SIGNED;
-    }
-  }
-
-  @Override
   public void close() {
     this.laneBinding.closeLaneView(this);
   }

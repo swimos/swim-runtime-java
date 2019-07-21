@@ -101,16 +101,6 @@ public class DemandLaneView<V> extends LaneView implements DemandLane<V> {
   }
 
   @Override
-  public final boolean isSigned() {
-    return false; // TODO
-  }
-
-  @Override
-  public DemandLaneView<V> isSigned(boolean isSigned) {
-    return this; // TODO
-  }
-
-  @Override
   public void close() {
     this.laneBinding.closeLaneView(this);
   }

@@ -61,9 +61,6 @@ public interface ListLane<V> extends Lane, KeyedList<V>, ObservableList<V> {
   ListLane<V> isTransient(boolean isTransient);
 
   @Override
-  ListLane<V> isSigned(boolean isSigned);
-
-  @Override
   ListLane<V> observe(Object observer);
 
   @Override

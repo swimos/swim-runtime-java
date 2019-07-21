@@ -98,16 +98,6 @@ public class CommandLaneView<V> extends LaneView implements CommandLane<V> {
   }
 
   @Override
-  public final boolean isSigned() {
-    return false; // TODO
-  }
-
-  @Override
-  public CommandLaneView<V> isSigned(boolean isSigned) {
-    return this; // TODO
-  }
-
-  @Override
   public void close() {
     this.laneBinding.closeLaneView(this);
   }

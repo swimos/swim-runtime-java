@@ -238,28 +238,6 @@ public class JoinMapLaneModel extends LaneModel<JoinMapLaneView<?, ?, ?>, JoinMa
     return this;
   }
 
-  public final boolean isSigned() {
-    return (this.flags & SIGNED) != 0;
-  }
-
-  public JoinMapLaneModel isSigned(boolean isSigned) {
-    if (isSigned) {
-      this.flags |= SIGNED;
-    } else {
-      this.flags &= ~SIGNED;
-    }
-    final Object views = this.views;
-    if (views instanceof JoinMapLaneView<?, ?, ?>) {
-      ((JoinMapLaneView<?, ?, ?>) views).didSetSigned(isSigned);
-    } else if (views instanceof LaneView[]) {
-      final LaneView[] viewArray = (LaneView[]) views;
-      for (int i = 0, n = viewArray.length; i < n; i += 1) {
-        ((JoinMapLaneView<?, ?, ?>) viewArray[i]).didSetSigned(isSigned);
-      }
-    }
-    return this;
-  }
-
   public Value get(Object key) {
     if (key != null) {
       return this.data.get(key);

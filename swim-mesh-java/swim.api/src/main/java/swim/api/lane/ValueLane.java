@@ -51,9 +51,6 @@ public interface ValueLane<V> extends Lane, ObservableValue<V>, Inlet<V>, Outlet
   ValueLane<V> isTransient(boolean isTransient);
 
   @Override
-  ValueLane<V> isSigned(boolean isSigned);
-
-  @Override
   ValueLane<V> observe(Object observer);
 
   @Override

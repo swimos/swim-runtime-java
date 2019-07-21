@@ -87,16 +87,6 @@ public class SupplyLaneView<V> extends LaneView implements SupplyLane<V> {
   }
 
   @Override
-  public final boolean isSigned() {
-    return false; // TODO
-  }
-
-  @Override
-  public SupplyLaneView<V> isSigned(boolean isSigned) {
-    return this; // TODO
-  }
-
-  @Override
   public void close() {
     this.laneBinding.closeLaneView(this);
   }

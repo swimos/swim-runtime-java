@@ -68,9 +68,6 @@ public interface MapLane<K, V> extends Lane, ObservableOrderedMap<K, V>, MapInle
   MapLane<K, V> isTransient(boolean isTransient);
 
   @Override
-  MapLane<K, V> isSigned(boolean isSigned);
-
-  @Override
   MapLane<K, V> observe(Object observer);
 
   @Override

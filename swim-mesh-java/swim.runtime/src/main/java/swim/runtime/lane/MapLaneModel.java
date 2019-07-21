@@ -138,36 +138,9 @@ public class MapLaneModel extends LaneModel<MapLaneView<?, ?>, MapLaneUplink> {
     return this;
   }
 
-  public final boolean isSigned() {
-    return (this.flags & SIGNED) != 0;
-  }
-
-  public MapLaneModel isSigned(boolean isSigned) {
-    if (isSigned) {
-      this.flags |= SIGNED;
-    } else {
-      this.flags &= ~SIGNED;
-    }
-    final Object views = this.views;
-    if (views instanceof MapLaneView<?, ?>) {
-      ((MapLaneView<?, ?>) views).didSetSigned(isSigned);
-    } else if (views instanceof LaneView[]) {
-      final LaneView[] viewArray = (LaneView[]) views;
-      for (int i = 0, n = viewArray.length; i < n; i += 1) {
-        ((MapLaneView<?, ?>) viewArray[i]).didSetSigned(isSigned);
-      }
-    }
-    return this;
-  }
-
   public Value get(Value key) {
     if (key != null) {
-      final Value value = this.data.get(key);
-      if (isSigned()) {
-        // TODO: might replaced by method from class replace Ledger later
-        // value = ledger().unsign(value);
-      }
-      return value;
+      return this.data.get(key);
     } else {
       return Value.absent();
     }

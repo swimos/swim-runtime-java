@@ -178,28 +178,6 @@ public class ListLaneModel extends LaneModel<ListLaneView<?>, ListLaneUplink> {
     return this;
   }
 
-  public final boolean isSigned() {
-    return (this.flags & SIGNED) != 0;
-  }
-
-  public ListLaneModel isSigned(boolean isSigned) {
-    if (isSigned) {
-      this.flags |= SIGNED;
-    } else {
-      this.flags &= ~SIGNED;
-    }
-    final Object views = this.views;
-    if (views instanceof ListLaneView<?>) {
-      ((ListLaneView<?>) views).didSetSigned(isSigned);
-    } else if (views instanceof LaneView[]) {
-      final LaneView[] viewArray = (LaneView[]) views;
-      for (int i = 0, n = viewArray.length; i < n; i += 1) {
-        ((ListLaneView<?>) viewArray[i]).didSetSigned(isSigned);
-      }
-    }
-    return this;
-  }
-
   @SuppressWarnings("unchecked")
   public <V> boolean add(ListLaneView<V> view, int index, V newObject) {
     return add(view, index, newObject, null);

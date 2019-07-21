@@ -174,33 +174,6 @@ public class ListLaneView<V> extends LaneView implements ListLane<V> {
   }
 
   @Override
-  public final boolean isSigned() {
-    return (this.flags & SIGNED) != 0;
-  }
-
-  @Override
-  public ListLaneView<V> isSigned(boolean isSigned) {
-    didSetSigned(isSigned);
-
-    // note: marked final given access of concurrently accessed volatile objects
-    final ListLaneModel laneBinding = this.laneBinding;
-
-    if (laneBinding != null) {
-      laneBinding.isSigned(isSigned);
-    }
-
-    return this;
-  }
-
-  void didSetSigned(boolean isSigned) {
-    if (isSigned) {
-      this.flags |= SIGNED;
-    } else {
-      this.flags &= ~SIGNED;
-    }
-  }
-
-  @Override
   protected void willLoad() {
     this.dataView = this.laneBinding.data.valueForm(this.valueForm);
     super.willLoad();

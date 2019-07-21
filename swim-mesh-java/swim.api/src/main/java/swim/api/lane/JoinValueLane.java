@@ -64,9 +64,6 @@ public interface JoinValueLane<K, V> extends Lane, Iterable<Map.Entry<K, V>>, Ob
   JoinValueLane<K, V> isTransient(boolean isTransient);
 
   @Override
-  JoinValueLane<K, V> isSigned(boolean isSigned);
-
-  @Override
   JoinValueLane<K, V> observe(Object observer);
 
   @Override

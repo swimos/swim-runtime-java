@@ -41,10 +41,6 @@ public interface Lane extends HttpLane<Object>, Log {
 
   void close();
 
-  boolean isSigned();
-
-  Lane isSigned(boolean isSigned);
-
   @Override
   Lane observe(Object observer);
 

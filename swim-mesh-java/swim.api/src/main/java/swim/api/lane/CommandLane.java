@@ -39,9 +39,6 @@ public interface CommandLane<V> extends Lane {
   <V2> CommandLane<V2> valueClass(Class<V2> valueClass);
 
   @Override
-  CommandLane<V> isSigned(boolean isSigned);
-
-  @Override
   CommandLane<V> observe(Object observer);
 
   @Override
