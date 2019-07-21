@@ -89,6 +89,14 @@ project(':swim-remote') {
   }
 }
 
+project(':swim-service-web') {
+  afterEvaluate {
+    dependencies {
+      api project(':swim-web')
+    }
+  }
+}
+
 project(':swim-cli') {
   afterEvaluate {
     dependencies {
@@ -203,6 +211,7 @@ gradle.projectsEvaluated {
         'swim.io.ws',
         'swim.mqtt',
         'swim.warp',
+        'swim.web',
         'swim.ws')
       options.group('Storage',
         'swim.store',
@@ -218,7 +227,7 @@ gradle.projectsEvaluated {
         'swim.runtime',
         'swim.server',
         'swim.service',
-        'swim.service.warp')
+        'swim.service.web')
       options.group('Polyglot',
         'swim.dynamic',
         'swim.dynamic.api',

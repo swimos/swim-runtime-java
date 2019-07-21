@@ -12,8 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.api.service;
+package swim.web;
 
-public interface ServiceDef {
-  String serviceName();
+import swim.web.route.AlternativeRoute;
+
+@FunctionalInterface
+public interface WebRoute {
+  WebResponse routeRequest(WebRequest request);
+
+  default WebRoute orElse(WebRoute alternative) {
+    return new AlternativeRoute(this, alternative);
+  }
 }

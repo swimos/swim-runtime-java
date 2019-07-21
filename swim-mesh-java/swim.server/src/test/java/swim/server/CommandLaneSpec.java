@@ -38,7 +38,7 @@ import swim.api.plane.AbstractPlane;
 import swim.codec.Format;
 import swim.fabric.FabricDef;
 import swim.kernel.Kernel;
-import swim.service.warp.WarpServiceDef;
+import swim.service.web.WebServiceDef;
 import swim.structure.Text;
 import static org.testng.Assert.assertEquals;
 
@@ -114,7 +114,7 @@ public class CommandLaneSpec {
     }
 
     try {
-      kernel.openService(WarpServiceDef.standard().port(53556).spaceName("test"));
+      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
       kernel.start();
       final EventDownlink<String> commandLink = plane.downlink()
           .valueClass(String.class)

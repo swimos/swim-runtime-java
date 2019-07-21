@@ -29,7 +29,7 @@ import swim.api.plane.AbstractPlane;
 import swim.fabric.FabricDef;
 import swim.kernel.Kernel;
 import swim.recon.Recon;
-import swim.service.warp.WarpServiceDef;
+import swim.service.web.WebServiceDef;
 import swim.structure.Attr;
 import swim.structure.Record;
 import swim.structure.Value;
@@ -80,7 +80,7 @@ public class PingPongSpec {
 
     final CountDownLatch onPong = new CountDownLatch(1);
     try {
-      kernel.openService(WarpServiceDef.standard().port(53556).spaceName("test"));
+      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
       kernel.start();
       final EventDownlink<String> pongLink = plane.downlink()
           .valueClass(String.class)

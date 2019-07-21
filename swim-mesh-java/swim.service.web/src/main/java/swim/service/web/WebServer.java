@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.service.warp;
+package swim.service.web;
 
 import java.io.File;
-import java.io.IOException;
 import swim.api.policy.PlanePolicy;
 import swim.api.policy.PolicyDirective;
 import swim.api.service.ServiceException;
@@ -39,15 +38,22 @@ import swim.uri.UriHost;
 import swim.uri.UriPath;
 import swim.uri.UriPort;
 import swim.uri.UriScheme;
+import swim.web.WebRequest;
+import swim.web.WebResponse;
+import swim.web.WebRoute;
+import swim.web.WebServerRequest;
+import swim.web.route.DirectoryRoute;
+import swim.web.route.RejectRoute;
+import swim.web.route.ResourceDirectoryRoute;
 import swim.ws.WsRequest;
 import swim.ws.WsResponse;
 
-public class WarpServiceServer extends AbstractWarpServer {
-  protected final KernelContext kernel;
-  protected final WarpServiceDef serviceDef;
-  final UriPath documentRoot;
+public class WebServer extends AbstractWarpServer {
+  final KernelContext kernel;
+  final WebServiceDef serviceDef;
+  WebRoute router;
 
-  public WarpServiceServer(KernelContext kernel, WarpServiceDef serviceDef) {
+  public WebServer(KernelContext kernel, WebServiceDef serviceDef) {
     this.kernel = kernel;
     this.serviceDef = serviceDef;
 
@@ -56,14 +62,24 @@ public class WarpServiceServer extends AbstractWarpServer {
       final UriPath cwd = UriPath.parse(new File("").getAbsolutePath().replace('\\', '/'));
       documentRoot = cwd.appended(documentRoot).removeDotSegments();
     }
-    this.documentRoot = documentRoot;
+    final UriPath resourceRoot = serviceDef.resourceRoot();
+
+    WebRoute router = new RejectRoute();
+    if (documentRoot != null) {
+      router = router.orElse(new DirectoryRoute(documentRoot, "index.html"));
+    }
+    if (resourceRoot != null) {
+      final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+      router = router.orElse(new ResourceDirectoryRoute(classLoader, resourceRoot, "index.html"));
+    }
+    this.router = router;
   }
 
   public final KernelContext kernel() {
     return this.kernel;
   }
 
-  public final WarpServiceDef serviceDef() {
+  public final WebServiceDef serviceDef() {
     return this.serviceDef;
   }
 
@@ -73,7 +89,7 @@ public class WarpServiceServer extends AbstractWarpServer {
     final PlanePolicy policy = space != null ? space.policy() : null;
     final Uri requestUri = httpRequest.uri();
 
-    // Check request permission.
+    // Verify request permission.
     if (policy != null) {
       final PolicyDirective<?> directive = policy.canConnect(requestUri);
       if (directive.isDenied()) {
@@ -83,6 +99,7 @@ public class WarpServiceServer extends AbstractWarpServer {
     }
 
     // Check for WARP upgrade.
+    // TODO: WarpSpaceRoute
     final WsRequest wsRequest = WsRequest.from(httpRequest);
     if (wsRequest != null) {
       final WsResponse wsResponse = wsRequest.accept(this.wsSettings);
@@ -92,10 +109,11 @@ public class WarpServiceServer extends AbstractWarpServer {
     }
 
     // Try routing HTTP lane.
+    // TODO: HttpLaneRoute
     try {
       final Uri laneUri = Uri.parse(requestUri.query().get("lane"));
       final Uri nodeUri = Uri.from(requestUri.path());
-      final WarpServiceHttpResponder httpBinding = new WarpServiceHttpResponder(
+      final HttpLaneResponder httpBinding = new HttpLaneResponder(
           Uri.empty(), Uri.empty(), nodeUri, laneUri, httpRequest);
       final EdgeBinding edge = ((EdgeContext) space).edgeWrapper();
       edge.httpUplink(httpBinding);
@@ -104,29 +122,10 @@ public class WarpServiceServer extends AbstractWarpServer {
       // nop
     }
 
-    // Try routing static resource request.
-    try {
-      if (this.documentRoot != null) {
-        UriPath requestPath = requestUri.path();
-        if (requestPath.foot().isAbsolute()) {
-          requestPath = requestPath.appended("index.html"); // TODO: configurable directory index
-        }
-        if (requestPath.isAbsolute()) {
-          requestPath = requestPath.tail();
-        }
-        final UriPath documentPath = this.documentRoot.appended(requestPath).removeDotSegments();
-        if (documentPath.isSubpathOf(this.documentRoot)) {
-          final HttpBody<Object> body = HttpBody.fromFile(documentPath.toString());
-          final HttpResponse<Object> httpResponse = HttpResponse.from(HttpStatus.OK).content(body);
-          return new StaticHttpResponder<Object>(httpResponse);
-        }
-      }
-    } catch (IOException swallow) {
-      // continue
-    }
-
-    // Return 404 error.
-    return new StaticHttpResponder<Object>(HttpResponse.from(HttpStatus.NOT_FOUND).content(HttpBody.empty()));
+    // Route request.
+    final WebRequest webRequest = new WebServerRequest(httpRequest);
+    final WebResponse webResponse = this.router.routeRequest(webRequest);
+    return webResponse.httpResponder();
   }
 
   protected HttpResponder<?> warpWebSocketResponder(WsRequest wsRequest, WsResponse wsResponse) {

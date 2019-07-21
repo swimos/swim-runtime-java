@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.service.warp;
+package swim.service.web;
 
 import java.net.InetSocketAddress;
 import swim.api.service.Service;
@@ -30,13 +30,13 @@ import swim.io.http.HttpSettings;
 import swim.io.warp.WarpSettings;
 import swim.kernel.KernelContext;
 
-public class WarpServicePort implements Service, HttpService, HttpInterface {
-  protected final KernelContext kernel;
-  protected final ServiceContext serviceContext;
-  protected final WarpServiceDef serviceDef;
-  protected HttpServiceContext httpServiceContext;
+public class WebService implements Service, HttpService, HttpInterface {
+  final KernelContext kernel;
+  final ServiceContext serviceContext;
+  final WebServiceDef serviceDef;
+  HttpServiceContext httpServiceContext;
 
-  public WarpServicePort(KernelContext kernel, ServiceContext serviceContext, WarpServiceDef serviceDef) {
+  public WebService(KernelContext kernel, ServiceContext serviceContext, WebServiceDef serviceDef) {
     this.kernel = kernel;
     this.serviceContext = serviceContext;
     this.serviceDef = serviceDef;
@@ -61,7 +61,7 @@ public class WarpServicePort implements Service, HttpService, HttpInterface {
     this.httpServiceContext = httpServiceContext;
   }
 
-  public final WarpServiceDef serviceDef() {
+  public final WebServiceDef serviceDef() {
     return this.serviceDef;
   }
 
@@ -101,7 +101,7 @@ public class WarpServicePort implements Service, HttpService, HttpInterface {
 
   @Override
   public HttpServer createServer() {
-    return new WarpServiceServer(this.kernel, this.serviceDef);
+    return new WebServer(this.kernel, this.serviceDef);
   }
 
   @Override
@@ -111,8 +111,8 @@ public class WarpServicePort implements Service, HttpService, HttpInterface {
 
   @Override
   public void didStart() {
-    final WarpServiceDef serviceDef = this.serviceDef;
-    if ("warps".equals(serviceDef.scheme.name())) {
+    final WebServiceDef serviceDef = this.serviceDef;
+    if (serviceDef.isSecure) {
       bindHttps(serviceDef.address, serviceDef.port, this, serviceDef.warpSettings.httpSettings());
     } else {
       bindHttp(serviceDef.address, serviceDef.port, this, serviceDef.warpSettings.httpSettings());

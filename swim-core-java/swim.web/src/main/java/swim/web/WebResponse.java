@@ -12,8 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.api.service;
+package swim.web;
 
-public interface ServiceDef {
-  String serviceName();
+import swim.io.http.HttpResponder;
+
+public abstract class WebResponse {
+  public abstract boolean isAccepted();
+
+  public abstract boolean isRejected();
+
+  public abstract HttpResponder<?> httpResponder();
 }

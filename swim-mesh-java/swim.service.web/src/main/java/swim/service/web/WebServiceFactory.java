@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.service.warp;
+package swim.service.web;
 
 import swim.api.service.ServiceContext;
 import swim.api.service.ServiceFactory;
 import swim.kernel.KernelContext;
 
-public class WarpServiceFactory implements ServiceFactory<WarpServicePort> {
-  protected final KernelContext kernel;
-  protected final WarpServiceDef serviceDef;
+public class WebServiceFactory implements ServiceFactory<WebService> {
+  final KernelContext kernel;
+  final WebServiceDef serviceDef;
 
-  WarpServiceFactory(KernelContext kernel, WarpServiceDef serviceDef) {
+  WebServiceFactory(KernelContext kernel, WebServiceDef serviceDef) {
     this.kernel = kernel;
     this.serviceDef = serviceDef;
   }
@@ -31,12 +31,12 @@ public class WarpServiceFactory implements ServiceFactory<WarpServicePort> {
     return this.kernel;
   }
 
-  public final WarpServiceDef serviceDef() {
+  public final WebServiceDef serviceDef() {
     return this.serviceDef;
   }
 
   @Override
-  public WarpServicePort createService(ServiceContext context) {
-    return new WarpServicePort(this.kernel, context, this.serviceDef);
+  public WebService createService(ServiceContext context) {
+    return new WebService(this.kernel, context, this.serviceDef);
   }
 }

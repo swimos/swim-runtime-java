@@ -13,6 +13,13 @@
 // limitations under the License.
 
 /**
- * WARP service runtime.
+ * Flow-controlled web server library.
  */
-package swim.service.warp;
+module swim.web {
+  requires transitive swim.io.http;
+  requires transitive swim.io.ws;
+  requires transitive swim.io.warp;
+
+  exports swim.web;
+  exports swim.web.route;
+}

@@ -47,7 +47,7 @@ import swim.observable.function.DidUpdateKey;
 import swim.observable.function.WillSet;
 import swim.observable.function.WillUpdateKey;
 import swim.recon.Recon;
-import swim.service.warp.WarpServiceDef;
+import swim.service.web.WebServiceDef;
 import swim.structure.Value;
 import static org.testng.Assert.assertEquals;
 
@@ -184,7 +184,7 @@ public class JoinValueLaneSpec {
     }
 
     try {
-      kernel.openService(WarpServiceDef.standard().port(53556).spaceName("test"));
+      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
       kernel.start();
       final ValueDownlink<String> x = plane.downlinkValue()
           .valueClass(String.class)

@@ -12,8 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.api.service;
+/**
+ * Web service runtime.
+ */
+module swim.service.web {
+  requires transitive swim.web;
+  requires transitive swim.service;
+  requires transitive swim.remote;
 
-public interface ServiceDef {
-  String serviceName();
+  exports swim.service.web;
+
+  provides swim.kernel.Kernel with swim.service.web.WebServiceKernel;
 }

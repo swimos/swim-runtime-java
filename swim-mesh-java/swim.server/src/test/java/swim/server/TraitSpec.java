@@ -41,7 +41,7 @@ import swim.kernel.Kernel;
 import swim.observable.function.DidSet;
 import swim.observable.function.WillSet;
 import swim.recon.Recon;
-import swim.service.warp.WarpServiceDef;
+import swim.service.web.WebServiceDef;
 import swim.structure.Text;
 import swim.structure.Value;
 import static org.testng.Assert.assertEquals;
@@ -186,7 +186,7 @@ public class TraitSpec {
     }
 
     try {
-      kernel.openService(WarpServiceDef.standard().port(53556).spaceName("test"));
+      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
       kernel.start();
       final ValueDownlink<String> valueLink = plane.downlinkValue()
           .valueClass(String.class)
@@ -284,7 +284,7 @@ public class TraitSpec {
     }
 
     try {
-      kernel.openService(WarpServiceDef.standard().port(53556).spaceName("test"));
+      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
       kernel.start();
       final ValueDownlink<String> infoLink = plane.downlinkValue()
           .valueClass(String.class)

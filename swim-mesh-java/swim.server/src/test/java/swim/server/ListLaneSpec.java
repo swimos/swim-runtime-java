@@ -38,7 +38,7 @@ import swim.observable.function.WillMoveIndex;
 import swim.observable.function.WillRemoveIndex;
 import swim.observable.function.WillUpdateIndex;
 import swim.recon.Recon;
-import swim.service.warp.WarpServiceDef;
+import swim.service.web.WebServiceDef;
 import swim.structure.Value;
 import static org.testng.AssertJUnit.assertEquals;
 
@@ -133,7 +133,7 @@ public class ListLaneSpec {
     }
 
     try {
-      kernel.openService(WarpServiceDef.standard().port(53556).spaceName("test"));
+      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
       kernel.start();
       final ListDownlink<String> listLink = plane.downlinkList()
           .valueClass(String.class)
@@ -211,7 +211,7 @@ public class ListLaneSpec {
     }
 
     try {
-      kernel.openService(WarpServiceDef.standard().port(53556).spaceName("test"));
+      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
       kernel.start();
       final ListDownlink<String> listLink = plane.downlinkList()
           .valueClass(String.class)
@@ -293,7 +293,7 @@ public class ListLaneSpec {
     }
 
     try {
-      kernel.openService(WarpServiceDef.standard().port(53556).spaceName("test"));
+      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
       kernel.start();
       final ListDownlink<String> listLink = plane.downlinkList()
           .valueClass(String.class)
@@ -368,7 +368,7 @@ public class ListLaneSpec {
     }
 
     try {
-      kernel.openService(WarpServiceDef.standard().port(53556).spaceName("test"));
+      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
       kernel.start();
       final ListDownlink<String> listLink = plane.downlinkList()
           .valueClass(String.class)

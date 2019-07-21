@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.api.service;
-
-public interface ServiceDef {
-  String serviceName();
-}
+/**
+ * Web server routing directives.
+ */
+package swim.web.route;

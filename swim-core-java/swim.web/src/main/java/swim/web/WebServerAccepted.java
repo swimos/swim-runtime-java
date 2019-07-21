@@ -12,14 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * WARP service runtime.
- */
-module swim.service.warp {
-  requires transitive swim.service;
-  requires transitive swim.remote;
+package swim.web;
 
-  exports swim.service.warp;
+import swim.io.http.HttpResponder;
 
-  provides swim.kernel.Kernel with swim.service.warp.WarpServiceKernel;
+final class WebServerAccepted extends WebResponse {
+  final HttpResponder<?> httpResponder;
+
+  WebServerAccepted(HttpResponder<?> httpResponder) {
+    this.httpResponder = httpResponder;
+  }
+
+  @Override
+  public boolean isAccepted() {
+    return true;
+  }
+
+  @Override
+  public boolean isRejected() {
+    return false;
+  }
+
+  @Override
+  public HttpResponder<?> httpResponder() {
+    return this.httpResponder;
+  }
 }

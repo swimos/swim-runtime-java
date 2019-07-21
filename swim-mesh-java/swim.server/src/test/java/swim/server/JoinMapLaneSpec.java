@@ -46,7 +46,7 @@ import swim.observable.function.DidUpdateKey;
 import swim.observable.function.WillRemoveKey;
 import swim.observable.function.WillUpdateKey;
 import swim.recon.Recon;
-import swim.service.warp.WarpServiceDef;
+import swim.service.web.WebServiceDef;
 import swim.structure.Value;
 import static org.testng.Assert.assertEquals;
 
@@ -198,7 +198,7 @@ public class JoinMapLaneSpec {
     }
 
     try {
-      kernel.openService(WarpServiceDef.standard().port(53556).spaceName("test"));
+      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
       kernel.start();
       final MapDownlink<String, String> xs = plane.downlinkMap()
           .keyClass(String.class)

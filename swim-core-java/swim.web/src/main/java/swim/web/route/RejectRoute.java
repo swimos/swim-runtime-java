@@ -12,8 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.api.service;
+package swim.web.route;
 
-public interface ServiceDef {
-  String serviceName();
+import swim.web.WebRequest;
+import swim.web.WebResponse;
+import swim.web.WebRoute;
+
+public final class RejectRoute implements WebRoute {
+  @Override
+  public WebResponse routeRequest(WebRequest request) {
+    return request.reject();
+  }
+
+  @Override
+  public WebRoute orElse(WebRoute alternative) {
+    return alternative;
+  }
 }

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.service.warp;
+package swim.service.web;
 
 import java.net.InetSocketAddress;
 import java.security.Principal;
@@ -29,7 +29,7 @@ import swim.runtime.HttpBinding;
 import swim.runtime.HttpContext;
 import swim.uri.Uri;
 
-public class WarpServiceHttpResponder implements HttpBinding, HttpResponder<Object> {
+public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
   final Uri meshUri;
   final Uri hostUri;
   final Uri nodeUri;
@@ -38,7 +38,7 @@ public class WarpServiceHttpResponder implements HttpBinding, HttpResponder<Obje
   HttpContext httpContext;
   HttpResponderContext httpResponderContext;
 
-  WarpServiceHttpResponder(Uri meshUri, Uri hostUri, Uri nodeUri, Uri laneUri, HttpRequest<?> request) {
+  HttpLaneResponder(Uri meshUri, Uri hostUri, Uri nodeUri, Uri laneUri, HttpRequest<?> request) {
     this.meshUri = meshUri;
     this.hostUri = hostUri;
     this.nodeUri = nodeUri;

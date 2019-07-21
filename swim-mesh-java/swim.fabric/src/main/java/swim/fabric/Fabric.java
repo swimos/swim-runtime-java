@@ -14,6 +14,7 @@
 
 package swim.fabric;
 
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import swim.api.SwimContext;
 import swim.api.agent.Agent;
@@ -184,6 +185,11 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
       oldAuthenticators = this.authenticators;
       newAuthenticators = oldAuthenticators.updated(authenticatorName, authenticator);
     } while (!AUTHENTICATORS.compareAndSet(this, oldAuthenticators, newAuthenticators));
+  }
+
+  @Override
+  public Collection<? extends Plane> planes() {
+    return this.planes.values();
   }
 
   @Override
