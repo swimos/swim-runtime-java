@@ -25,10 +25,8 @@ import swim.concurrent.PullContext;
 import swim.concurrent.PullRequest;
 import swim.runtime.CellContext;
 import swim.runtime.LinkContext;
-import swim.runtime.LinkFailure;
 import swim.runtime.WarpBinding;
 import swim.runtime.WarpContext;
-import swim.runtime.warp.WarpErrorUplinkModem;
 import swim.structure.Value;
 import swim.uri.Uri;
 import swim.warp.Envelope;
@@ -365,13 +363,6 @@ class RemoteWarpDownlink implements WarpBinding, PullRequest<Envelope> {
   @Override
   public void didCloseUp() {
     // nop
-  }
-
-  @Override
-  public void fail(LinkFailure failure) {
-    final WarpErrorUplinkModem linkContext = new WarpErrorUplinkModem(this, failure.toValue());
-    setLinkContext(linkContext);
-    linkContext.cueDown();
   }
 
   @Override

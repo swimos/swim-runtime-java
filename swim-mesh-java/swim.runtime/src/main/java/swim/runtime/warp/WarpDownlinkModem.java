@@ -19,7 +19,6 @@ import swim.runtime.CellContext;
 import swim.runtime.DownlinkModel;
 import swim.runtime.DownlinkView;
 import swim.runtime.LinkContext;
-import swim.runtime.LinkFailure;
 import swim.runtime.WarpBinding;
 import swim.runtime.WarpContext;
 import swim.structure.Value;
@@ -512,13 +511,6 @@ public abstract class WarpDownlinkModem<View extends DownlinkView> extends Downl
   public void didCloseUp() {
     didClose();
     super.didCloseUp();
-  }
-
-  @Override
-  public void fail(LinkFailure failure) {
-    final WarpErrorUplinkModem linkContext = new WarpErrorUplinkModem(this, failure.toValue());
-    setLinkContext(linkContext);
-    linkContext.cueDown();
   }
 
   @Override

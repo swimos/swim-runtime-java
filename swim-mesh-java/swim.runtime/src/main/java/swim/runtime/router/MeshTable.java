@@ -24,13 +24,13 @@ import swim.concurrent.Stage;
 import swim.runtime.AbstractTierBinding;
 import swim.runtime.EdgeBinding;
 import swim.runtime.LinkBinding;
-import swim.runtime.LinkFailure;
 import swim.runtime.MeshBinding;
 import swim.runtime.MeshContext;
 import swim.runtime.PartBinding;
 import swim.runtime.PartContext;
 import swim.runtime.PushRequest;
 import swim.runtime.TierContext;
+import swim.runtime.UplinkError;
 import swim.store.StoreBinding;
 import swim.structure.Extant;
 import swim.structure.Text;
@@ -344,7 +344,7 @@ public class MeshTable extends AbstractTierBinding implements MeshBinding {
     if (partBinding != null) {
       partBinding.openUplink(link);
     } else {
-      link.fail(LinkFailure.partNotFound());
+      UplinkError.rejectPartNotFound(link);
     }
   }
 

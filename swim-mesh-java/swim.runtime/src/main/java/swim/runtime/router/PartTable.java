@@ -26,13 +26,13 @@ import swim.runtime.HostBinding;
 import swim.runtime.HostContext;
 import swim.runtime.HttpBinding;
 import swim.runtime.LinkBinding;
-import swim.runtime.LinkFailure;
 import swim.runtime.MeshBinding;
 import swim.runtime.PartBinding;
 import swim.runtime.PartContext;
 import swim.runtime.PartPredicate;
 import swim.runtime.PushRequest;
 import swim.runtime.TierContext;
+import swim.runtime.UplinkError;
 import swim.runtime.WarpBinding;
 import swim.store.StoreBinding;
 import swim.structure.Value;
@@ -288,10 +288,10 @@ public class PartTable extends AbstractTierBinding implements PartBinding {
       } else if (link instanceof HttpBinding) {
         hostBinding.openUplink(new PartTableHttpUplink(this, (HttpBinding) link));
       } else {
-        link.fail(LinkFailure.unsupported());
+        UplinkError.rejectUnsupported(link);
       }
     } else {
-      link.fail(LinkFailure.hostNotFound());
+      UplinkError.rejectHostNotFound(link);
     }
   }
 

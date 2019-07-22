@@ -254,7 +254,7 @@ public abstract class LaneModel<View extends LaneView, U extends AbstractUplinkC
       didUplink(uplink);
       // TODO: onEnter
     } else {
-      link.fail(LinkFailure.unsupported());
+      UplinkError.rejectUnsupported(link);
     }
   }
 

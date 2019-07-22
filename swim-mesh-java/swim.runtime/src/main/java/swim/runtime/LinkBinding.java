@@ -83,8 +83,6 @@ public interface LinkBinding {
 
   void didCloseUp();
 
-  void fail(LinkFailure failure);
-
   void didFail(Throwable error);
 
   void traceDown(Object message);

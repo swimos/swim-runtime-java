@@ -29,8 +29,6 @@ import swim.runtime.CellContext;
 import swim.runtime.HttpBinding;
 import swim.runtime.HttpContext;
 import swim.runtime.LinkContext;
-import swim.runtime.LinkFailure;
-import swim.runtime.http.HttpErrorUplinkModem;
 import swim.structure.Value;
 import swim.uri.Uri;
 
@@ -276,12 +274,6 @@ public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
   @Override
   public void didCloseUp() {
     // nop
-  }
-
-  @Override
-  public void fail(LinkFailure failure) {
-    final HttpErrorUplinkModem httpContext = new HttpErrorUplinkModem(this);
-    setLinkContext(httpContext);
   }
 
   @Override

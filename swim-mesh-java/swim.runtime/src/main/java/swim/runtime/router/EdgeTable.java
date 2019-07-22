@@ -26,11 +26,11 @@ import swim.runtime.DownlinkView;
 import swim.runtime.EdgeBinding;
 import swim.runtime.EdgeContext;
 import swim.runtime.LinkBinding;
-import swim.runtime.LinkFailure;
 import swim.runtime.MeshBinding;
 import swim.runtime.MeshContext;
 import swim.runtime.PushRequest;
 import swim.runtime.TierContext;
+import swim.runtime.UplinkError;
 import swim.store.StoreBinding;
 import swim.uri.Uri;
 
@@ -236,7 +236,7 @@ public class EdgeTable extends AbstractTierBinding implements EdgeBinding {
     if (meshBinding != null) {
       meshBinding.openUplink(link);
     } else {
-      link.fail(LinkFailure.meshNotFound());
+      UplinkError.rejectMeshNotFound(link);
     }
   }
 

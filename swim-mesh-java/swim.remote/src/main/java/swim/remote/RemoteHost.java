@@ -41,11 +41,11 @@ import swim.runtime.AbstractTierBinding;
 import swim.runtime.HostBinding;
 import swim.runtime.HostContext;
 import swim.runtime.LinkBinding;
-import swim.runtime.LinkFailure;
 import swim.runtime.NodeBinding;
 import swim.runtime.PartBinding;
 import swim.runtime.PushRequest;
 import swim.runtime.TierContext;
+import swim.runtime.UplinkError;
 import swim.runtime.WarpBinding;
 import swim.store.StoreBinding;
 import swim.structure.Value;
@@ -404,7 +404,7 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
     if (link instanceof WarpBinding) {
       openWarpUplink((WarpBinding) link);
     } else {
-      link.fail(LinkFailure.unsupported());
+      UplinkError.rejectUnsupported(link);
     }
   }
 

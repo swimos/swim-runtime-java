@@ -26,12 +26,12 @@ import swim.runtime.AbstractTierBinding;
 import swim.runtime.HostBinding;
 import swim.runtime.HostContext;
 import swim.runtime.LinkBinding;
-import swim.runtime.LinkFailure;
 import swim.runtime.NodeBinding;
 import swim.runtime.NodeContext;
 import swim.runtime.PartBinding;
 import swim.runtime.PushRequest;
 import swim.runtime.TierContext;
+import swim.runtime.UplinkError;
 import swim.store.StoreBinding;
 import swim.structure.Value;
 import swim.uri.Uri;
@@ -337,7 +337,7 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
     if (nodeBinding != null) {
       nodeBinding.openUplink(link);
     } else {
-      link.fail(LinkFailure.nodeNotFound());
+      UplinkError.rejectNodeNotFound(link);
     }
   }
 

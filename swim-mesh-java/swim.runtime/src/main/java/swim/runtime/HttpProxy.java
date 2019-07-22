@@ -319,11 +319,6 @@ public class HttpProxy implements HttpBinding, HttpContext {
   }
 
   @Override
-  public void fail(LinkFailure failure) {
-    this.linkBinding.fail(failure);
-  }
-
-  @Override
   public void didFail(Throwable error) {
     this.linkBinding.didFail(error);
   }

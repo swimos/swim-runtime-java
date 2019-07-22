@@ -57,11 +57,11 @@ import swim.runtime.LaneBinding;
 import swim.runtime.LaneContext;
 import swim.runtime.LaneView;
 import swim.runtime.LinkBinding;
-import swim.runtime.LinkFailure;
 import swim.runtime.NodeBinding;
 import swim.runtime.NodeContext;
 import swim.runtime.PushRequest;
 import swim.runtime.TierContext;
+import swim.runtime.UplinkError;
 import swim.runtime.WarpBinding;
 import swim.runtime.lane.CommandLaneView;
 import swim.runtime.lane.DemandLaneView;
@@ -401,7 +401,7 @@ public class AgentNode extends AbstractTierBinding implements NodeBinding, CellC
     if (laneBinding != null) {
       laneBinding.openUplink(link);
     } else if (link instanceof WarpBinding) {
-      link.fail(LinkFailure.laneNotFound());
+      UplinkError.rejectLaneNotFound(link);
     }
   }
 

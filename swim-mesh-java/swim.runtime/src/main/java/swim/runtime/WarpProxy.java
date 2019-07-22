@@ -337,11 +337,6 @@ public class WarpProxy implements WarpBinding, WarpContext {
   }
 
   @Override
-  public void fail(LinkFailure failure) {
-    this.linkBinding.fail(failure);
-  }
-
-  @Override
   public void didFail(Throwable error) {
     this.linkBinding.didFail(error);
   }
