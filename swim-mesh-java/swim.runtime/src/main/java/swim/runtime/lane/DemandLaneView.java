@@ -100,16 +100,16 @@ public class DemandLaneView<V> extends WarpLaneView implements DemandLane<V> {
     this.laneBinding.closeLaneView(this);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public DemandLaneView<V> observe(Object observer) {
-    return (DemandLaneView<V>) super.observe(observer);
+    super.observe(observer);
+    return this;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public DemandLaneView<V> unobserve(Object observer) {
-    return (DemandLaneView<V>) super.unobserve(observer);
+    super.unobserve(observer);
+    return this;
   }
 
   @Override

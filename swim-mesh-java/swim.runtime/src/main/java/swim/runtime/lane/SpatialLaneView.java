@@ -198,16 +198,16 @@ public class SpatialLaneView<K, S, V> extends WarpLaneView implements SpatialLan
     this.laneBinding.closeLaneView(this);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public SpatialLaneView<K, S, V> observe(Object observer) {
-    return (SpatialLaneView<K, S, V>) super.observe(observer);
+    super.observe(observer);
+    return this;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public SpatialLaneView<K, S, V> unobserve(Object observer) {
-    return (SpatialLaneView<K, S, V>) super.unobserve(observer);
+    super.unobserve(observer);
+    return this;
   }
 
   @Override

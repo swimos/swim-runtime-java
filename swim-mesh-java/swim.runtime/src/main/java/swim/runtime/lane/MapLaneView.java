@@ -220,16 +220,16 @@ public class MapLaneView<K, V> extends WarpLaneView implements MapLane<K, V> {
     this.laneBinding.closeLaneView(this);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public MapLaneView<K, V> observe(Object observer) {
-    return (MapLaneView<K, V>) super.observe(observer);
+    super.observe(observer);
+    return this;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public MapLaneView<K, V> unobserve(Object observer) {
-    return (MapLaneView<K, V>) super.unobserve(observer);
+    super.unobserve(observer);
+    return this;
   }
 
   @Override

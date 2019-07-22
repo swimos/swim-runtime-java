@@ -168,16 +168,16 @@ public class ValueLaneView<V> extends WarpLaneView implements ValueLane<V> {
     this.laneBinding.closeLaneView(this);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public ValueLaneView<V> observe(Object observer) {
-    return (ValueLaneView<V>) super.observe(observer);
+    super.observe(observer);
+    return this;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public ValueLaneView<V> unobserve(Object observer) {
-    return (ValueLaneView<V>) super.unobserve(observer);
+    super.unobserve(observer);
+    return this;
   }
 
   @Override

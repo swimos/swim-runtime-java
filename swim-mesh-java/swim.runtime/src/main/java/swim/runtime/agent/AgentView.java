@@ -48,6 +48,7 @@ import swim.runtime.LaneView;
 import swim.runtime.LinkBinding;
 import swim.runtime.PushRequest;
 import swim.runtime.TierContext;
+import swim.runtime.http.RestLaneView;
 import swim.runtime.lane.CommandLaneView;
 import swim.runtime.lane.DemandLaneView;
 import swim.runtime.lane.DemandMapLaneView;
@@ -262,7 +263,7 @@ public class AgentView extends AbstractTierBinding implements TierContext, Agent
 
   @Override
   public <V> HttpLane<V> httpLane() {
-    throw new UnsupportedOperationException(); // TODO
+    return new RestLaneView<V>(this, null);
   }
 
   @Override

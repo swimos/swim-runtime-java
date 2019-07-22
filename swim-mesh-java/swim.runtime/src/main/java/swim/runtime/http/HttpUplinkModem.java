@@ -100,6 +100,9 @@ public abstract class HttpUplinkModem extends AbstractUplinkContext implements H
   public abstract void didRequest(HttpRequest<Object> request);
 
   @Override
+  public abstract void doRespond(HttpRequest<Object> request);
+
+  @Override
   public abstract void willRespond(HttpResponse<?> response);
 
   public void writeResponse(HttpResponse<?> response) {

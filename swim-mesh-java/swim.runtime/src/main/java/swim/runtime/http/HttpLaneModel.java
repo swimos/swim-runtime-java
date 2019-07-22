@@ -27,7 +27,7 @@ import swim.runtime.LinkBinding;
 import swim.runtime.PushRequest;
 import swim.warp.CommandMessage;
 
-public class HttpLaneModel<View extends HttpLaneView<?>, U extends HttpLaneUplink> extends LaneModel<View, U> {
+public abstract class HttpLaneModel<View extends HttpLaneView<?>, U extends HttpUplinkModem> extends LaneModel<View, U> {
   @Override
   public String laneType() {
     return "http";
@@ -41,10 +41,7 @@ public class HttpLaneModel<View extends HttpLaneView<?>, U extends HttpLaneUplin
     return null;
   }
 
-  @SuppressWarnings("unchecked")
-  protected U createHttpUplink(HttpBinding link) {
-    return (U) new HttpLaneUplink(this, link);
-  }
+  protected abstract U createHttpUplink(HttpBinding link);
 
   @Override
   public void pushUp(PushRequest pushRequest) {
@@ -61,7 +58,15 @@ public class HttpLaneModel<View extends HttpLaneView<?>, U extends HttpLaneUplin
     // nop
   }
 
-  public Decoder<Object> decodeRequest(HttpLaneUplink uplink, HttpRequest<?> request) {
+  protected Decoder<Object> decodeRequestDefault(U uplink, HttpRequest<?> request) {
+    return request.contentDecoder();
+  }
+
+  protected HttpResponse<?> doRespondDefault(U uplink, HttpRequest<?> request) {
+    return HttpResponse.from(HttpStatus.NOT_FOUND).entity(HttpBody.empty());
+  }
+
+  protected Decoder<Object> decodeRequest(U uplink, HttpRequest<?> request) {
     final Object views = this.views;
     HttpLaneView<?> view;
     Decoder<Object> decoder = null;
@@ -84,35 +89,38 @@ public class HttpLaneModel<View extends HttpLaneView<?>, U extends HttpLaneUplin
         }
       }
     }
+    if (decoder == null) {
+      decoder = decodeRequestDefault(uplink, request);
+    }
     return decoder;
   }
 
-  public void willRequest(HttpLaneUplink uplink, HttpRequest<?> request) {
+  protected void willRequest(U uplink, HttpRequest<?> request) {
     new HttpLaneRelayWillRequest<View>(this, uplink, request).run();
   }
 
-  public void didRequest(HttpLaneUplink uplink, HttpRequest<Object> request) {
+  protected void didRequest(U uplink, HttpRequest<Object> request) {
     new HttpLaneRelayDidRequest<View>(this, uplink, request).run();
   }
 
-  public void doRespond(HttpLaneUplink uplink, HttpRequest<Object> request) {
-    new HttpLaneRelayDoRespond<View>(this, uplink, request).run();
+  protected void doRespond(U uplink, HttpRequest<Object> request) {
+    new HttpLaneRelayDoRespond<View, U>(this, uplink, request).run();
   }
 
-  public void willRespond(HttpLaneUplink uplink, HttpResponse<?> response) {
+  protected void willRespond(U uplink, HttpResponse<?> response) {
     new HttpLaneRelayWillRespond<View>(this, uplink, response).run();
   }
 
-  public void didRespond(HttpLaneUplink uplink, HttpResponse<?> response) {
+  protected void didRespond(U uplink, HttpResponse<?> response) {
     new HttpLaneRelayDidRespond<View>(this, uplink, response).run();
   }
 }
 
 final class HttpLaneRelayWillRequest<View extends HttpLaneView<?>> extends LaneRelay<HttpLaneModel<View, ?>, View> {
-  final HttpLaneUplink uplink;
+  final HttpUplinkModem uplink;
   final HttpRequest<?> request;
 
-  HttpLaneRelayWillRequest(HttpLaneModel<View, ?> model, HttpLaneUplink uplink, HttpRequest<?> request) {
+  HttpLaneRelayWillRequest(HttpLaneModel<View, ?> model, HttpUplinkModem uplink, HttpRequest<?> request) {
     super(model);
     this.uplink = uplink;
     this.request = request;
@@ -132,10 +140,10 @@ final class HttpLaneRelayWillRequest<View extends HttpLaneView<?>> extends LaneR
 }
 
 final class HttpLaneRelayDidRequest<View extends HttpLaneView<?>> extends LaneRelay<HttpLaneModel<View, ?>, View> {
-  final HttpLaneUplink uplink;
+  final HttpUplinkModem uplink;
   final HttpRequest<Object> request;
 
-  HttpLaneRelayDidRequest(HttpLaneModel<View, ?> model, HttpLaneUplink uplink, HttpRequest<Object> request) {
+  HttpLaneRelayDidRequest(HttpLaneModel<View, ?> model, HttpUplinkModem uplink, HttpRequest<Object> request) {
     super(model);
     this.uplink = uplink;
     this.request = request;
@@ -154,12 +162,12 @@ final class HttpLaneRelayDidRequest<View extends HttpLaneView<?>> extends LaneRe
   }
 }
 
-final class HttpLaneRelayDoRespond<View extends HttpLaneView<?>> extends LaneRelay<HttpLaneModel<View, ?>, View> {
-  final HttpLaneUplink uplink;
+final class HttpLaneRelayDoRespond<View extends HttpLaneView<?>, U extends HttpUplinkModem> extends LaneRelay<HttpLaneModel<View, U>, View> {
+  final U uplink;
   final HttpRequest<Object> request;
   HttpResponse<?> response;
 
-  HttpLaneRelayDoRespond(HttpLaneModel<View, ?> model, HttpLaneUplink uplink, HttpRequest<Object> request) {
+  HttpLaneRelayDoRespond(HttpLaneModel<View, U> model, U uplink, HttpRequest<Object> request) {
     super(model);
     this.uplink = uplink;
     this.request = request;
@@ -189,17 +197,17 @@ final class HttpLaneRelayDoRespond<View extends HttpLaneView<?>> extends LaneRel
   @Override
   protected void done() {
     if (this.response == null) {
-      this.response = HttpResponse.from(HttpStatus.NOT_FOUND).entity(HttpBody.empty());
+      this.response = this.model.doRespondDefault(this.uplink, this.request);
     }
     this.uplink.writeResponse(this.response);
   }
 }
 
 final class HttpLaneRelayWillRespond<View extends HttpLaneView<?>> extends LaneRelay<HttpLaneModel<View, ?>, View> {
-  final HttpLaneUplink uplink;
+  final HttpUplinkModem uplink;
   final HttpResponse<?> response;
 
-  HttpLaneRelayWillRespond(HttpLaneModel<View, ?> model, HttpLaneUplink uplink, HttpResponse<?> response) {
+  HttpLaneRelayWillRespond(HttpLaneModel<View, ?> model, HttpUplinkModem uplink, HttpResponse<?> response) {
     super(model);
     this.uplink = uplink;
     this.response = response;
@@ -219,10 +227,10 @@ final class HttpLaneRelayWillRespond<View extends HttpLaneView<?>> extends LaneR
 }
 
 final class HttpLaneRelayDidRespond<View extends HttpLaneView<?>> extends LaneRelay<HttpLaneModel<View, ?>, View> {
-  final HttpLaneUplink uplink;
+  final HttpUplinkModem uplink;
   final HttpResponse<?> response;
 
-  HttpLaneRelayDidRespond(HttpLaneModel<View, ?> model, HttpLaneUplink uplink, HttpResponse<?> response) {
+  HttpLaneRelayDidRespond(HttpLaneModel<View, ?> model, HttpUplinkModem uplink, HttpResponse<?> response) {
     super(model);
     this.uplink = uplink;
     this.response = response;

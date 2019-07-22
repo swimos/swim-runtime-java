@@ -20,16 +20,16 @@ import swim.http.HttpRequest;
 import swim.http.HttpResponse;
 import swim.runtime.HttpBinding;
 
-public class HttpLaneUplink extends HttpUplinkModem {
-  protected final HttpLaneModel<?, ?> laneBinding;
+public class RestLaneUplink extends HttpUplinkModem {
+  protected final RestLaneModel laneBinding;
 
-  public HttpLaneUplink(HttpLaneModel<?, ?> laneBinding, HttpBinding linkBinding) {
+  public RestLaneUplink(RestLaneModel laneBinding, HttpBinding linkBinding) {
     super(linkBinding);
     this.laneBinding = laneBinding;
   }
 
   @Override
-  public final HttpLaneModel<?, ?> laneBinding() {
+  public final RestLaneModel laneBinding() {
     return this.laneBinding;
   }
 
@@ -51,6 +51,11 @@ public class HttpLaneUplink extends HttpUplinkModem {
   @Override
   public void didRequest(HttpRequest<Object> request) {
     this.laneBinding.didRequest(this, request);
+  }
+
+  @Override
+  public void doRespond(HttpRequest<Object> request) {
+    this.laneBinding.doRespond(this, request);
   }
 
   @Override

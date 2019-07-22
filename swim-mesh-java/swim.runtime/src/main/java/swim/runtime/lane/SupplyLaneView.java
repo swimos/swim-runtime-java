@@ -86,16 +86,16 @@ public class SupplyLaneView<V> extends WarpLaneView implements SupplyLane<V> {
     this.laneBinding.closeLaneView(this);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public SupplyLaneView<V> observe(Object observer) {
-    return (SupplyLaneView<V>) super.observe(observer);
+    super.observe(observer);
+    return this;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public SupplyLaneView<V> unobserve(Object observer) {
-    return (SupplyLaneView<V>) super.unobserve(observer);
+    super.unobserve(observer);
+    return this;
   }
 
   @Override

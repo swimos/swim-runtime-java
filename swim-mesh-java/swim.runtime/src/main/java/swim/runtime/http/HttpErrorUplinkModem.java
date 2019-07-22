@@ -136,6 +136,11 @@ public class HttpErrorUplinkModem implements HttpContext {
 
   @Override
   public void didRequest(HttpRequest<Object> request) {
+    // nop
+  }
+
+  @Override
+  public void doRespond(HttpRequest<Object> request) {
     this.linkBinding.writeResponse(HttpResponse.from(HttpStatus.NOT_FOUND));
   }
 

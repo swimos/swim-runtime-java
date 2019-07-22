@@ -12,24 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.io.http;
+package swim.runtime.http;
 
-import swim.http.HttpRequest;
-import swim.http.HttpResponse;
+import swim.runtime.HttpBinding;
 
-public class StaticHttpResponder<T> extends AbstractHttpResponder<T> {
-  protected final HttpResponse<T> response;
-
-  public StaticHttpResponder(HttpResponse<T> response) {
-    this.response = response;
-  }
-
-  public final HttpResponse<T> response() {
-    return this.response;
-  }
-
+public class RestLaneModel extends HttpLaneModel<RestLaneView<?>, RestLaneUplink> {
   @Override
-  public void doRespond(HttpRequest<T> request) {
-    writeResponse(this.response);
+  protected RestLaneUplink createHttpUplink(HttpBinding link) {
+    return new RestLaneUplink(this, link);
   }
 }

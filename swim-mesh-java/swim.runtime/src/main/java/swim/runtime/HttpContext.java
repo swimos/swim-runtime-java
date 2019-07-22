@@ -28,6 +28,8 @@ public interface HttpContext extends LinkContext {
 
   void didRequest(HttpRequest<Object> request);
 
+  void doRespond(HttpRequest<Object> request);
+
   void willRespond(HttpResponse<?> response);
 
   void didRespond(HttpResponse<?> response);

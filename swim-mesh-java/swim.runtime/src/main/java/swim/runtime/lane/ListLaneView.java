@@ -179,16 +179,16 @@ public class ListLaneView<V> extends WarpLaneView implements ListLane<V> {
     this.laneBinding.closeLaneView(this);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public ListLaneView<V> observe(Object observer) {
-    return (ListLaneView<V>) super.observe(observer);
+    super.observe(observer);
+    return this;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public ListLaneView<V> unobserve(Object observer) {
-    return (ListLaneView<V>) super.unobserve(observer);
+    super.unobserve(observer);
+    return this;
   }
 
   @Override

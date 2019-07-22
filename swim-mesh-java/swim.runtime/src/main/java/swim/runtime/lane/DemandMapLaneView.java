@@ -125,16 +125,16 @@ public class DemandMapLaneView<K, V> extends WarpLaneView implements DemandMapLa
     this.laneBinding.closeLaneView(this);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public DemandMapLaneView<K, V> observe(Object observer) {
-    return (DemandMapLaneView<K, V>) super.observe(observer);
+    super.observe(observer);
+    return this;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public DemandMapLaneView<K, V> unobserve(Object observer) {
-    return (DemandMapLaneView<K, V>) super.unobserve(observer);
+    super.unobserve(observer);
+    return this;
   }
 
   @Override

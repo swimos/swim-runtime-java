@@ -63,6 +63,7 @@ import swim.runtime.PushRequest;
 import swim.runtime.TierContext;
 import swim.runtime.UplinkError;
 import swim.runtime.WarpBinding;
+import swim.runtime.http.RestLaneView;
 import swim.runtime.lane.CommandLaneView;
 import swim.runtime.lane.DemandLaneView;
 import swim.runtime.lane.DemandMapLaneView;
@@ -346,7 +347,7 @@ public class AgentNode extends AbstractTierBinding implements NodeBinding, CellC
 
   @Override
   public <V> HttpLane<V> httpLane() {
-    throw new UnsupportedOperationException(); // TODO
+    return new RestLaneView<V>(null, null);
   }
 
   @Override

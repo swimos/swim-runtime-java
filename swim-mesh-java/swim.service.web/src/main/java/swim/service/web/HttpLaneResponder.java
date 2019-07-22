@@ -217,6 +217,11 @@ public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
   }
 
   @Override
+  public void doRespond(HttpRequest<Object> request) {
+    this.linkContext.doRespond(request);
+  }
+
+  @Override
   public void writeResponse(HttpResponse<?> response) {
     this.httpResponderContext.writeResponse(response);
   }

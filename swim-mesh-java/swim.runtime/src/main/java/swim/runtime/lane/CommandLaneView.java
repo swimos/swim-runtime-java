@@ -97,16 +97,16 @@ public class CommandLaneView<V> extends WarpLaneView implements CommandLane<V> {
     this.laneBinding.closeLaneView(this);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public CommandLaneView<V> observe(Object observer) {
-    return (CommandLaneView<V>) super.observe(observer);
+    super.observe(observer);
+    return this;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public CommandLaneView<V> unobserve(Object observer) {
-    return (CommandLaneView<V>) super.unobserve(observer);
+    super.unobserve(observer);
+    return this;
   }
 
   @Override

@@ -203,16 +203,16 @@ public class JoinValueLaneView<K, V> extends WarpLaneView implements JoinValueLa
     this.laneBinding.closeLaneView(this);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public JoinValueLaneView<K, V> observe(Object observer) {
-    return (JoinValueLaneView<K, V>) super.observe(observer);
+    super.observe(observer);
+    return this;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public JoinValueLaneView<K, V> unobserve(Object observer) {
-    return (JoinValueLaneView<K, V>) super.unobserve(observer);
+    super.unobserve(observer);
+    return this;
   }
 
   @Override
