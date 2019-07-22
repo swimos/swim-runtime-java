@@ -87,7 +87,7 @@ public class CliClient {
         .opt(Opt.of("host").flag('h').arg(Arg.of("hostUri").optional(true)).desc("introspect default or specified host"))
         .opt(Opt.of("node").flag('n').arg("nodeUri").desc("introspect specified node"))
         .opt(Opt.of("lane").flag('l').arg("laneUri").desc("introspect specified lane"))
-        .opt(Opt.of("link").flag('l').desc("introspect link behavior"))
+        .opt(Opt.of("link").flag('k').desc("introspect link behavior"))
         .opt(Opt.of("router").flag('r').desc("introspect router behavior"))
         .opt(Opt.of("data").desc("introspect data behavior"))
         .opt(Opt.of("system").desc("introspect system behavior"))
