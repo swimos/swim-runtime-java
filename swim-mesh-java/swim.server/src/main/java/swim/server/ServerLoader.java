@@ -38,7 +38,7 @@ public final class ServerLoader {
   }
 
   public static Kernel loadServer() {
-    return loadServer(ServerLoader.class.getClassLoader());
+    return loadServer(KernelLoader.class.getClassLoader());
   }
 
   public static Kernel loadServer(ClassLoader classLoader) {
@@ -60,7 +60,7 @@ public final class ServerLoader {
   }
 
   public static Kernel loadServerStack() {
-    return loadServerStack(ServerLoader.class.getClassLoader());
+    return loadServerStack(KernelLoader.class.getClassLoader());
   }
 
   public static Kernel loadServerStack(ClassLoader classLoader) {

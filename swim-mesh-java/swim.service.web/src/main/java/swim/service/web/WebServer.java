@@ -116,7 +116,7 @@ public class WebServer extends AbstractWarpServer {
       final HttpLaneResponder httpBinding = new HttpLaneResponder(
           Uri.empty(), Uri.empty(), nodeUri, laneUri, httpRequest);
       final EdgeBinding edge = ((EdgeContext) space).edgeWrapper();
-      edge.httpUplink(httpBinding);
+      edge.openUplink(httpBinding);
       return httpBinding;
     } catch (Exception swallow) {
       // nop

@@ -18,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.testng.annotations.Test;
 import swim.api.downlink.EventDownlink;
-import swim.api.downlink.function.OnEvent;
+import swim.api.warp.function.OnEvent;
 import swim.fabric.Fabric;
 import swim.fabric.FabricDef;
 import swim.fabric.FabricNodeDef;

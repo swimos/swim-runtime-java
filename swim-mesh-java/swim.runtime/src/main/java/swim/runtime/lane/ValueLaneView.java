@@ -17,34 +17,29 @@ package swim.runtime.lane;
 import java.util.AbstractMap;
 import java.util.Iterator;
 import java.util.Map;
+import swim.api.Lane;
 import swim.api.Link;
 import swim.api.SwimContext;
 import swim.api.agent.AgentContext;
-import swim.api.function.DidCommand;
-import swim.api.function.WillCommand;
-import swim.api.http.function.DecodeRequestHttp;
-import swim.api.http.function.DidRequestHttp;
-import swim.api.http.function.DidRespondHttp;
-import swim.api.http.function.DoRespondHttp;
-import swim.api.http.function.WillRequestHttp;
-import swim.api.http.function.WillRespondHttp;
-import swim.api.lane.Lane;
 import swim.api.lane.ValueLane;
-import swim.api.lane.function.DidEnter;
-import swim.api.lane.function.DidLeave;
-import swim.api.lane.function.DidUplink;
-import swim.api.lane.function.WillEnter;
-import swim.api.lane.function.WillLeave;
-import swim.api.lane.function.WillUplink;
+import swim.api.warp.function.DidCommand;
+import swim.api.warp.function.DidEnter;
+import swim.api.warp.function.DidLeave;
+import swim.api.warp.function.DidUplink;
+import swim.api.warp.function.WillCommand;
+import swim.api.warp.function.WillEnter;
+import swim.api.warp.function.WillLeave;
+import swim.api.warp.function.WillUplink;
 import swim.concurrent.Conts;
 import swim.observable.function.DidSet;
 import swim.observable.function.WillSet;
+import swim.runtime.warp.WarpLaneView;
 import swim.streamlet.Inlet;
 import swim.streamlet.Outlet;
 import swim.structure.Form;
 import swim.util.Cursor;
 
-public class ValueLaneView<V> extends LaneView implements ValueLane<V> {
+public class ValueLaneView<V> extends WarpLaneView implements ValueLane<V> {
   protected final AgentContext agentContext;
   protected Form<V> valueForm;
 
@@ -235,38 +230,8 @@ public class ValueLaneView<V> extends LaneView implements ValueLane<V> {
     return observe(didLeave);
   }
 
-  @Override
-  public ValueLaneView<V> decodeRequest(DecodeRequestHttp<Object> decodeRequest) {
-    return observe(decodeRequest);
-  }
-
-  @Override
-  public ValueLaneView<V> willRequest(WillRequestHttp<?> willRequest) {
-    return observe(willRequest);
-  }
-
-  @Override
-  public ValueLaneView<V> didRequest(DidRequestHttp<Object> didRequest) {
-    return observe(didRequest);
-  }
-
-  @Override
-  public ValueLaneView<V> doRespond(DoRespondHttp<Object> doRespond) {
-    return observe(doRespond);
-  }
-
-  @Override
-  public ValueLaneView<V> willRespond(WillRespondHttp<?> willRespond) {
-    return observe(willRespond);
-  }
-
-  @Override
-  public ValueLaneView<V> didRespond(DidRespondHttp<?> didRespond) {
-    return observe(didRespond);
-  }
-
   @SuppressWarnings("unchecked")
-  protected Map.Entry<Boolean, V> dispatchWillSet(Link link, V newValue, boolean preemptive) {
+  public Map.Entry<Boolean, V> dispatchWillSet(Link link, V newValue, boolean preemptive) {
     final Lane oldLane = SwimContext.getLane();
     final Link oldLink = SwimContext.getLink();
     try {
@@ -315,7 +280,7 @@ public class ValueLaneView<V> extends LaneView implements ValueLane<V> {
   }
 
   @SuppressWarnings("unchecked")
-  protected boolean dispatchDidSet(Link link, V newValue, V oldValue, boolean preemptive) {
+  public boolean dispatchDidSet(Link link, V newValue, V oldValue, boolean preemptive) {
     final Lane oldLane = SwimContext.getLane();
     final Link oldLink = SwimContext.getLink();
     try {

@@ -14,41 +14,13 @@
 
 package swim.runtime;
 
-import java.net.InetSocketAddress;
-import java.security.Principal;
-import java.security.cert.Certificate;
-import java.util.Collection;
-import swim.api.auth.Identity;
 import swim.codec.Decoder;
 import swim.http.HttpRequest;
 import swim.http.HttpResponse;
 
-public interface HttpContext {
-  boolean isConnectedUp();
-
-  boolean isRemoteUp();
-
-  boolean isSecureUp();
-
-  String securityProtocolUp();
-
-  String cipherSuiteUp();
-
-  InetSocketAddress localAddressUp();
-
-  Identity localIdentityUp();
-
-  Principal localPrincipalUp();
-
-  Collection<Certificate> localCertificatesUp();
-
-  InetSocketAddress remoteAddressUp();
-
-  Identity remoteIdentityUp();
-
-  Principal remotePrincipalUp();
-
-  Collection<Certificate> remoteCertificatesUp();
+public interface HttpContext extends LinkContext {
+  @Override
+  HttpBinding linkWrapper();
 
   Decoder<Object> decodeRequest(HttpRequest<?> request);
 
@@ -59,16 +31,4 @@ public interface HttpContext {
   void willRespond(HttpResponse<?> response);
 
   void didRespond(HttpResponse<?> response);
-
-  void closeUp();
-
-  void traceUp(Object message);
-
-  void debugUp(Object message);
-
-  void infoUp(Object message);
-
-  void warnUp(Object message);
-
-  void errorUp(Object message);
 }

@@ -25,8 +25,13 @@ import swim.http.HttpResponse;
 import swim.io.IpSocket;
 import swim.io.http.HttpResponder;
 import swim.io.http.HttpResponderContext;
+import swim.runtime.CellContext;
 import swim.runtime.HttpBinding;
 import swim.runtime.HttpContext;
+import swim.runtime.LinkContext;
+import swim.runtime.LinkFailure;
+import swim.runtime.http.HttpErrorUplinkModem;
+import swim.structure.Value;
 import swim.uri.Uri;
 
 public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
@@ -35,7 +40,8 @@ public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
   final Uri nodeUri;
   final Uri laneUri;
   final HttpRequest<?> request;
-  HttpContext httpContext;
+
+  HttpContext linkContext;
   HttpResponderContext httpResponderContext;
 
   HttpLaneResponder(Uri meshUri, Uri hostUri, Uri nodeUri, Uri laneUri, HttpRequest<?> request) {
@@ -47,13 +53,28 @@ public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
   }
 
   @Override
-  public HttpContext httpContext() {
-    return this.httpContext;
+  public HttpBinding linkWrapper() {
+    return this;
   }
 
   @Override
-  public void setHttpContext(HttpContext httpContext) {
-    this.httpContext = httpContext;
+  public HttpContext linkContext() {
+    return this.linkContext;
+  }
+
+  @Override
+  public void setLinkContext(LinkContext linkContext) {
+    this.linkContext = (HttpContext) linkContext;
+  }
+
+  @Override
+  public CellContext cellContext() {
+    return null;
+  }
+
+  @Override
+  public void setCellContext(CellContext cellContext) {
+    // nop
   }
 
   @Override
@@ -64,6 +85,16 @@ public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
   @Override
   public void setHttpResponderContext(HttpResponderContext httpResponderContext) {
     this.httpResponderContext = httpResponderContext;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> T unwrapLink(Class<T> linkClass) {
+    if (linkClass.isAssignableFrom(getClass())) {
+      return (T) this;
+    } else {
+      return this.linkContext.unwrapLink(linkClass);
+    }
   }
 
   @Override
@@ -84,6 +115,11 @@ public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
   @Override
   public Uri laneUri() {
     return this.laneUri;
+  }
+
+  @Override
+  public Value linkKey() {
+    return this.linkContext.linkKey();
   }
 
   @Override
@@ -169,17 +205,17 @@ public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
   @SuppressWarnings("unchecked")
   @Override
   public Decoder<Object> contentDecoder(HttpRequest<?> request) {
-    return this.httpContext.decodeRequest(request);
+    return this.linkContext.decodeRequest(request);
   }
 
   @Override
   public void willRequest(HttpRequest<?> request) {
-    this.httpContext.willRequest(request);
+    this.linkContext.willRequest(request);
   }
 
   @Override
   public void didRequest(HttpRequest<Object> request) {
-    this.httpContext.didRequest(request);
+    this.linkContext.didRequest(request);
   }
 
   @Override
@@ -189,12 +225,12 @@ public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
 
   @Override
   public void willRespond(HttpResponse<?> response) {
-    this.httpContext.willRespond(response);
+    this.linkContext.willRespond(response);
   }
 
   @Override
   public void didRespond(HttpResponse<?> response) {
-    this.httpContext.didRespond(response);
+    this.linkContext.didRespond(response);
   }
 
   @Override
@@ -213,7 +249,22 @@ public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
   }
 
   @Override
+  public void didConnect() {
+    // nop
+  }
+
+  @Override
   public void didDisconnect() {
+    // nop
+  }
+
+  @Override
+  public void reopen() {
+    // nop
+  }
+
+  @Override
+  public void openDown() {
     // nop
   }
 
@@ -223,8 +274,19 @@ public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
   }
 
   @Override
+  public void didCloseUp() {
+    // nop
+  }
+
+  @Override
+  public void fail(LinkFailure failure) {
+    final HttpErrorUplinkModem httpContext = new HttpErrorUplinkModem(this);
+    setLinkContext(httpContext);
+  }
+
+  @Override
   public void didFail(Throwable error) {
-    this.httpContext.closeUp();
+    this.linkContext.closeUp();
     closeDown();
   }
 

@@ -39,7 +39,7 @@ public class RemoteHostSpec {
     final HttpEndpoint endpoint = new HttpEndpoint(stage);
     final CountDownLatch clientUpgrade = new CountDownLatch(1);
     final CountDownLatch serverUpgrade = new CountDownLatch(1);
-    final Uri hostUri = Uri.parse("swim://127.0.0.1:53556/");
+    final Uri hostUri = Uri.parse("warp://localhost:53556/");
 
     final RemoteHostClient clientHost = new RemoteHostClient(hostUri, endpoint) {
       @Override
@@ -78,7 +78,7 @@ public class RemoteHostSpec {
     try {
       stage.start();
       endpoint.start();
-      endpoint.bindHttp("127.0.0.1", 53556, service);
+      endpoint.bindHttp("localhost", 53556, service);
       clientHost.setHostContext(new TestHostContext(hostUri, endpoint.stage()));
       clientUpgrade.await();
       serverUpgrade.await();
@@ -98,9 +98,9 @@ public class RemoteHostSpec {
     final CountDownLatch serverPush = new CountDownLatch(1);
     final CountDownLatch clientPull = new CountDownLatch(1);
     final CountDownLatch serverPull = new CountDownLatch(1);
-    final CommandMessage clientToServerCommand = new CommandMessage("swim://127.0.0.1:53556/a", "x");
-    final CommandMessage serverToClientCommand = new CommandMessage("swim://127.0.0.1:53556/b", "y");
-    final Uri hostUri = Uri.parse("swim://127.0.0.1:53556/");
+    final CommandMessage clientToServerCommand = new CommandMessage("warp://localhost:53556/a", "x");
+    final CommandMessage serverToClientCommand = new CommandMessage("warp://localhost:53556/b", "y");
+    final Uri hostUri = Uri.parse("warp://localhost:53556/");
 
     final RemoteHostClient clientHost = new RemoteHostClient(hostUri, endpoint) {
       @Override
@@ -147,7 +147,7 @@ public class RemoteHostSpec {
     try {
       stage.start();
       endpoint.start();
-      endpoint.bindHttp("127.0.0.1", 53556, service);
+      endpoint.bindHttp("localhost", 53556, service);
       clientHost.setHostContext(new TestHostContext(hostUri, endpoint.stage()) {
         @Override
         public void pushDown(PushRequest pushRequest) {
