@@ -159,7 +159,7 @@ project(':swim-vm-js') {
 project(':swim-js') {
   afterEvaluate {
     dependencies {
-      testCompile project(':swim-json')
+      implementation project(':swim-json')
       api project(':swim-kernel')
       testCompile project(':swim-server')
     }
