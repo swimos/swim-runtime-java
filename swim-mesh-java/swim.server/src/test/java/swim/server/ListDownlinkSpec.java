@@ -426,7 +426,7 @@ public class ListDownlinkSpec {
     final CountDownLatch willDrop = new CountDownLatch(2);
     final CountDownLatch didDrop = new CountDownLatch(2);
     final CountDownLatch readOnlyDidDrop = new CountDownLatch(1);
-    final CountDownLatch readOnlyDidUpdate= new CountDownLatch(total);
+    final CountDownLatch readOnlyDidUpdate = new CountDownLatch(total);
 
     class ListLinkController implements DidUpdateIndex<String>, WillDrop, DidDrop {
       @Override
