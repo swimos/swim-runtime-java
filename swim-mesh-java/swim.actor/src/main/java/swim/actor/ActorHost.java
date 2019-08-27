@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import swim.api.agent.Agent;
 import swim.api.agent.AgentDef;
@@ -43,12 +43,12 @@ import swim.structure.Value;
 import swim.uri.Uri;
 import swim.util.Log;
 
-public class FabricHost extends FabricTier implements HostBinding, HostContext {
+public class ActorHost extends ActorTier implements HostBinding, HostContext {
   final HostBinding hostBinding;
   HostContext hostContext;
   HostDef hostDef;
 
-  public FabricHost(HostBinding hostBinding, HostDef hostDef) {
+  public ActorHost(HostBinding hostBinding, HostDef hostDef) {
     this.hostBinding = hostBinding;
     this.hostDef = hostDef;
   }
@@ -57,8 +57,8 @@ public class FabricHost extends FabricTier implements HostBinding, HostContext {
     return this.hostDef;
   }
 
-  public final FabricPart fabricPart() {
-    return part().unwrapPart(FabricPart.class);
+  public final ActorPart actorPart() {
+    return part().unwrapPart(ActorPart.class);
   }
 
   @Override
@@ -192,12 +192,12 @@ public class FabricHost extends FabricTier implements HostBinding, HostContext {
   }
 
   public Log createLog(LogDef logDef) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.createLog(logDef) : null;
   }
 
   public Log injectLog(Log log) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.injectLog(log) : log;
   }
 
@@ -216,12 +216,12 @@ public class FabricHost extends FabricTier implements HostBinding, HostContext {
   }
 
   public Policy createPolicy(PolicyDef policyDef) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.createPolicy(policyDef) : null;
   }
 
   public Policy injectPolicy(Policy policy) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.injectPolicy(policy) : policy;
   }
 
@@ -240,12 +240,12 @@ public class FabricHost extends FabricTier implements HostBinding, HostContext {
   }
 
   public Stage createStage(StageDef stageDef) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.createStage(stageDef) : null;
   }
 
   public Stage injectStage(Stage stage) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.injectStage(stage) : stage;
   }
 
@@ -264,12 +264,12 @@ public class FabricHost extends FabricTier implements HostBinding, HostContext {
   }
 
   public StoreBinding createStore(StoreDef storeDef) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.createStore(storeDef) : null;
   }
 
   public StoreBinding injectStore(StoreBinding store) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.injectStore(store) : store;
   }
 
@@ -288,22 +288,22 @@ public class FabricHost extends FabricTier implements HostBinding, HostContext {
   }
 
   protected Log openHostLog() {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openHostLog(hostUri()) : null;
   }
 
   protected Policy openHostPolicy() {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openHostPolicy(hostUri()) : null;
   }
 
   protected Stage openHostStage() {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openHostStage(hostUri()) : null;
   }
 
   protected StoreBinding openHostStore() {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openHostStore(hostUri()) : null;
   }
 
@@ -311,7 +311,7 @@ public class FabricHost extends FabricTier implements HostBinding, HostContext {
     final HostDef hostDef = this.hostDef;
     NodeDef nodeDef = hostDef != null ? hostDef.getNodeDef(nodeUri) : null;
     if (nodeDef == null) {
-      final FabricPart part = fabricPart();
+      final ActorPart part = actorPart();
       nodeDef = part != null ? part.getNodeDef(hostUri(), nodeUri) : null;
     }
     return nodeDef;
@@ -334,26 +334,26 @@ public class FabricHost extends FabricTier implements HostBinding, HostContext {
   @Override
   public NodeBinding injectNode(Uri nodeUri, NodeBinding node) {
     final NodeDef nodeDef = getNodeDef(nodeUri);
-    return new FabricNode(this.hostContext.injectNode(nodeUri, node), nodeDef);
+    return new ActorNode(this.hostContext.injectNode(nodeUri, node), nodeDef);
   }
 
   public Log openNodeLog(Uri nodeUri) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openNodeLog(hostUri(), nodeUri) : null;
   }
 
   public Policy openNodePolicy(Uri nodeUri) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openNodePolicy(hostUri(), nodeUri) : null;
   }
 
   public Stage openNodeStage(Uri nodeUri) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openNodeStage(hostUri(), nodeUri) : null;
   }
 
   public StoreBinding openNodeStore(Uri nodeUri) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openNodeStore(hostUri(), nodeUri) : null;
   }
 
@@ -361,7 +361,7 @@ public class FabricHost extends FabricTier implements HostBinding, HostContext {
     final HostDef hostDef = this.hostDef;
     LaneDef laneDef = hostDef != null ? hostDef.getLaneDef(laneUri) : null;
     if (laneDef == null) {
-      final FabricPart part = fabricPart();
+      final ActorPart part = actorPart();
       laneDef = part != null ? part.getLaneDef(hostUri(), nodeUri, laneUri) : null;
     }
     return laneDef;
@@ -388,22 +388,22 @@ public class FabricHost extends FabricTier implements HostBinding, HostContext {
   }
 
   public Log openLaneLog(Uri nodeUri, Uri laneUri) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openLaneLog(hostUri(), nodeUri, laneUri) : null;
   }
 
   public Policy openLanePolicy(Uri nodeUri, Uri laneUri) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openLanePolicy(hostUri(), nodeUri, laneUri) : null;
   }
 
   public Stage openLaneStage(Uri nodeUri, Uri laneUri) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openLaneStage(hostUri(), nodeUri, laneUri) : null;
   }
 
   public StoreBinding openLaneStore(Uri nodeUri, Uri laneUri) {
-    final FabricPart part = fabricPart();
+    final ActorPart part = actorPart();
     return part != null ? part.openLaneStore(hostUri(), nodeUri, laneUri) : null;
   }
 

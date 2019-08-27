@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import swim.api.agent.Agent;
 import swim.api.agent.AgentDef;
@@ -39,12 +39,12 @@ import swim.structure.Value;
 import swim.uri.Uri;
 import swim.util.Log;
 
-public class FabricNode extends FabricTier implements NodeBinding, NodeContext {
+public class ActorNode extends ActorTier implements NodeBinding, NodeContext {
   final NodeBinding nodeBinding;
   NodeContext nodeContext;
   NodeDef nodeDef;
 
-  public FabricNode(NodeBinding nodeBinding, NodeDef nodeDef) {
+  public ActorNode(NodeBinding nodeBinding, NodeDef nodeDef) {
     this.nodeBinding = nodeBinding;
     this.nodeDef = nodeDef;
   }
@@ -53,8 +53,8 @@ public class FabricNode extends FabricTier implements NodeBinding, NodeContext {
     return this.nodeDef;
   }
 
-  public final FabricHost fabricHost() {
-    return host().unwrapHost(FabricHost.class);
+  public final ActorHost actorHost() {
+    return host().unwrapHost(ActorHost.class);
   }
 
   @Override
@@ -138,12 +138,12 @@ public class FabricNode extends FabricTier implements NodeBinding, NodeContext {
   }
 
   public Log createLog(LogDef logDef) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.createLog(logDef) : null;
   }
 
   public Log injectLog(Log log) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.injectLog(log) : log;
   }
 
@@ -162,12 +162,12 @@ public class FabricNode extends FabricTier implements NodeBinding, NodeContext {
   }
 
   public Policy createPolicy(PolicyDef policyDef) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.createPolicy(policyDef) : null;
   }
 
   public Policy injectPolicy(Policy policy) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.injectPolicy(policy) : policy;
   }
 
@@ -186,12 +186,12 @@ public class FabricNode extends FabricTier implements NodeBinding, NodeContext {
   }
 
   public Stage createStage(StageDef stageDef) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.createStage(stageDef) : null;
   }
 
   public Stage injectStage(Stage stage) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.injectStage(stage) : stage;
   }
 
@@ -210,12 +210,12 @@ public class FabricNode extends FabricTier implements NodeBinding, NodeContext {
   }
 
   public StoreBinding createStore(StoreDef storeDef) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.createStore(storeDef) : null;
   }
 
   public StoreBinding injectStore(StoreBinding store) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.injectStore(store) : store;
   }
 
@@ -240,22 +240,22 @@ public class FabricNode extends FabricTier implements NodeBinding, NodeContext {
   }
 
   protected Log openNodeLog() {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.openNodeLog(nodeUri()) : null;
   }
 
   protected Policy openNodePolicy() {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.openNodePolicy(nodeUri()) : null;
   }
 
   protected Stage openNodeStage() {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.openNodeStage(nodeUri()) : null;
   }
 
   protected StoreBinding openNodeStore() {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.openNodeStore(nodeUri()) : null;
   }
 
@@ -273,7 +273,7 @@ public class FabricNode extends FabricTier implements NodeBinding, NodeContext {
     final NodeDef nodeDef = this.nodeDef;
     LaneDef laneDef = nodeDef != null ? nodeDef.getLaneDef(laneUri) : null;
     if (laneDef == null) {
-      final FabricHost host = fabricHost();
+      final ActorHost host = actorHost();
       laneDef = host != null ? host.getLaneDef(nodeUri(), laneUri) : null;
     }
     return laneDef;
@@ -292,7 +292,7 @@ public class FabricNode extends FabricTier implements NodeBinding, NodeContext {
   @Override
   public LaneBinding injectLane(Uri laneUri, LaneBinding lane) {
     final LaneDef laneDef = getLaneDef(laneUri);
-    return new FabricLane(this.nodeContext.injectLane(laneUri, lane), laneDef);
+    return new ActorLane(this.nodeContext.injectLane(laneUri, lane), laneDef);
   }
 
   @Override
@@ -311,22 +311,22 @@ public class FabricNode extends FabricTier implements NodeBinding, NodeContext {
   }
 
   public Log openLaneLog(Uri laneUri) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.openLaneLog(nodeUri(), laneUri) : null;
   }
 
   public Policy openLanePolicy(Uri laneUri) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.openLanePolicy(nodeUri(), laneUri) : null;
   }
 
   public Stage openLaneStage(Uri laneUri) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.openLaneStage(nodeUri(), laneUri) : null;
   }
 
   public StoreBinding openLaneStore(Uri laneUri) {
-    final FabricHost host = fabricHost();
+    final ActorHost host = actorHost();
     return host != null ? host.openLaneStore(nodeUri(), laneUri) : null;
   }
 

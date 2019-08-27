@@ -68,7 +68,7 @@ component libraries:
 - [**swim.runtime**](swim-mesh-java/swim.runtime) –
 - [**swim.kernel**](swim-mesh-java/swim.kernel) –
 - [**swim.auth**](swim-mesh-java/swim.auth) –
-- [**swim.fabric**](swim-mesh-java/swim.fabric) –
+- [**swim.actor**](swim-mesh-java/swim.actor) –
 - [**swim.service**](swim-mesh-java/swim.service) –
 - [**swim.store.mem**](swim-mesh-java/swim.store.mem) –
 - [**swim.remote**](swim-mesh-java/swim.remote) –

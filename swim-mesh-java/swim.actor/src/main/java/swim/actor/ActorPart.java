@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import swim.api.agent.Agent;
 import swim.api.agent.AgentDef;
@@ -46,12 +46,12 @@ import swim.structure.Value;
 import swim.uri.Uri;
 import swim.util.Log;
 
-public class FabricPart extends FabricTier implements PartBinding, PartContext {
+public class ActorPart extends ActorTier implements PartBinding, PartContext {
   final PartBinding partBinding;
   PartContext partContext;
   PartDef partDef;
 
-  public FabricPart(PartBinding partBinding, PartDef partDef) {
+  public ActorPart(PartBinding partBinding, PartDef partDef) {
     this.partBinding = partBinding;
     this.partDef = partDef;
   }
@@ -60,8 +60,8 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
     return this.partDef;
   }
 
-  public final FabricMesh fabricMesh() {
-    return mesh().unwrapMesh(FabricMesh.class);
+  public final ActorMesh actorMesh() {
+    return mesh().unwrapMesh(ActorMesh.class);
   }
 
   @Override
@@ -165,12 +165,12 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
   }
 
   public Log createLog(LogDef logDef) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.createLog(logDef) : null;
   }
 
   public Log injectLog(Log log) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.injectLog(log) : log;
   }
 
@@ -189,12 +189,12 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
   }
 
   public Policy createPolicy(PolicyDef policyDef) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.createPolicy(policyDef) : null;
   }
 
   public Policy injectPolicy(Policy policy) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.injectPolicy(policy) : policy;
   }
 
@@ -213,12 +213,12 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
   }
 
   public Stage createStage(StageDef stageDef) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.createStage(stageDef) : null;
   }
 
   public Stage injectStage(Stage stage) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.injectStage(stage) : stage;
   }
 
@@ -237,12 +237,12 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
   }
 
   public StoreBinding createStore(StoreDef storeDef) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.createStore(storeDef) : null;
   }
 
   public StoreBinding injectStore(StoreBinding store) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.injectStore(store) : store;
   }
 
@@ -261,22 +261,22 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
   }
 
   protected Log openPartLog() {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openPartLog(partKey()) : null;
   }
 
   protected Policy openPartPolicy() {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openPartPolicy(partKey()) : null;
   }
 
   protected Stage openPartStage() {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openPartStage(partKey()) : null;
   }
 
   protected StoreBinding openPartStore() {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openPartStore(partKey()) : null;
   }
 
@@ -284,7 +284,7 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
     final PartDef partDef = this.partDef;
     HostDef hostDef = partDef != null ? partDef.getHostDef(hostUri) : null;
     if (hostDef == null) {
-      final FabricMesh mesh = fabricMesh();
+      final ActorMesh mesh = actorMesh();
       hostDef = mesh != null ? mesh.getHostDef(partKey(), hostUri) : null;
     }
     return hostDef;
@@ -298,26 +298,26 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
   @Override
   public HostBinding injectHost(Uri hostUri, HostBinding host) {
     final HostDef hostDef = getHostDef(hostUri);
-    return new FabricHost(this.partContext.injectHost(hostUri, host), hostDef);
+    return new ActorHost(this.partContext.injectHost(hostUri, host), hostDef);
   }
 
   public Log openHostLog(Uri hostUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openHostLog(partKey(), hostUri) : null;
   }
 
   public Policy openHostPolicy(Uri hostUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openHostPolicy(partKey(), hostUri) : null;
   }
 
   public Stage openHostStage(Uri hostUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openHostStage(partKey(), hostUri) : null;
   }
 
   public StoreBinding openHostStore(Uri hostUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openHostStore(partKey(), hostUri) : null;
   }
 
@@ -325,7 +325,7 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
     final PartDef partDef = this.partDef;
     NodeDef nodeDef = partDef != null ? partDef.getNodeDef(nodeUri) : null;
     if (nodeDef == null) {
-      final FabricMesh mesh = fabricMesh();
+      final ActorMesh mesh = actorMesh();
       nodeDef = mesh != null ? mesh.getNodeDef(partKey(), hostUri, nodeUri) : null;
     }
     return nodeDef;
@@ -351,22 +351,22 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
   }
 
   public Log openNodeLog(Uri hostUri, Uri nodeUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openNodeLog(partKey(), hostUri, nodeUri) : null;
   }
 
   public Policy openNodePolicy(Uri hostUri, Uri nodeUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openNodePolicy(partKey(), hostUri, nodeUri) : null;
   }
 
   public Stage openNodeStage(Uri hostUri, Uri nodeUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openNodeStage(partKey(), hostUri, nodeUri) : null;
   }
 
   public StoreBinding openNodeStore(Uri hostUri, Uri nodeUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openNodeStore(partKey(), hostUri, nodeUri) : null;
   }
 
@@ -374,7 +374,7 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
     final PartDef partDef = this.partDef;
     LaneDef laneDef = partDef != null ? partDef.getLaneDef(laneUri) : null;
     if (laneDef == null) {
-      final FabricMesh mesh = fabricMesh();
+      final ActorMesh mesh = actorMesh();
       laneDef = mesh != null ? mesh.getLaneDef(partKey(), hostUri, nodeUri, laneUri) : null;
     }
     return laneDef;
@@ -401,22 +401,22 @@ public class FabricPart extends FabricTier implements PartBinding, PartContext {
   }
 
   public Log openLaneLog(Uri hostUri, Uri nodeUri, Uri laneUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openLaneLog(partKey(), hostUri, nodeUri, laneUri) : null;
   }
 
   public Policy openLanePolicy(Uri hostUri, Uri nodeUri, Uri laneUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openLanePolicy(partKey(), hostUri, nodeUri, laneUri) : null;
   }
 
   public Stage openLaneStage(Uri hostUri, Uri nodeUri, Uri laneUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openLaneStage(partKey(), hostUri, nodeUri, laneUri) : null;
   }
 
   public StoreBinding openLaneStore(Uri hostUri, Uri nodeUri, Uri laneUri) {
-    final FabricMesh mesh = fabricMesh();
+    final ActorMesh mesh = actorMesh();
     return mesh != null ? mesh.openLaneStore(partKey(), hostUri, nodeUri, laneUri) : null;
   }
 

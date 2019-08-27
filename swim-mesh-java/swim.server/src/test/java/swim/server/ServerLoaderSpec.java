@@ -15,8 +15,8 @@
 package swim.server;
 
 import org.testng.annotations.Test;
+import swim.actor.ActorKernel;
 import swim.auth.AuthenticatorKernel;
-import swim.fabric.FabricKernel;
 import swim.java.JavaKernel;
 import swim.kernel.BootKernel;
 import swim.kernel.Kernel;
@@ -36,7 +36,7 @@ public class ServerLoaderSpec {
     assertNotNull(kernel.unwrapKernel(ServiceKernel.class));
     assertNotNull(kernel.unwrapKernel(WebServiceKernel.class));
     assertNotNull(kernel.unwrapKernel(AuthenticatorKernel.class));
-    assertNotNull(kernel.unwrapKernel(FabricKernel.class));
+    assertNotNull(kernel.unwrapKernel(ActorKernel.class));
     assertNotNull(kernel.unwrapKernel(JavaKernel.class));
   }
 

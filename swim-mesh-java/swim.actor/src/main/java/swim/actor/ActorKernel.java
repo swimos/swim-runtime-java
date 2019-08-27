@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import swim.api.agent.AgentDef;
@@ -43,16 +43,16 @@ import swim.uri.Uri;
 import swim.uri.UriMapper;
 import swim.uri.UriPattern;
 
-public class FabricKernel extends KernelProxy {
+public class ActorKernel extends KernelProxy {
   final double kernelPriority;
-  volatile HashTrieMap<String, Fabric> fabrics;
+  volatile HashTrieMap<String, ActorSpace> spaces;
 
-  public FabricKernel(double kernelPriority) {
+  public ActorKernel(double kernelPriority) {
     this.kernelPriority = kernelPriority;
-    this.fabrics = HashTrieMap.empty();
+    this.spaces = HashTrieMap.empty();
   }
 
-  public FabricKernel() {
+  public ActorKernel() {
     this(KERNEL_PRIORITY);
   }
 
@@ -63,16 +63,16 @@ public class FabricKernel extends KernelProxy {
 
   @Override
   public SpaceDef defineSpace(Item spaceConfig) {
-    final SpaceDef fabricDef = defineFabricSpace(spaceConfig);
-    return fabricDef != null ? fabricDef : super.defineSpace(spaceConfig);
+    final SpaceDef spaceDef = defineActorSpace(spaceConfig);
+    return spaceDef != null ? spaceDef : super.defineSpace(spaceConfig);
   }
 
-  public FabricDef defineFabricSpace(Item spaceConfig) {
+  public ActorSpaceDef defineActorSpace(Item spaceConfig) {
     final Value value = spaceConfig.toValue();
     final Value header = value.getAttr("fabric");
     if (header.isDefined()) {
       final String fabricProvider = header.get("provider").stringValue(null);
-      if (fabricProvider == null || FabricKernel.class.getName().equals(fabricProvider)) {
+      if (fabricProvider == null || ActorKernel.class.getName().equals(fabricProvider)) {
         final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
         final String spaceName = spaceConfig.key().stringValue(null);
         FingerTrieSeq<PlaneDef> planeDefs = FingerTrieSeq.empty();
@@ -144,9 +144,9 @@ public class FabricKernel extends KernelProxy {
             continue;
           }
         }
-        return new FabricDef(spaceName, planeDefs, authenticatorDefs, meshDefs,
-                             partDefs, hostDefs, nodeDefs, laneDefs,
-                             logDef, policyDef, stageDef, storeDef);
+        return new ActorSpaceDef(spaceName, planeDefs, authenticatorDefs, meshDefs,
+                                 partDefs, hostDefs, nodeDefs, laneDefs,
+                                 logDef, policyDef, stageDef, storeDef);
       }
     }
     return null;
@@ -154,78 +154,78 @@ public class FabricKernel extends KernelProxy {
 
   @Override
   public Space openSpace(SpaceDef spaceDef) {
-    if (spaceDef instanceof FabricDef) {
-      return openFabric((FabricDef) spaceDef);
+    if (spaceDef instanceof ActorSpaceDef) {
+      return openActorSpace((ActorSpaceDef) spaceDef);
     } else {
       return super.openSpace(spaceDef);
     }
   }
 
-  public Fabric openFabric(FabricDef fabricDef) {
-    final String spaceName = fabricDef.spaceName;
-    Fabric fabric = null;
+  public ActorSpace openActorSpace(ActorSpaceDef spaceDef) {
+    final String spaceName = spaceDef.spaceName;
+    ActorSpace space = null;
     do {
-      final HashTrieMap<String, Fabric> oldFabrics = this.fabrics;
-      final Fabric oldFabric = oldFabrics.get(spaceName);
-      if (oldFabric == null) {
-        if (fabric == null) {
-          fabric = createFabric(spaceName, fabricDef);
+      final HashTrieMap<String, ActorSpace> oldSpaces = this.spaces;
+      final ActorSpace oldSpace = oldSpaces.get(spaceName);
+      if (oldSpace == null) {
+        if (space == null) {
+          space = createActorSpace(spaceName, spaceDef);
         }
-        final HashTrieMap<String, Fabric> newFabrics = oldFabrics.updated(spaceName, fabric);
-        if (FABRICS.compareAndSet(this, oldFabrics, newFabrics)) {
+        final HashTrieMap<String, ActorSpace> newSpaces = oldSpaces.updated(spaceName, space);
+        if (SPACES.compareAndSet(this, oldSpaces, newSpaces)) {
           if (isStarted()) {
-            fabric.start();
+            space.start();
           }
           break;
         }
       } else {
-        fabric = oldFabric;
+        space = oldSpace;
         break;
       }
     } while (true);
-    return fabric;
+    return space;
   }
 
-  protected Fabric createFabric(String spaceName, FabricDef spaceDef) {
+  protected ActorSpace createActorSpace(String spaceName, ActorSpaceDef spaceDef) {
     final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
-    final Fabric fabric = new Fabric(spaceName, spaceDef, kernel);
-    createAuthenticators(fabric, spaceDef);
-    createPlanes(fabric, spaceDef);
-    return fabric;
+    final ActorSpace space = new ActorSpace(spaceName, spaceDef, kernel);
+    createAuthenticators(space, spaceDef);
+    createPlanes(space, spaceDef);
+    return space;
   }
 
-  protected void createAuthenticators(Fabric fabric, FabricDef spaceDef) {
+  protected void createAuthenticators(ActorSpace space, ActorSpaceDef spaceDef) {
     for (AuthenticatorDef authenticatorDef : spaceDef.authenticatorDefs()) {
-      if (fabric.getAuthenticator(authenticatorDef.authenticatorName()) == null) {
-        createAuthenticator(fabric, authenticatorDef);
+      if (space.getAuthenticator(authenticatorDef.authenticatorName()) == null) {
+        createAuthenticator(space, authenticatorDef);
       }
     }
   }
 
-  protected void createAuthenticator(Fabric fabric, AuthenticatorDef authenticatorDef) {
+  protected void createAuthenticator(ActorSpace space, AuthenticatorDef authenticatorDef) {
     final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
     Authenticator authenticator = kernel.createAuthenticator(authenticatorDef, null);
     if (authenticator != null) {
       authenticator = kernel.injectAuthenticator(authenticator);
     }
     if (authenticator != null) {
-      fabric.addAuthenticator(authenticatorDef.authenticatorName(), authenticator);
+      space.addAuthenticator(authenticatorDef.authenticatorName(), authenticator);
     }
   }
 
-  protected void createPlanes(Fabric fabric, FabricDef spaceDef) {
+  protected void createPlanes(ActorSpace space, ActorSpaceDef spaceDef) {
     for (PlaneDef planeDef : spaceDef.planeDefs()) {
-      if (fabric.getPlane(planeDef.planeName()) == null) {
-        createPlane(fabric, planeDef);
+      if (space.getPlane(planeDef.planeName()) == null) {
+        createPlane(space, planeDef);
       }
     }
   }
 
-  protected void createPlane(Fabric fabric, PlaneDef planeDef) {
+  protected void createPlane(ActorSpace space, PlaneDef planeDef) {
     final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
     final PlaneFactory<?> planeFactory = kernel.createPlaneFactory(planeDef, null);
     if (planeFactory != null) {
-      fabric.openPlane(planeDef.planeName(), planeFactory);
+      space.openPlane(planeDef.planeName(), planeFactory);
     } else {
       throw new PlaneException("No factory for plane: " + planeDef.planeName());
     }
@@ -233,29 +233,29 @@ public class FabricKernel extends KernelProxy {
 
   @Override
   public Space getSpace(String spaceName) {
-    Space space = getFabric(spaceName);
+    Space space = getActorSpace(spaceName);
     if (space == null) {
       space = super.getSpace(spaceName);
     }
     return space;
   }
 
-  public Fabric getFabric(String spaceName) {
-    return this.fabrics.get(spaceName);
+  public ActorSpace getActorSpace(String spaceName) {
+    return this.spaces.get(spaceName);
   }
 
   @Override
   public MeshDef defineMesh(Item meshConfig) {
-    final MeshDef meshDef = defineFabricMesh(meshConfig);
+    final MeshDef meshDef = defineActorMesh(meshConfig);
     return meshDef != null ? meshDef : super.defineMesh(meshConfig);
   }
 
-  public FabricMeshDef defineFabricMesh(Item meshConfig) {
+  public ActorMeshDef defineActorMesh(Item meshConfig) {
     final Value value = meshConfig.toValue();
     final Value header = value.getAttr("mesh");
     if (header.isDefined()) {
       final String fabricProvider = header.get("provider").stringValue(null);
-      if (fabricProvider == null || FabricKernel.class.getName().equals(fabricProvider)) {
+      if (fabricProvider == null || ActorKernel.class.getName().equals(fabricProvider)) {
         final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
         Uri meshUri = Uri.empty();
         HashTrieMap<Value, PartDef> partDefs = HashTrieMap.empty();
@@ -313,8 +313,8 @@ public class FabricKernel extends KernelProxy {
             continue;
           }
         }
-        return new FabricMeshDef(meshUri, partDefs, hostDefs, nodeDefs, laneDefs,
-                                 logDef, policyDef, stageDef, storeDef);
+        return new ActorMeshDef(meshUri, partDefs, hostDefs, nodeDefs, laneDefs,
+                                logDef, policyDef, stageDef, storeDef);
       }
     }
     return null;
@@ -322,16 +322,16 @@ public class FabricKernel extends KernelProxy {
 
   @Override
   public PartDef definePart(Item partConfig) {
-    final PartDef partDef = defineFabricPart(partConfig);
+    final PartDef partDef = defineActorPart(partConfig);
     return partDef != null ? partDef : super.definePart(partConfig);
   }
 
-  public FabricPartDef defineFabricPart(Item partConfig) {
+  public ActorPartDef defineActorPart(Item partConfig) {
     final Value value = partConfig.toValue();
     final Value header = value.getAttr("part");
     if (header.isDefined()) {
       final String fabricProvider = header.get("provider").stringValue(null);
-      if (fabricProvider == null || FabricKernel.class.getName().equals(fabricProvider)) {
+      if (fabricProvider == null || ActorKernel.class.getName().equals(fabricProvider)) {
         final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
         Value partKey = null;
         PartPredicate predicate = null;
@@ -394,8 +394,8 @@ public class FabricKernel extends KernelProxy {
           }
         }
         if (partKey != null && predicate != null) {
-          return new FabricPartDef(partKey, predicate, isGateway, hostDefs, nodeDefs,
-                                   laneDefs, logDef, policyDef, stageDef, storeDef);
+          return new ActorPartDef(partKey, predicate, isGateway, hostDefs, nodeDefs,
+                                 laneDefs, logDef, policyDef, stageDef, storeDef);
         }
       }
     }
@@ -404,16 +404,16 @@ public class FabricKernel extends KernelProxy {
 
   @Override
   public HostDef defineHost(Item hostConfig) {
-    final HostDef hostDef = defineFabricHost(hostConfig);
+    final HostDef hostDef = defineActorHost(hostConfig);
     return hostDef != null ? hostDef : super.defineHost(hostConfig);
   }
 
-  public FabricHostDef defineFabricHost(Item hostConfig) {
+  public ActorHostDef defineActorHost(Item hostConfig) {
     final Value value = hostConfig.toValue();
     final Value header = value.getAttr("host");
     if (header.isDefined()) {
       final String fabricProvider = header.get("provider").stringValue(null);
-      if (fabricProvider == null || FabricKernel.class.getName().equals(fabricProvider)) {
+      if (fabricProvider == null || ActorKernel.class.getName().equals(fabricProvider)) {
         final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
         UriPattern hostPattern = UriPattern.empty();
         boolean isPrimary = false;
@@ -469,8 +469,8 @@ public class FabricKernel extends KernelProxy {
             continue;
           }
         }
-        return new FabricHostDef(hostPattern, isPrimary, isReplica, nodeDefs,
-                                 laneDefs, logDef, policyDef, stageDef, storeDef);
+        return new ActorHostDef(hostPattern, isPrimary, isReplica, nodeDefs,
+                                laneDefs, logDef, policyDef, stageDef, storeDef);
       }
     }
     return null;
@@ -478,16 +478,16 @@ public class FabricKernel extends KernelProxy {
 
   @Override
   public NodeDef defineNode(Item nodeConfig) {
-    final NodeDef nodeDef = defineFabricNode(nodeConfig);
+    final NodeDef nodeDef = defineActorNode(nodeConfig);
     return nodeDef != null ? nodeDef : super.defineNode(nodeConfig);
   }
 
-  public FabricNodeDef defineFabricNode(Item nodeConfig) {
+  public ActorNodeDef defineActorNode(Item nodeConfig) {
     final Value value = nodeConfig.toValue();
     final Value header = value.getAttr("node");
     if (header.isDefined()) {
       final String fabricProvider = header.get("provider").stringValue(null);
-      if (fabricProvider == null || FabricKernel.class.getName().equals(fabricProvider)) {
+      if (fabricProvider == null || ActorKernel.class.getName().equals(fabricProvider)) {
         final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
         UriPattern nodePattern = null;
         FingerTrieSeq<AgentDef> agentDefs = FingerTrieSeq.empty();
@@ -534,8 +534,8 @@ public class FabricKernel extends KernelProxy {
           }
         }
         if (nodePattern != null) {
-          return new FabricNodeDef(nodePattern, agentDefs, laneDefs,
-                                   logDef, policyDef, stageDef, storeDef);
+          return new ActorNodeDef(nodePattern, agentDefs, laneDefs,
+                                  logDef, policyDef, stageDef, storeDef);
         }
       }
     }
@@ -544,16 +544,16 @@ public class FabricKernel extends KernelProxy {
 
   @Override
   public LaneDef defineLane(Item laneConfig) {
-    final LaneDef laneDef = defineFabricLane(laneConfig);
+    final LaneDef laneDef = defineActorLane(laneConfig);
     return laneDef != null ? laneDef : super.defineLane(laneConfig);
   }
 
-  public FabricLaneDef defineFabricLane(Item laneConfig) {
+  public ActorLaneDef defineActorLane(Item laneConfig) {
     final Value value = laneConfig.toValue();
     final Value header = value.getAttr("lane");
     if (header.isDefined()) {
       final String fabricProvider = header.get("provider").stringValue(null);
-      if (fabricProvider == null || FabricKernel.class.getName().equals(fabricProvider)) {
+      if (fabricProvider == null || ActorKernel.class.getName().equals(fabricProvider)) {
         final KernelContext kernel = kernelWrapper().unwrapKernel(KernelContext.class);
         final String laneType = header.get("type").stringValue(null);
         UriPattern lanePattern = null;
@@ -589,7 +589,7 @@ public class FabricKernel extends KernelProxy {
           }
         }
         if (lanePattern != null) {
-          return new FabricLaneDef(lanePattern, laneType, logDef, policyDef, stageDef, storeDef);
+          return new ActorLaneDef(lanePattern, laneType, logDef, policyDef, stageDef, storeDef);
         }
       }
     }
@@ -598,30 +598,30 @@ public class FabricKernel extends KernelProxy {
 
   @Override
   public void didStart() {
-    for (Fabric fabric : this.fabrics.values()) {
-      fabric.start();
+    for (ActorSpace space : this.spaces.values()) {
+      space.start();
     }
   }
 
   @Override
   public void willStop() {
-    for (Fabric fabric : this.fabrics.values()) {
-      fabric.stop();
+    for (ActorSpace space : this.spaces.values()) {
+      space.stop();
     }
   }
 
   private static final double KERNEL_PRIORITY = 1.0;
 
   @SuppressWarnings("unchecked")
-  static final AtomicReferenceFieldUpdater<FabricKernel, HashTrieMap<String, Fabric>> FABRICS =
-      AtomicReferenceFieldUpdater.newUpdater(FabricKernel.class, (Class<HashTrieMap<String, Fabric>>) (Class<?>) HashTrieMap.class, "fabrics");
+  static final AtomicReferenceFieldUpdater<ActorKernel, HashTrieMap<String, ActorSpace>> SPACES =
+      AtomicReferenceFieldUpdater.newUpdater(ActorKernel.class, (Class<HashTrieMap<String, ActorSpace>>) (Class<?>) HashTrieMap.class, "spaces");
 
-  public static FabricKernel fromValue(Value moduleConfig) {
+  public static ActorKernel fromValue(Value moduleConfig) {
     final Value header = moduleConfig.getAttr("kernel");
     final String kernelClassName = header.get("class").stringValue(null);
-    if (kernelClassName == null || FabricKernel.class.getName().equals(kernelClassName)) {
+    if (kernelClassName == null || ActorKernel.class.getName().equals(kernelClassName)) {
       final double kernelPriority = header.get("priority").doubleValue(KERNEL_PRIORITY);
-      return new FabricKernel(kernelPriority);
+      return new ActorKernel(kernelPriority);
     }
     return null;
   }

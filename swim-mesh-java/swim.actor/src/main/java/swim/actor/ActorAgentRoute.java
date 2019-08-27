@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import swim.api.agent.AgentRouteContext;
 import swim.uri.UriPattern;
 
-public class FabricAgentRoute implements AgentRouteContext {
+public class ActorAgentRoute implements AgentRouteContext {
   final String routeName;
   final UriPattern pattern;
 
-  public FabricAgentRoute(String routeName, UriPattern pattern) {
+  public ActorAgentRoute(String routeName, UriPattern pattern) {
     this.routeName = routeName;
     this.pattern = pattern;
   }

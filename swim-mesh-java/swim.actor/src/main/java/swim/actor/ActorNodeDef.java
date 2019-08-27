@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import java.util.Collection;
 import swim.api.agent.AgentDef;
@@ -31,7 +31,7 @@ import swim.uri.UriMapper;
 import swim.uri.UriPattern;
 import swim.util.Murmur3;
 
-public class FabricNodeDef implements NodeDef, Debug {
+public class ActorNodeDef implements NodeDef, Debug {
   final UriPattern nodePattern;
   final FingerTrieSeq<AgentDef> agentDefs;
   final UriMapper<LaneDef> laneDefs;
@@ -40,9 +40,9 @@ public class FabricNodeDef implements NodeDef, Debug {
   final StageDef stageDef;
   final StoreDef storeDef;
 
-  public FabricNodeDef(UriPattern nodePattern, FingerTrieSeq<AgentDef> agentDefs,
-                       UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
-                       StageDef stageDef, StoreDef storeDef) {
+  public ActorNodeDef(UriPattern nodePattern, FingerTrieSeq<AgentDef> agentDefs,
+                      UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
+                      StageDef stageDef, StoreDef storeDef) {
     this.nodePattern = nodePattern;
     this.agentDefs = agentDefs;
     this.laneDefs = laneDefs;
@@ -62,7 +62,7 @@ public class FabricNodeDef implements NodeDef, Debug {
     return this.nodePattern;
   }
 
-  public FabricNodeDef nodePattern(UriPattern nodePattern) {
+  public ActorNodeDef nodePattern(UriPattern nodePattern) {
     return copy(nodePattern, this.agentDefs, this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -82,7 +82,7 @@ public class FabricNodeDef implements NodeDef, Debug {
     return null;
   }
 
-  public FabricNodeDef agentDef(AgentDef agentDef) {
+  public ActorNodeDef agentDef(AgentDef agentDef) {
     return copy(this.nodePattern, this.agentDefs.appended(agentDef), this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -97,7 +97,7 @@ public class FabricNodeDef implements NodeDef, Debug {
     return this.laneDefs.get(laneUri);
   }
 
-  public FabricNodeDef laneDef(LaneDef laneDef) {
+  public ActorNodeDef laneDef(LaneDef laneDef) {
     return copy(this.nodePattern, this.agentDefs, this.laneDefs.updated(laneDef.lanePattern(), laneDef),
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -107,7 +107,7 @@ public class FabricNodeDef implements NodeDef, Debug {
     return this.logDef;
   }
 
-  public FabricNodeDef logDef(LogDef logDef) {
+  public ActorNodeDef logDef(LogDef logDef) {
     return copy(this.nodePattern, this.agentDefs, this.laneDefs,
                 logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -117,7 +117,7 @@ public class FabricNodeDef implements NodeDef, Debug {
     return this.policyDef;
   }
 
-  public FabricNodeDef policyDef(PolicyDef policyDef) {
+  public ActorNodeDef policyDef(PolicyDef policyDef) {
     return copy(this.nodePattern, this.agentDefs, this.laneDefs,
                 this.logDef, policyDef, this.stageDef, this.storeDef);
   }
@@ -127,7 +127,7 @@ public class FabricNodeDef implements NodeDef, Debug {
     return this.stageDef;
   }
 
-  public FabricNodeDef stageDef(StageDef stageDef) {
+  public ActorNodeDef stageDef(StageDef stageDef) {
     return copy(this.nodePattern, this.agentDefs, this.laneDefs,
                 this.logDef, this.policyDef, stageDef, this.storeDef);
   }
@@ -137,24 +137,24 @@ public class FabricNodeDef implements NodeDef, Debug {
     return this.storeDef;
   }
 
-  public FabricNodeDef storeDef(StoreDef storeDef) {
+  public ActorNodeDef storeDef(StoreDef storeDef) {
     return copy(this.nodePattern, this.agentDefs, this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, storeDef);
   }
 
-  protected FabricNodeDef copy(UriPattern nodePattern, FingerTrieSeq<AgentDef> agentDefs,
-                               UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
-                               StageDef stageDef, StoreDef storeDef) {
-    return new FabricNodeDef(nodePattern, agentDefs, laneDefs,
-                             logDef, policyDef, stageDef, storeDef);
+  protected ActorNodeDef copy(UriPattern nodePattern, FingerTrieSeq<AgentDef> agentDefs,
+                              UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
+                              StageDef stageDef, StoreDef storeDef) {
+    return new ActorNodeDef(nodePattern, agentDefs, laneDefs,
+                            logDef, policyDef, stageDef, storeDef);
   }
 
   @Override
   public boolean equals(Object other) {
     if (this == other) {
       return true;
-    } else if (other instanceof FabricNodeDef) {
-      final FabricNodeDef that = (FabricNodeDef) other;
+    } else if (other instanceof ActorNodeDef) {
+      final ActorNodeDef that = (ActorNodeDef) other;
       return this.nodePattern.equals(that.nodePattern)
           && this.agentDefs.equals(that.agentDefs)
           && this.laneDefs.equals(that.laneDefs)
@@ -169,7 +169,7 @@ public class FabricNodeDef implements NodeDef, Debug {
   @Override
   public int hashCode() {
     if (hashSeed == 0) {
-      hashSeed = Murmur3.seed(FabricNodeDef.class);
+      hashSeed = Murmur3.seed(ActorNodeDef.class);
     }
     return Murmur3.mash(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(
         Murmur3.mix(hashSeed, this.nodePattern.hashCode()), this.agentDefs.hashCode()),
@@ -179,7 +179,7 @@ public class FabricNodeDef implements NodeDef, Debug {
 
   @Override
   public void debug(Output<?> output) {
-    output = output.write("FabricNodeDef").write('.');
+    output = output.write("ActorNodeDef").write('.');
     if (this.nodePattern.isUri()) {
       output = output.write("fromNodeUri").write('(').debug(this.nodePattern.toUri()).write(')');
     } else {
@@ -212,21 +212,21 @@ public class FabricNodeDef implements NodeDef, Debug {
 
   private static int hashSeed;
 
-  public static FabricNodeDef fromNodeUri(Uri nodeUri) {
-    return new FabricNodeDef(UriPattern.from(nodeUri), FingerTrieSeq.empty(),
-                             UriMapper.empty(), null, null, null, null);
+  public static ActorNodeDef fromNodeUri(Uri nodeUri) {
+    return new ActorNodeDef(UriPattern.from(nodeUri), FingerTrieSeq.empty(),
+                            UriMapper.empty(), null, null, null, null);
   }
 
-  public static FabricNodeDef fromNodeUri(String nodeUri) {
+  public static ActorNodeDef fromNodeUri(String nodeUri) {
     return fromNodeUri(Uri.parse(nodeUri));
   }
 
-  public static FabricNodeDef fromNodePattern(UriPattern nodePattern) {
-    return new FabricNodeDef(nodePattern, FingerTrieSeq.empty(),
-                             UriMapper.empty(), null, null, null, null);
+  public static ActorNodeDef fromNodePattern(UriPattern nodePattern) {
+    return new ActorNodeDef(nodePattern, FingerTrieSeq.empty(),
+                            UriMapper.empty(), null, null, null, null);
   }
 
-  public static FabricNodeDef fromNodePattern(String nodePattern) {
+  public static ActorNodeDef fromNodePattern(String nodePattern) {
     return fromNodePattern(UriPattern.parse(nodePattern));
   }
 }

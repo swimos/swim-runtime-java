@@ -1,7 +1,7 @@
 apply from: '../project.gradle'
 
-description = 'Swim fabric runtime'
-ext.moduleName = 'swim.fabric'
+description = 'Swim actor runtime'
+ext.moduleName = 'swim.actor'
 
 dependencies {
   api project(':swim-runtime')

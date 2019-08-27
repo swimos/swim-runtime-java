@@ -220,7 +220,7 @@ gradle.projectsEvaluated {
         'swim.api',
         'swim.auth',
         'swim.client',
-        'swim.fabric',
+        'swim.actor',
         'swim.java',
         'swim.kernel',
         'swim.remote',

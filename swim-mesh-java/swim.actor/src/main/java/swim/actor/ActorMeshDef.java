@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import java.util.Collection;
 import swim.codec.Debug;
@@ -33,7 +33,7 @@ import swim.uri.Uri;
 import swim.uri.UriMapper;
 import swim.util.Murmur3;
 
-public class FabricMeshDef implements MeshDef, Debug {
+public class ActorMeshDef implements MeshDef, Debug {
   final Uri meshUri;
   final HashTrieMap<Value, PartDef> partDefs;
   final UriMapper<HostDef> hostDefs;
@@ -44,10 +44,10 @@ public class FabricMeshDef implements MeshDef, Debug {
   final StageDef stageDef;
   final StoreDef storeDef;
 
-  public FabricMeshDef(Uri meshUri, HashTrieMap<Value, PartDef> partDefs,
-                       UriMapper<HostDef> hostDefs, UriMapper<NodeDef> nodeDefs,
-                       UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
-                       StageDef stageDef, StoreDef storeDef) {
+  public ActorMeshDef(Uri meshUri, HashTrieMap<Value, PartDef> partDefs,
+                      UriMapper<HostDef> hostDefs, UriMapper<NodeDef> nodeDefs,
+                      UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
+                      StageDef stageDef, StoreDef storeDef) {
     this.meshUri = meshUri;
     this.partDefs = partDefs;
     this.hostDefs = hostDefs;
@@ -64,7 +64,7 @@ public class FabricMeshDef implements MeshDef, Debug {
     return this.meshUri;
   }
 
-  public FabricMeshDef meshUri(Uri meshUri) {
+  public ActorMeshDef meshUri(Uri meshUri) {
     return copy(meshUri, this.partDefs, this.hostDefs, this.nodeDefs, this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -79,7 +79,7 @@ public class FabricMeshDef implements MeshDef, Debug {
     return this.partDefs.get(partKey);
   }
 
-  public FabricMeshDef partDef(PartDef partDef) {
+  public ActorMeshDef partDef(PartDef partDef) {
     return copy(this.meshUri, this.partDefs.updated(partDef.partKey(), partDef),
                 this.hostDefs, this.nodeDefs, this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
@@ -95,7 +95,7 @@ public class FabricMeshDef implements MeshDef, Debug {
     return this.hostDefs.get(hostUri);
   }
 
-  public FabricMeshDef hostDef(HostDef hostDef) {
+  public ActorMeshDef hostDef(HostDef hostDef) {
     return copy(this.meshUri, this.partDefs, this.hostDefs.updated(hostDef.hostPattern(), hostDef),
                 this.nodeDefs, this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
@@ -111,7 +111,7 @@ public class FabricMeshDef implements MeshDef, Debug {
     return this.nodeDefs.get(nodeUri);
   }
 
-  public FabricMeshDef nodeDef(NodeDef nodeDef) {
+  public ActorMeshDef nodeDef(NodeDef nodeDef) {
     return copy(this.meshUri, this.partDefs, this.hostDefs,
                 this.nodeDefs.updated(nodeDef.nodePattern(), nodeDef), this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
@@ -127,7 +127,7 @@ public class FabricMeshDef implements MeshDef, Debug {
     return this.laneDefs.get(laneUri);
   }
 
-  public FabricMeshDef laneDef(LaneDef laneDef) {
+  public ActorMeshDef laneDef(LaneDef laneDef) {
     return copy(this.meshUri, this.partDefs, this.hostDefs, this.nodeDefs,
                 this.laneDefs.updated(laneDef.lanePattern(), laneDef),
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
@@ -138,7 +138,7 @@ public class FabricMeshDef implements MeshDef, Debug {
     return this.logDef;
   }
 
-  public FabricMeshDef logDef(LogDef logDef) {
+  public ActorMeshDef logDef(LogDef logDef) {
     return copy(this.meshUri, this.partDefs, this.hostDefs, this.nodeDefs, this.laneDefs,
                 logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -148,7 +148,7 @@ public class FabricMeshDef implements MeshDef, Debug {
     return this.policyDef;
   }
 
-  public FabricMeshDef policyDef(PolicyDef policyDef) {
+  public ActorMeshDef policyDef(PolicyDef policyDef) {
     return copy(this.meshUri, this.partDefs, this.hostDefs, this.nodeDefs, this.laneDefs,
                 this.logDef, policyDef, this.stageDef, this.storeDef);
   }
@@ -158,7 +158,7 @@ public class FabricMeshDef implements MeshDef, Debug {
     return this.stageDef;
   }
 
-  public FabricMeshDef stageDef(StageDef stageDef) {
+  public ActorMeshDef stageDef(StageDef stageDef) {
     return copy(this.meshUri, this.partDefs, this.hostDefs, this.nodeDefs, this.laneDefs,
                 this.logDef, this.policyDef, stageDef, this.storeDef);
   }
@@ -168,25 +168,25 @@ public class FabricMeshDef implements MeshDef, Debug {
     return this.storeDef;
   }
 
-  public FabricMeshDef storeDef(StoreDef storeDef) {
+  public ActorMeshDef storeDef(StoreDef storeDef) {
     return copy(this.meshUri, this.partDefs, this.hostDefs, this.nodeDefs, this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, storeDef);
   }
 
-  protected FabricMeshDef copy(Uri meshUri, HashTrieMap<Value, PartDef> partDefs,
-                               UriMapper<HostDef> hostDefs, UriMapper<NodeDef> nodeDefs,
-                               UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
-                               StageDef stageDef, StoreDef storeDef) {
-    return new FabricMeshDef(meshUri, partDefs, hostDefs, nodeDefs, laneDefs,
-                             logDef, policyDef, stageDef, storeDef);
+  protected ActorMeshDef copy(Uri meshUri, HashTrieMap<Value, PartDef> partDefs,
+                              UriMapper<HostDef> hostDefs, UriMapper<NodeDef> nodeDefs,
+                              UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
+                              StageDef stageDef, StoreDef storeDef) {
+    return new ActorMeshDef(meshUri, partDefs, hostDefs, nodeDefs, laneDefs,
+                            logDef, policyDef, stageDef, storeDef);
   }
 
   @Override
   public boolean equals(Object other) {
     if (this == other) {
       return true;
-    } else if (other instanceof FabricMeshDef) {
-      final FabricMeshDef that = (FabricMeshDef) other;
+    } else if (other instanceof ActorMeshDef) {
+      final ActorMeshDef that = (ActorMeshDef) other;
       return this.meshUri.equals(that.meshUri)
           && this.partDefs.equals(that.partDefs)
           && this.hostDefs.equals(that.hostDefs)
@@ -203,7 +203,7 @@ public class FabricMeshDef implements MeshDef, Debug {
   @Override
   public int hashCode() {
     if (hashSeed == 0) {
-      hashSeed = Murmur3.seed(FabricMeshDef.class);
+      hashSeed = Murmur3.seed(ActorMeshDef.class);
     }
     return Murmur3.mash(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(
         Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(hashSeed, Murmur3.hash(this.meshUri)),
@@ -214,7 +214,7 @@ public class FabricMeshDef implements MeshDef, Debug {
 
   @Override
   public void debug(Output<?> output) {
-    output = output.write("FabricMeshDef").write('.').write("fromMeshUri").write('(')
+    output = output.write("ActorMeshDef").write('.').write("fromMeshUri").write('(')
         .debug(this.meshUri).write(')');
     for (PartDef partDef : this.partDefs.values()) {
       output = output.write('.').write("partDef").write('(').debug(partDef).write(')');
@@ -249,13 +249,13 @@ public class FabricMeshDef implements MeshDef, Debug {
 
   private static int hashSeed;
 
-  public static FabricMeshDef fromMeshUri(Uri meshUri) {
-    return new FabricMeshDef(meshUri, HashTrieMap.empty(), UriMapper.empty(),
-                             UriMapper.empty(), UriMapper.empty(),
-                             null, null, null, null);
+  public static ActorMeshDef fromMeshUri(Uri meshUri) {
+    return new ActorMeshDef(meshUri, HashTrieMap.empty(), UriMapper.empty(),
+                            UriMapper.empty(), UriMapper.empty(),
+                            null, null, null, null);
   }
 
-  public static FabricMeshDef fromMeshUri(String meshUri) {
+  public static ActorMeshDef fromMeshUri(String meshUri) {
     return fromMeshUri(Uri.parse(meshUri));
   }
 }

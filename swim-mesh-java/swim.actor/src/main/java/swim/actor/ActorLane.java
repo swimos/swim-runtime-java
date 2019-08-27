@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import swim.api.Lane;
 import swim.api.agent.AgentContext;
@@ -38,12 +38,12 @@ import swim.uri.Uri;
 import swim.util.Log;
 import swim.warp.CommandMessage;
 
-public class FabricLane extends FabricTier implements LaneBinding, LaneContext {
+public class ActorLane extends ActorTier implements LaneBinding, LaneContext {
   final LaneBinding laneBinding;
   LaneContext laneContext;
   LaneDef laneDef;
 
-  public FabricLane(LaneBinding laneBinding, LaneDef laneDef) {
+  public ActorLane(LaneBinding laneBinding, LaneDef laneDef) {
     this.laneBinding = laneBinding;
     this.laneDef = laneDef;
   }
@@ -52,8 +52,8 @@ public class FabricLane extends FabricTier implements LaneBinding, LaneContext {
     return this.laneDef;
   }
 
-  public final FabricNode fabricNode() {
-    return node().unwrapNode(FabricNode.class);
+  public final ActorNode actorNode() {
+    return node().unwrapNode(ActorNode.class);
   }
 
   @Override
@@ -167,12 +167,12 @@ public class FabricLane extends FabricTier implements LaneBinding, LaneContext {
   }
 
   public Log createLog(LogDef logDef) {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.createLog(logDef) : null;
   }
 
   public Log injectLog(Log log) {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.injectLog(log) : log;
   }
 
@@ -191,12 +191,12 @@ public class FabricLane extends FabricTier implements LaneBinding, LaneContext {
   }
 
   public Policy createPolicy(PolicyDef policyDef) {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.createPolicy(policyDef) : null;
   }
 
   public Policy injectPolicy(Policy policy) {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.injectPolicy(policy) : policy;
   }
 
@@ -215,12 +215,12 @@ public class FabricLane extends FabricTier implements LaneBinding, LaneContext {
   }
 
   public Stage createStage(StageDef stageDef) {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.createStage(stageDef) : null;
   }
 
   public Stage injectStage(Stage stage) {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.injectStage(stage) : stage;
   }
 
@@ -239,12 +239,12 @@ public class FabricLane extends FabricTier implements LaneBinding, LaneContext {
   }
 
   public StoreBinding createStore(StoreDef storeDef) {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.createStore(storeDef) : null;
   }
 
   public StoreBinding injectStore(StoreBinding store) {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.injectStore(store) : store;
   }
 
@@ -263,22 +263,22 @@ public class FabricLane extends FabricTier implements LaneBinding, LaneContext {
   }
 
   protected Log openLaneLog() {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.openLaneLog(laneUri()) : null;
   }
 
   protected Policy openLanePolicy() {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.openLanePolicy(laneUri()) : null;
   }
 
   protected Stage openLaneStage() {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.openLaneStage(laneUri()) : null;
   }
 
   protected StoreBinding openLaneStore() {
-    final FabricNode node = fabricNode();
+    final ActorNode node = actorNode();
     return node != null ? node.openLaneStore(laneUri()) : null;
   }
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import swim.api.agent.Agent;
 import swim.api.agent.AgentDef;
@@ -47,12 +47,12 @@ import swim.structure.Value;
 import swim.uri.Uri;
 import swim.util.Log;
 
-public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
+public class ActorMesh extends ActorTier implements MeshBinding, MeshContext {
   final MeshBinding meshBinding;
   MeshContext meshContext;
   MeshDef meshDef;
 
-  public FabricMesh(MeshBinding meshBinding, MeshDef meshDef) {
+  public ActorMesh(MeshBinding meshBinding, MeshDef meshDef) {
     this.meshBinding = meshBinding;
     this.meshDef = meshDef;
   }
@@ -61,8 +61,8 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
     return this.meshDef;
   }
 
-  public final Fabric fabricEdge() {
-    return edge().unwrapEdge(Fabric.class);
+  public final ActorSpace actorEdge() {
+    return edge().unwrapEdge(ActorSpace.class);
   }
 
   @Override
@@ -161,12 +161,12 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
   }
 
   public Log createLog(LogDef logDef) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.createLog(logDef) : null;
   }
 
   public Log injectLog(Log log) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.injectLog(log) : log;
   }
 
@@ -185,12 +185,12 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
   }
 
   public Policy createPolicy(PolicyDef policyDef) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.createPolicy(policyDef) : null;
   }
 
   public Policy injectPolicy(Policy policy) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.injectPolicy(policy) : policy;
   }
 
@@ -209,12 +209,12 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
   }
 
   public Stage createStage(StageDef stageDef) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.createStage(stageDef) : null;
   }
 
   public Stage injectStage(Stage stage) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.injectStage(stage) : stage;
   }
 
@@ -233,12 +233,12 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
   }
 
   public StoreBinding createStore(StoreDef storeDef) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.createStore(storeDef) : null;
   }
 
   public StoreBinding injectStore(StoreBinding store) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.injectStore(store) : store;
   }
 
@@ -257,22 +257,22 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
   }
 
   protected Log openMeshLog() {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openMeshLog(meshUri()) : null;
   }
 
   protected Policy openMeshPolicy() {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openMeshPolicy(meshUri()) : null;
   }
 
   protected Stage openMeshStage() {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openMeshStage(meshUri()) : null;
   }
 
   protected StoreBinding openMeshStore() {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openMeshStore(meshUri()) : null;
   }
 
@@ -280,7 +280,7 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
     final MeshDef meshDef = this.meshDef;
     PartDef partDef = meshDef != null ? meshDef.getPartDef(partKey) : null;
     if (partDef == null) {
-      final Fabric edge = fabricEdge();
+      final ActorSpace edge = actorEdge();
       partDef = edge != null ? edge.getPartDef(meshUri(), partKey) : null;
     }
     return partDef;
@@ -294,26 +294,26 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
   @Override
   public PartBinding injectPart(Value partKey, PartBinding part) {
     final PartDef partDef = getPartDef(partKey);
-    return new FabricPart(this.meshContext.injectPart(partKey, part), partDef);
+    return new ActorPart(this.meshContext.injectPart(partKey, part), partDef);
   }
 
   public Log openPartLog(Value partKey) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openPartLog(meshUri(), partKey) : null;
   }
 
   public Policy openPartPolicy(Value partKey) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openPartPolicy(meshUri(), partKey) : null;
   }
 
   public Stage openPartStage(Value partKey) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openPartStage(meshUri(), partKey) : null;
   }
 
   public StoreBinding openPartStore(Value partKey) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openPartStore(meshUri(), partKey) : null;
   }
 
@@ -321,7 +321,7 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
     final MeshDef meshDef = this.meshDef;
     HostDef hostDef = meshDef != null ? meshDef.getHostDef(hostUri) : null;
     if (hostDef == null) {
-      final Fabric edge = fabricEdge();
+      final ActorSpace edge = actorEdge();
       hostDef = edge != null ? edge.getHostDef(meshUri(), partKey, hostUri) : null;
     }
     return hostDef;
@@ -338,22 +338,22 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
   }
 
   public Log openHostLog(Value partKey, Uri hostUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openHostLog(meshUri(), partKey, hostUri) : null;
   }
 
   public Policy openHostPolicy(Value partKey, Uri hostUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openHostPolicy(meshUri(), partKey, hostUri) : null;
   }
 
   public Stage openHostStage(Value partKey, Uri hostUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openHostStage(meshUri(), partKey, hostUri) : null;
   }
 
   public StoreBinding openHostStore(Value partKey, Uri hostUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openHostStore(meshUri(), partKey, hostUri) : null;
   }
 
@@ -361,7 +361,7 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
     final MeshDef meshDef = this.meshDef;
     NodeDef nodeDef = meshDef != null ? meshDef.getNodeDef(nodeUri) : null;
     if (nodeDef == null) {
-      final Fabric edge = fabricEdge();
+      final ActorSpace edge = actorEdge();
       nodeDef = edge != null ? edge.getNodeDef(meshUri(), partKey, hostUri, nodeUri) : null;
     }
     return nodeDef;
@@ -387,22 +387,22 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
   }
 
   public Log openNodeLog(Value partKey, Uri hostUri, Uri nodeUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openNodeLog(meshUri(), partKey, hostUri, nodeUri) : null;
   }
 
   public Policy openNodePolicy(Value partKey, Uri hostUri, Uri nodeUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openNodePolicy(meshUri(), partKey, hostUri, nodeUri) : null;
   }
 
   public Stage openNodeStage(Value partKey, Uri hostUri, Uri nodeUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openNodeStage(meshUri(), partKey, hostUri, nodeUri) : null;
   }
 
   public StoreBinding openNodeStore(Value partKey, Uri hostUri, Uri nodeUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openNodeStore(meshUri(), partKey, hostUri, nodeUri) : null;
   }
 
@@ -410,7 +410,7 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
     final MeshDef meshDef = this.meshDef;
     LaneDef laneDef = meshDef != null ? meshDef.getLaneDef(laneUri) : null;
     if (laneDef == null) {
-      final Fabric edge = fabricEdge();
+      final ActorSpace edge = actorEdge();
       laneDef = edge != null ? edge.getLaneDef(meshUri(), partKey, hostUri, nodeUri, laneUri) : null;
     }
     return laneDef;
@@ -437,22 +437,22 @@ public class FabricMesh extends FabricTier implements MeshBinding, MeshContext {
   }
 
   public Log openLaneLog(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openLaneLog(meshUri(), partKey, hostUri, nodeUri, laneUri) : null;
   }
 
   public Policy openLanePolicy(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openLanePolicy(meshUri(), partKey, hostUri, nodeUri, laneUri) : null;
   }
 
   public Stage openLaneStage(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openLaneStage(meshUri(), partKey, hostUri, nodeUri, laneUri) : null;
   }
 
   public StoreBinding openLaneStore(Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {
-    final Fabric edge = fabricEdge();
+    final ActorSpace edge = actorEdge();
     return edge != null ? edge.openLaneStore(meshUri(), partKey, hostUri, nodeUri, laneUri) : null;
   }
 

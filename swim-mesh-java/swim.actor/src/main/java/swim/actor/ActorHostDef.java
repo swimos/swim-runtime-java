@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import java.util.Collection;
 import swim.codec.Debug;
@@ -30,7 +30,7 @@ import swim.uri.UriMapper;
 import swim.uri.UriPattern;
 import swim.util.Murmur3;
 
-public class FabricHostDef implements HostDef, Debug {
+public class ActorHostDef implements HostDef, Debug {
   final UriPattern hostPattern;
   final boolean isPrimary;
   final boolean isReplica;
@@ -41,10 +41,10 @@ public class FabricHostDef implements HostDef, Debug {
   final StageDef stageDef;
   final StoreDef storeDef;
 
-  public FabricHostDef(UriPattern hostPattern, boolean isPrimary, boolean isReplica,
-                       UriMapper<NodeDef> nodeDefs, UriMapper<LaneDef> laneDefs,
-                       LogDef logDef, PolicyDef policyDef, StageDef stageDef,
-                       StoreDef storeDef) {
+  public ActorHostDef(UriPattern hostPattern, boolean isPrimary, boolean isReplica,
+                      UriMapper<NodeDef> nodeDefs, UriMapper<LaneDef> laneDefs,
+                      LogDef logDef, PolicyDef policyDef, StageDef stageDef,
+                      StoreDef storeDef) {
     this.hostPattern = hostPattern;
     this.isPrimary = isPrimary;
     this.isReplica = isReplica;
@@ -66,7 +66,7 @@ public class FabricHostDef implements HostDef, Debug {
     return this.hostPattern;
   }
 
-  public FabricHostDef hostPattern(UriPattern hostPattern) {
+  public ActorHostDef hostPattern(UriPattern hostPattern) {
     return copy(hostPattern, this.isPrimary, this.isReplica, this.nodeDefs, this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -76,7 +76,7 @@ public class FabricHostDef implements HostDef, Debug {
     return this.isPrimary;
   }
 
-  public FabricHostDef isPrimary(boolean isPrimary) {
+  public ActorHostDef isPrimary(boolean isPrimary) {
     return copy(this.hostPattern, isPrimary, this.isReplica, this.nodeDefs, this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -86,7 +86,7 @@ public class FabricHostDef implements HostDef, Debug {
     return this.isReplica;
   }
 
-  public FabricHostDef isReplica(boolean isReplica) {
+  public ActorHostDef isReplica(boolean isReplica) {
     return copy(this.hostPattern, this.isPrimary, isReplica, this.nodeDefs, this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -101,7 +101,7 @@ public class FabricHostDef implements HostDef, Debug {
     return this.nodeDefs.get(nodeUri);
   }
 
-  public FabricHostDef nodeDef(NodeDef nodeDef) {
+  public ActorHostDef nodeDef(NodeDef nodeDef) {
     return copy(this.hostPattern, this.isPrimary, this.isReplica,
                 this.nodeDefs.updated(nodeDef.nodePattern(), nodeDef), this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
@@ -117,7 +117,7 @@ public class FabricHostDef implements HostDef, Debug {
     return this.laneDefs.get(laneUri);
   }
 
-  public FabricHostDef laneDef(LaneDef laneDef) {
+  public ActorHostDef laneDef(LaneDef laneDef) {
     return copy(this.hostPattern, this.isPrimary, this.isReplica,
                 this.nodeDefs, this.laneDefs.updated(laneDef.lanePattern(), laneDef),
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
@@ -128,7 +128,7 @@ public class FabricHostDef implements HostDef, Debug {
     return this.logDef;
   }
 
-  public FabricHostDef logDef(LogDef logDef) {
+  public ActorHostDef logDef(LogDef logDef) {
     return copy(this.hostPattern, this.isPrimary, this.isReplica, this.nodeDefs, this.laneDefs,
                 logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -138,7 +138,7 @@ public class FabricHostDef implements HostDef, Debug {
     return this.policyDef;
   }
 
-  public FabricHostDef policyDef(PolicyDef policyDef) {
+  public ActorHostDef policyDef(PolicyDef policyDef) {
     return copy(this.hostPattern, this.isPrimary, this.isReplica, this.nodeDefs, this.laneDefs,
                 this.logDef, policyDef, this.stageDef, this.storeDef);
   }
@@ -148,7 +148,7 @@ public class FabricHostDef implements HostDef, Debug {
     return this.stageDef;
   }
 
-  public FabricHostDef stageDef(StageDef stageDef) {
+  public ActorHostDef stageDef(StageDef stageDef) {
     return copy(this.hostPattern, this.isPrimary, this.isReplica, this.nodeDefs, this.laneDefs,
                 this.logDef, this.policyDef, stageDef, this.storeDef);
   }
@@ -158,25 +158,25 @@ public class FabricHostDef implements HostDef, Debug {
     return this.storeDef;
   }
 
-  public FabricHostDef storeDef(StoreDef storeDef) {
+  public ActorHostDef storeDef(StoreDef storeDef) {
     return copy(this.hostPattern, this.isPrimary, this.isReplica, this.nodeDefs, this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, storeDef);
   }
 
-  protected FabricHostDef copy(UriPattern hostPattern, boolean isPrimary, boolean isReplica,
-                               UriMapper<NodeDef> nodeDefs, UriMapper<LaneDef> laneDefs,
-                               LogDef logDef, PolicyDef policyDef, StageDef stageDef,
-                               StoreDef storeDef) {
-    return new FabricHostDef(hostPattern, isPrimary, isReplica, nodeDefs, laneDefs,
-                             logDef, policyDef, stageDef, storeDef);
+  protected ActorHostDef copy(UriPattern hostPattern, boolean isPrimary, boolean isReplica,
+                              UriMapper<NodeDef> nodeDefs, UriMapper<LaneDef> laneDefs,
+                              LogDef logDef, PolicyDef policyDef, StageDef stageDef,
+                              StoreDef storeDef) {
+    return new ActorHostDef(hostPattern, isPrimary, isReplica, nodeDefs, laneDefs,
+                            logDef, policyDef, stageDef, storeDef);
   }
 
   @Override
   public boolean equals(Object other) {
     if (this == other) {
       return true;
-    } else if (other instanceof FabricHostDef) {
-      final FabricHostDef that = (FabricHostDef) other;
+    } else if (other instanceof ActorHostDef) {
+      final ActorHostDef that = (ActorHostDef) other;
       return this.hostPattern.equals(that.hostPattern)
           && this.isPrimary == that.isPrimary
           && this.isReplica == that.isReplica
@@ -193,7 +193,7 @@ public class FabricHostDef implements HostDef, Debug {
   @Override
   public int hashCode() {
     if (hashSeed == 0) {
-      hashSeed = Murmur3.seed(FabricHostDef.class);
+      hashSeed = Murmur3.seed(ActorHostDef.class);
     }
     return Murmur3.mash(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(
         Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(hashSeed, this.hostPattern.hashCode()),
@@ -204,7 +204,7 @@ public class FabricHostDef implements HostDef, Debug {
 
   @Override
   public void debug(Output<?> output) {
-    output = output.write("FabricHostDef").write('.');
+    output = output.write("ActorHostDef").write('.');
     if (this.hostPattern.isUri()) {
       output = output.write("fromHostUri").write('(').debug(this.hostPattern.toUri()).write(')');
     } else {
@@ -243,21 +243,21 @@ public class FabricHostDef implements HostDef, Debug {
 
   private static int hashSeed;
 
-  public static FabricHostDef fromHostUri(Uri hostUri) {
-    return new FabricHostDef(UriPattern.from(hostUri), false, false, UriMapper.empty(),
-                             UriMapper.empty(), null, null, null, null);
+  public static ActorHostDef fromHostUri(Uri hostUri) {
+    return new ActorHostDef(UriPattern.from(hostUri), false, false, UriMapper.empty(),
+                            UriMapper.empty(), null, null, null, null);
   }
 
-  public static FabricHostDef fromHostUri(String hostUri) {
+  public static ActorHostDef fromHostUri(String hostUri) {
     return fromHostUri(Uri.parse(hostUri));
   }
 
-  public static FabricHostDef fromHostPattern(UriPattern hostPattern) {
-    return new FabricHostDef(hostPattern, false, false, UriMapper.empty(),
-                             UriMapper.empty(), null, null, null, null);
+  public static ActorHostDef fromHostPattern(UriPattern hostPattern) {
+    return new ActorHostDef(hostPattern, false, false, UriMapper.empty(),
+                            UriMapper.empty(), null, null, null, null);
   }
 
-  public static FabricHostDef fromHostPattern(String hostPattern) {
+  public static ActorHostDef fromHostPattern(String hostPattern) {
     return fromHostPattern(UriPattern.parse(hostPattern));
   }
 }

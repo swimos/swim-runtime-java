@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import swim.api.Downlink;
 import swim.api.policy.Policy;
@@ -26,7 +26,7 @@ import swim.store.StoreBinding;
 import swim.uri.Uri;
 import swim.util.Log;
 
-public abstract class FabricCell implements CellBinding, CellContext {
+public abstract class ActorCell implements CellBinding, CellContext {
   Log log;
   Policy policy;
 

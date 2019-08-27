@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
@@ -67,9 +67,9 @@ import swim.uri.UriMapper;
 import swim.uri.UriPattern;
 import swim.util.Log;
 
-public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneContext, Space {
+public class ActorSpace extends AbstractTierBinding implements EdgeContext, PlaneContext, Space {
   final String spaceName;
-  final FabricDef fabricDef;
+  final ActorSpaceDef spaceDef;
   final KernelContext kernel;
   final EdgeBinding edge;
 
@@ -83,9 +83,9 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   volatile UriMapper<AgentFactory<?>> agentFactories;
   volatile HashTrieMap<String, Authenticator> authenticators;
 
-  public Fabric(String spaceName, FabricDef fabricDef, KernelContext kernel) {
+  public ActorSpace(String spaceName, ActorSpaceDef spaceDef, KernelContext kernel) {
     this.spaceName = spaceName;
-    this.fabricDef = fabricDef;
+    this.spaceDef = spaceDef;
     this.kernel = kernel;
 
     EdgeBinding edge = createEdge();
@@ -106,8 +106,8 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
     return this.spaceName;
   }
 
-  public final FabricDef fabricDef() {
-    return this.fabricDef;
+  public final ActorSpaceDef spaceDef() {
+    return this.spaceDef;
   }
 
   @Override
@@ -175,7 +175,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
 
   @Override
   public void addAuthenticator(String authenticatorName, Authenticator authenticator) {
-    final AuthenticatorContext authenticatorContext = new FabricAuthenticator(authenticatorName, this.kernel);
+    final AuthenticatorContext authenticatorContext = new ActorAuthenticator(authenticatorName, this.kernel);
     authenticator.setAuthenticatorContext(authenticatorContext);
 
     HashTrieMap<String, Authenticator> oldAuthenticators;
@@ -266,7 +266,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
 
   @Override
   public void addAgentRoute(String routeName, UriPattern pattern, AgentRoute<?> agentRoute) {
-    final AgentRouteContext agentRouteContext = new FabricAgentRoute(routeName, pattern);
+    final AgentRouteContext agentRouteContext = new ActorAgentRoute(routeName, pattern);
     agentRoute.setAgentRouteContext(agentRouteContext);
 
     HashTrieMap<String, AgentRoute<?>> oldAgentRoutes;
@@ -329,7 +329,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   public void openAgents(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, NodeBinding node) {
     this.kernel.openAgents(this.spaceName, meshUri, partKey, hostUri, nodeUri, node);
     if (!meshUri.isDefined()) {
-      final NodeDef nodeDef = this.fabricDef.getNodeDef(nodeUri);
+      final NodeDef nodeDef = this.spaceDef.getNodeDef(nodeUri);
       if (nodeDef != null && node instanceof AgentModel) {
         final AgentModel agentModel = (AgentModel) node;
         for (AgentDef agentDef : nodeDef.agentDefs()) {
@@ -361,8 +361,8 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
 
   protected Log openLog() {
     Log log;
-    if (this.fabricDef.logDef != null) {
-      log = createLog(this.fabricDef.logDef);
+    if (this.spaceDef.logDef != null) {
+      log = createLog(this.spaceDef.logDef);
     } else {
       log = openEdgeLog();
     }
@@ -386,8 +386,8 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
 
   protected PlanePolicy openPolicy() {
     Policy policy;
-    if (this.fabricDef.policyDef != null) {
-      policy = createPolicy(this.fabricDef.policyDef);
+    if (this.spaceDef.policyDef != null) {
+      policy = createPolicy(this.spaceDef.policyDef);
     } else {
       policy = openEdgePolicy();
     }
@@ -411,8 +411,8 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
 
   protected Stage openStage() {
     Stage stage;
-    if (this.fabricDef.stageDef != null) {
-      stage = createStage(this.fabricDef.stageDef);
+    if (this.spaceDef.stageDef != null) {
+      stage = createStage(this.spaceDef.stageDef);
     } else {
       stage = openEdgeStage();
     }
@@ -440,8 +440,8 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
 
   protected StoreBinding openStore() {
     StoreBinding store = null;
-    if (this.fabricDef.storeDef != null) {
-      store = createStore(this.fabricDef.storeDef);
+    if (this.spaceDef.storeDef != null) {
+      store = createStore(this.spaceDef.storeDef);
     } else {
       store = openEdgeStore();
     }
@@ -468,7 +468,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   }
 
   protected void openEdge(EdgeBinding edge) {
-    for (MeshDef meshDef : this.fabricDef.meshDefs()) {
+    for (MeshDef meshDef : this.spaceDef.meshDefs()) {
       createMesh(edge, meshDef);
     }
     if (edge.network() == null) {
@@ -603,7 +603,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   }
 
   public MeshDef getMeshDef(Uri meshUri) {
-    MeshDef meshDef = this.fabricDef.getMeshDef(meshUri);
+    MeshDef meshDef = this.spaceDef.getMeshDef(meshUri);
     if (meshDef == null) {
       meshDef = this.kernel.getMeshDef(this.spaceName, meshUri);
     }
@@ -618,7 +618,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   @Override
   public MeshBinding injectMesh(Uri meshUri, MeshBinding mesh) {
     final MeshDef meshDef = getMeshDef(meshUri);
-    return new FabricMesh(this.kernel.injectMesh(this.spaceName, meshUri, mesh), meshDef);
+    return new ActorMesh(this.kernel.injectMesh(this.spaceName, meshUri, mesh), meshDef);
   }
 
   public Log openMeshLog(Uri meshUri) {
@@ -638,7 +638,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   }
 
   public PartDef getPartDef(Uri meshUri, Value partKey) {
-    PartDef partDef = this.fabricDef.getPartDef(partKey);
+    PartDef partDef = this.spaceDef.getPartDef(partKey);
     if (partDef == null) {
       partDef = this.kernel.getPartDef(this.spaceName, meshUri, partKey);
     }
@@ -672,7 +672,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   }
 
   public HostDef getHostDef(Uri meshUri, Value partKey, Uri hostUri) {
-    HostDef hostDef = this.fabricDef.getHostDef(hostUri);
+    HostDef hostDef = this.spaceDef.getHostDef(hostUri);
     if (hostDef == null) {
       hostDef = this.kernel.getHostDef(this.spaceName, meshUri, partKey, hostUri);
     }
@@ -706,7 +706,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   }
 
   public NodeDef getNodeDef(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri) {
-    NodeDef nodeDef = this.fabricDef.getNodeDef(nodeUri);
+    NodeDef nodeDef = this.spaceDef.getNodeDef(nodeUri);
     if (nodeDef == null) {
       nodeDef = this.kernel.getNodeDef(this.spaceName, meshUri, partKey, hostUri, nodeUri);
     }
@@ -727,7 +727,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
       node = this.kernel.createNode(this.spaceName, meshUri, partKey, hostUri, nodeUri);
     }
     if (node == null && !meshUri.isDefined()) {
-      final NodeDef nodeDef = this.fabricDef.getNodeDef(nodeUri);
+      final NodeDef nodeDef = this.spaceDef.getNodeDef(nodeUri);
       if (nodeDef != null) {
         final Value props = nodeDef.props(nodeUri);
         node = new AgentModel(props);
@@ -758,7 +758,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   }
 
   public LaneDef getLaneDef(Uri meshUri, Value partKey, Uri hostUri, Uri nodeUri, Uri laneUri) {
-    LaneDef laneDef = this.fabricDef.getLaneDef(laneUri);
+    LaneDef laneDef = this.spaceDef.getLaneDef(laneUri);
     if (laneDef == null) {
       laneDef = this.kernel.getLaneDef(this.spaceName, meshUri, partKey, hostUri, nodeUri, laneUri);
     }
@@ -813,7 +813,7 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
         }
       }
     } else {
-      final Identity identity = new FabricIdentity(credentials.requestUri(), credentials.fromUri(), Value.absent());
+      final Identity identity = new ActorIdentity(credentials.requestUri(), credentials.fromUri(), Value.absent());
       directive = PolicyDirective.<Identity>allow(identity);
     }
     return directive;
@@ -1018,18 +1018,18 @@ public class Fabric extends AbstractTierBinding implements EdgeContext, PlaneCon
   }
 
   @SuppressWarnings("unchecked")
-  static final AtomicReferenceFieldUpdater<Fabric, HashTrieMap<String, Plane>> PLANES =
-      AtomicReferenceFieldUpdater.newUpdater(Fabric.class, (Class<HashTrieMap<String, Plane>>) (Class<?>) HashTrieMap.class, "planes");
+  static final AtomicReferenceFieldUpdater<ActorSpace, HashTrieMap<String, Plane>> PLANES =
+      AtomicReferenceFieldUpdater.newUpdater(ActorSpace.class, (Class<HashTrieMap<String, Plane>>) (Class<?>) HashTrieMap.class, "planes");
 
   @SuppressWarnings("unchecked")
-  static final AtomicReferenceFieldUpdater<Fabric, HashTrieMap<String, AgentRoute<?>>> AGENT_ROUTES =
-      AtomicReferenceFieldUpdater.newUpdater(Fabric.class, (Class<HashTrieMap<String, AgentRoute<?>>>) (Class<?>) HashTrieMap.class, "agentRoutes");
+  static final AtomicReferenceFieldUpdater<ActorSpace, HashTrieMap<String, AgentRoute<?>>> AGENT_ROUTES =
+      AtomicReferenceFieldUpdater.newUpdater(ActorSpace.class, (Class<HashTrieMap<String, AgentRoute<?>>>) (Class<?>) HashTrieMap.class, "agentRoutes");
 
   @SuppressWarnings("unchecked")
-  static final AtomicReferenceFieldUpdater<Fabric, UriMapper<AgentFactory<?>>> AGENT_FACTORIES =
-      AtomicReferenceFieldUpdater.newUpdater(Fabric.class, (Class<UriMapper<AgentFactory<?>>>) (Class<?>) UriMapper.class, "agentFactories");
+  static final AtomicReferenceFieldUpdater<ActorSpace, UriMapper<AgentFactory<?>>> AGENT_FACTORIES =
+      AtomicReferenceFieldUpdater.newUpdater(ActorSpace.class, (Class<UriMapper<AgentFactory<?>>>) (Class<?>) UriMapper.class, "agentFactories");
 
   @SuppressWarnings("unchecked")
-  static final AtomicReferenceFieldUpdater<Fabric, HashTrieMap<String, Authenticator>> AUTHENTICATORS =
-      AtomicReferenceFieldUpdater.newUpdater(Fabric.class, (Class<HashTrieMap<String, Authenticator>>) (Class<?>) HashTrieMap.class, "authenticators");
+  static final AtomicReferenceFieldUpdater<ActorSpace, HashTrieMap<String, Authenticator>> AUTHENTICATORS =
+      AtomicReferenceFieldUpdater.newUpdater(ActorSpace.class, (Class<HashTrieMap<String, Authenticator>>) (Class<?>) HashTrieMap.class, "authenticators");
 }

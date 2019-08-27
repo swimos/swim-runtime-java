@@ -13,13 +13,13 @@
 // limitations under the License.
 
 /**
- * Swim fabric runtime.
+ * Swim actor runtime.
  */
-module swim.fabric {
+module swim.actor {
   requires transitive swim.runtime;
   requires transitive swim.kernel;
 
-  exports swim.fabric;
+  exports swim.actor;
 
-  provides swim.kernel.Kernel with swim.fabric.FabricKernel;
+  provides swim.kernel.Kernel with swim.actor.ActorKernel;
 }

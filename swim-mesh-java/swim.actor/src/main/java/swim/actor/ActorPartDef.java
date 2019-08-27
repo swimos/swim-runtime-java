@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import java.util.Collection;
 import swim.codec.Debug;
@@ -32,7 +32,7 @@ import swim.uri.Uri;
 import swim.uri.UriMapper;
 import swim.util.Murmur3;
 
-public class FabricPartDef implements PartDef, Debug {
+public class ActorPartDef implements PartDef, Debug {
   final Value partKey;
   final PartPredicate predicate;
   final boolean isGateway;
@@ -44,10 +44,10 @@ public class FabricPartDef implements PartDef, Debug {
   final StageDef stageDef;
   final StoreDef storeDef;
 
-  public FabricPartDef(Value partKey, PartPredicate predicate, boolean isGateway,
-                       UriMapper<HostDef> hostDefs, UriMapper<NodeDef> nodeDefs,
-                       UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
-                       StageDef stageDef, StoreDef storeDef) {
+  public ActorPartDef(Value partKey, PartPredicate predicate, boolean isGateway,
+                      UriMapper<HostDef> hostDefs, UriMapper<NodeDef> nodeDefs,
+                      UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
+                      StageDef stageDef, StoreDef storeDef) {
     this.partKey = partKey;
     this.predicate = predicate;
     this.isGateway = isGateway;
@@ -65,7 +65,7 @@ public class FabricPartDef implements PartDef, Debug {
     return this.partKey;
   }
 
-  public FabricPartDef partKey(Value partKey) {
+  public ActorPartDef partKey(Value partKey) {
     return copy(partKey, this.predicate, this.isGateway, this.hostDefs, this.nodeDefs,
                 this.laneDefs, this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -75,7 +75,7 @@ public class FabricPartDef implements PartDef, Debug {
     return this.predicate;
   }
 
-  public FabricPartDef predicate(PartPredicate predicate) {
+  public ActorPartDef predicate(PartPredicate predicate) {
     return copy(this.partKey, predicate, this.isGateway, this.hostDefs, this.nodeDefs,
                 this.laneDefs, this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -85,7 +85,7 @@ public class FabricPartDef implements PartDef, Debug {
     return this.isGateway;
   }
 
-  public FabricPartDef isGateway(boolean isGateway) {
+  public ActorPartDef isGateway(boolean isGateway) {
     return copy(this.partKey, this.predicate, isGateway, this.hostDefs, this.nodeDefs,
                 this.laneDefs, this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -100,7 +100,7 @@ public class FabricPartDef implements PartDef, Debug {
     return this.hostDefs.get(hostUri);
   }
 
-  public FabricPartDef hostDef(HostDef hostDef) {
+  public ActorPartDef hostDef(HostDef hostDef) {
     return copy(this.partKey, this.predicate, this.isGateway,
                 this.hostDefs.updated(hostDef.hostPattern(), hostDef), this.nodeDefs,
                 this.laneDefs, this.logDef, this.policyDef, this.stageDef, this.storeDef);
@@ -116,7 +116,7 @@ public class FabricPartDef implements PartDef, Debug {
     return this.nodeDefs.get(nodeUri);
   }
 
-  public FabricPartDef nodeDef(NodeDef nodeDef) {
+  public ActorPartDef nodeDef(NodeDef nodeDef) {
     return copy(this.partKey, this.predicate, this.isGateway, this.hostDefs,
                 this.nodeDefs.updated(nodeDef.nodePattern(), nodeDef), this.laneDefs,
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
@@ -132,7 +132,7 @@ public class FabricPartDef implements PartDef, Debug {
     return this.laneDefs.get(laneUri);
   }
 
-  public FabricPartDef laneDef(LaneDef laneDef) {
+  public ActorPartDef laneDef(LaneDef laneDef) {
     return copy(this.partKey, this.predicate, this.isGateway, this.hostDefs,
                 this.nodeDefs, this.laneDefs.updated(laneDef.lanePattern(), laneDef),
                 this.logDef, this.policyDef, this.stageDef, this.storeDef);
@@ -143,7 +143,7 @@ public class FabricPartDef implements PartDef, Debug {
     return this.logDef;
   }
 
-  public FabricPartDef logDef(LogDef logDef) {
+  public ActorPartDef logDef(LogDef logDef) {
     return copy(this.partKey, this.predicate, this.isGateway, this.hostDefs, this.nodeDefs,
                 this.laneDefs, logDef, this.policyDef, this.stageDef, this.storeDef);
   }
@@ -153,7 +153,7 @@ public class FabricPartDef implements PartDef, Debug {
     return this.policyDef;
   }
 
-  public FabricPartDef policyDef(PolicyDef policyDef) {
+  public ActorPartDef policyDef(PolicyDef policyDef) {
     return copy(this.partKey, this.predicate, this.isGateway, this.hostDefs, this.nodeDefs,
                 this.laneDefs, this.logDef, policyDef, this.stageDef, this.storeDef);
   }
@@ -163,7 +163,7 @@ public class FabricPartDef implements PartDef, Debug {
     return this.stageDef;
   }
 
-  public FabricPartDef stageDef(StageDef stageDef) {
+  public ActorPartDef stageDef(StageDef stageDef) {
     return copy(this.partKey, this.predicate, this.isGateway, this.hostDefs, this.nodeDefs,
                 this.laneDefs, this.logDef, this.policyDef, stageDef, this.storeDef);
   }
@@ -173,25 +173,25 @@ public class FabricPartDef implements PartDef, Debug {
     return this.storeDef;
   }
 
-  public FabricPartDef storeDef(StoreDef storeDef) {
+  public ActorPartDef storeDef(StoreDef storeDef) {
     return copy(this.partKey, this.predicate, this.isGateway, this.hostDefs, this.nodeDefs,
                 this.laneDefs, this.logDef, this.policyDef, this.stageDef, storeDef);
   }
 
-  protected FabricPartDef copy(Value partKey, PartPredicate predicate, boolean isGateway,
-                               UriMapper<HostDef> hostDefs, UriMapper<NodeDef> nodeDefs,
-                               UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
-                               StageDef stageDef, StoreDef storeDef) {
-    return new FabricPartDef(partKey, predicate, isGateway, hostDefs, nodeDefs,
-                             laneDefs, logDef, policyDef, stageDef, storeDef);
+  protected ActorPartDef copy(Value partKey, PartPredicate predicate, boolean isGateway,
+                              UriMapper<HostDef> hostDefs, UriMapper<NodeDef> nodeDefs,
+                              UriMapper<LaneDef> laneDefs, LogDef logDef, PolicyDef policyDef,
+                              StageDef stageDef, StoreDef storeDef) {
+    return new ActorPartDef(partKey, predicate, isGateway, hostDefs, nodeDefs,
+                            laneDefs, logDef, policyDef, stageDef, storeDef);
   }
 
   @Override
   public boolean equals(Object other) {
     if (this == other) {
       return true;
-    } else if (other instanceof FabricPartDef) {
-      final FabricPartDef that = (FabricPartDef) other;
+    } else if (other instanceof ActorPartDef) {
+      final ActorPartDef that = (ActorPartDef) other;
       return this.partKey.equals(that.partKey)
           && this.predicate.equals(that.predicate)
           && this.isGateway == that.isGateway
@@ -209,7 +209,7 @@ public class FabricPartDef implements PartDef, Debug {
   @Override
   public int hashCode() {
     if (hashSeed == 0) {
-      hashSeed = Murmur3.seed(FabricPartDef.class);
+      hashSeed = Murmur3.seed(ActorPartDef.class);
     }
     return Murmur3.mash(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(
         Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(hashSeed, Murmur3.hash(this.partKey)),
@@ -220,7 +220,7 @@ public class FabricPartDef implements PartDef, Debug {
 
   @Override
   public void debug(Output<?> output) {
-    output = output.write("FabricPartDef").write('.').write("fromPartPredicate").write('(')
+    output = output.write("ActorPartDef").write('.').write("fromPartPredicate").write('(')
         .debug(this.partKey).write(", ").debug(this.predicate).write(')');
     if (this.isGateway) {
       output = output.write('.').write("isGateway").write('(').debug(this.isGateway).write(')');
@@ -255,9 +255,9 @@ public class FabricPartDef implements PartDef, Debug {
 
   private static int hashSeed;
 
-  public static FabricPartDef fromPartPredicate(Value partKey, PartPredicate predicate) {
-    return new FabricPartDef(partKey, predicate, false, UriMapper.empty(),
-                             UriMapper.empty(), UriMapper.empty(),
-                             null, null, null, null);
+  public static ActorPartDef fromPartPredicate(Value partKey, PartPredicate predicate) {
+    return new ActorPartDef(partKey, predicate, false, UriMapper.empty(),
+                            UriMapper.empty(), UriMapper.empty(),
+                            null, null, null, null);
   }
 }

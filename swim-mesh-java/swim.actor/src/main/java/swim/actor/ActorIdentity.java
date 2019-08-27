@@ -12,19 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import swim.api.auth.Identity;
 import swim.api.store.Store;
 import swim.structure.Value;
 import swim.uri.Uri;
 
-public class FabricIdentity implements Identity {
+public class ActorIdentity implements Identity {
   final Uri requestUri;
   final Uri fromUri;
   final Value subject;
 
-  public FabricIdentity(Uri requestUri, Uri fromUri, Value subject) {
+  public ActorIdentity(Uri requestUri, Uri fromUri, Value subject) {
     this.requestUri = requestUri;
     this.fromUri = fromUri;
     this.subject = subject;

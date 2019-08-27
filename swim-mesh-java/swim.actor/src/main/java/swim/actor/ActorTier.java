@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import swim.concurrent.MainStage;
 import swim.concurrent.Schedule;
@@ -21,7 +21,7 @@ import swim.runtime.TierBinding;
 import swim.runtime.TierContext;
 import swim.store.StoreBinding;
 
-public abstract class FabricTier extends FabricCell implements TierBinding, TierContext {
+public abstract class ActorTier extends ActorCell implements TierBinding, TierContext {
   Stage stage;
   StoreBinding store;
 

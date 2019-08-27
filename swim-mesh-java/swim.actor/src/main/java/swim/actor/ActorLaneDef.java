@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import swim.codec.Debug;
 import swim.codec.Format;
@@ -26,7 +26,7 @@ import swim.uri.Uri;
 import swim.uri.UriPattern;
 import swim.util.Murmur3;
 
-public class FabricLaneDef implements LaneDef, Debug {
+public class ActorLaneDef implements LaneDef, Debug {
   final UriPattern lanePattern;
   final String laneType;
   final LogDef logDef;
@@ -34,8 +34,8 @@ public class FabricLaneDef implements LaneDef, Debug {
   final StageDef stageDef;
   final StoreDef storeDef;
 
-  public FabricLaneDef(UriPattern lanePattern, String laneType, LogDef logDef,
-                       PolicyDef policyDef, StageDef stageDef, StoreDef storeDef) {
+  public ActorLaneDef(UriPattern lanePattern, String laneType, LogDef logDef,
+                      PolicyDef policyDef, StageDef stageDef, StoreDef storeDef) {
     this.lanePattern = lanePattern;
     this.laneType = laneType;
     this.logDef = logDef;
@@ -54,7 +54,7 @@ public class FabricLaneDef implements LaneDef, Debug {
     return this.lanePattern;
   }
 
-  public FabricLaneDef lanePattern(UriPattern lanePattern) {
+  public ActorLaneDef lanePattern(UriPattern lanePattern) {
     return copy(lanePattern, this.laneType, this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
 
@@ -63,7 +63,7 @@ public class FabricLaneDef implements LaneDef, Debug {
     return this.laneType;
   }
 
-  public FabricLaneDef laneType(String laneType) {
+  public ActorLaneDef laneType(String laneType) {
     return copy(this.lanePattern, laneType, this.logDef, this.policyDef, this.stageDef, this.storeDef);
   }
 
@@ -72,7 +72,7 @@ public class FabricLaneDef implements LaneDef, Debug {
     return this.logDef;
   }
 
-  public FabricLaneDef logDef(LogDef logDef) {
+  public ActorLaneDef logDef(LogDef logDef) {
     return copy(this.lanePattern, this.laneType, logDef, this.policyDef, this.stageDef, this.storeDef);
   }
 
@@ -81,7 +81,7 @@ public class FabricLaneDef implements LaneDef, Debug {
     return this.policyDef;
   }
 
-  public FabricLaneDef policyDef(PolicyDef policyDef) {
+  public ActorLaneDef policyDef(PolicyDef policyDef) {
     return copy(this.lanePattern, this.laneType, this.logDef, policyDef, this.stageDef, this.storeDef);
   }
 
@@ -90,7 +90,7 @@ public class FabricLaneDef implements LaneDef, Debug {
     return this.stageDef;
   }
 
-  public FabricLaneDef stageDef(StageDef stageDef) {
+  public ActorLaneDef stageDef(StageDef stageDef) {
     return copy(this.lanePattern, this.laneType, this.logDef, this.policyDef, stageDef, this.storeDef);
   }
 
@@ -99,21 +99,21 @@ public class FabricLaneDef implements LaneDef, Debug {
     return this.storeDef;
   }
 
-  public FabricLaneDef storeDef(StoreDef storeDef) {
+  public ActorLaneDef storeDef(StoreDef storeDef) {
     return copy(this.lanePattern, this.laneType, this.logDef, this.policyDef, this.stageDef, storeDef);
   }
 
-  protected FabricLaneDef copy(UriPattern lanePattern, String laneType, LogDef logDef,
+  protected ActorLaneDef copy(UriPattern lanePattern, String laneType, LogDef logDef,
                                PolicyDef policyDef, StageDef stageDef, StoreDef storeDef) {
-    return new FabricLaneDef(lanePattern, laneType, logDef, policyDef, stageDef, storeDef);
+    return new ActorLaneDef(lanePattern, laneType, logDef, policyDef, stageDef, storeDef);
   }
 
   @Override
   public boolean equals(Object other) {
     if (this == other) {
       return true;
-    } else if (other instanceof FabricLaneDef) {
-      final FabricLaneDef that = (FabricLaneDef) other;
+    } else if (other instanceof ActorLaneDef) {
+      final ActorLaneDef that = (ActorLaneDef) other;
       return this.lanePattern.equals(that.lanePattern)
           && (this.laneType == null ? that.laneType == null : this.laneType.equals(that.laneType))
           && (this.logDef == null ? that.logDef == null : this.logDef.equals(that.logDef))
@@ -127,7 +127,7 @@ public class FabricLaneDef implements LaneDef, Debug {
   @Override
   public int hashCode() {
     if (hashSeed == 0) {
-      hashSeed = Murmur3.seed(FabricLaneDef.class);
+      hashSeed = Murmur3.seed(ActorLaneDef.class);
     }
     return Murmur3.mash(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(Murmur3.mix(
         Murmur3.mix(hashSeed, this.lanePattern.hashCode()), Murmur3.hash(this.laneType)),
@@ -137,7 +137,7 @@ public class FabricLaneDef implements LaneDef, Debug {
 
   @Override
   public void debug(Output<?> output) {
-    output = output.write("FabricLaneDef").write('.');
+    output = output.write("ActorLaneDef").write('.');
     if (this.lanePattern.isUri()) {
       output = output.write("fromLaneUri").write('(').debug(this.lanePattern.toUri()).write(')');
     } else {
@@ -167,19 +167,19 @@ public class FabricLaneDef implements LaneDef, Debug {
 
   private static int hashSeed;
 
-  public static FabricLaneDef fromLaneUri(Uri laneUri) {
-    return new FabricLaneDef(UriPattern.from(laneUri), null, null, null, null, null);
+  public static ActorLaneDef fromLaneUri(Uri laneUri) {
+    return new ActorLaneDef(UriPattern.from(laneUri), null, null, null, null, null);
   }
 
-  public static FabricLaneDef fromLaneUri(String laneUri) {
+  public static ActorLaneDef fromLaneUri(String laneUri) {
     return fromLaneUri(Uri.parse(laneUri));
   }
 
-  public static FabricLaneDef fromLanePattern(UriPattern lanePattern) {
-    return new FabricLaneDef(lanePattern, null, null, null, null, null);
+  public static ActorLaneDef fromLanePattern(UriPattern lanePattern) {
+    return new ActorLaneDef(lanePattern, null, null, null, null, null);
   }
 
-  public static FabricLaneDef fromLanePattern(String lanePattern) {
+  public static ActorLaneDef fromLanePattern(String lanePattern) {
     return fromLanePattern(UriPattern.parse(lanePattern));
   }
 }

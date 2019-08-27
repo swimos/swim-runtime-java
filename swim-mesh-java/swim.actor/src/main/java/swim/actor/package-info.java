@@ -13,6 +13,6 @@
 // limitations under the License.
 
 /**
- * Swim fabric runtime.
+ * Swim actor runtime.
  */
-package swim.fabric;
+package swim.actor;

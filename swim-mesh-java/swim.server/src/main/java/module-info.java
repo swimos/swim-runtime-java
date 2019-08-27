@@ -22,7 +22,7 @@ module swim.server {
   requires transitive swim.service;
   requires transitive swim.service.web;
   requires transitive swim.auth;
-  requires transitive swim.fabric;
+  requires transitive swim.actor;
   requires transitive swim.java;
 
   exports swim.server;

@@ -23,10 +23,10 @@ gradle.projectsEvaluated {
         'swim.store',
         'swim.store.mem')
       options.group('Runtime',
+        'swim.actor',
         'swim.api',
         'swim.auth',
         'swim.client',
-        'swim.fabric',
         'swim.java',
         'swim.kernel',
         'swim.remote',

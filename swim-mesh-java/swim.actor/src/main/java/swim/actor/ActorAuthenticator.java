@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.fabric;
+package swim.actor;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
@@ -29,7 +29,7 @@ import swim.io.IpSocketRef;
 import swim.kernel.KernelContext;
 import swim.util.Log;
 
-public class FabricAuthenticator implements AuthenticatorContext {
+public class ActorAuthenticator implements AuthenticatorContext {
   final String authenticatorName;
   final KernelContext kernel;
   Authenticator authenticator;
@@ -38,7 +38,7 @@ public class FabricAuthenticator implements AuthenticatorContext {
   Log log;
   Stage stage;
 
-  public FabricAuthenticator(String authenticatorName, KernelContext kernel) {
+  public ActorAuthenticator(String authenticatorName, KernelContext kernel) {
     this.authenticatorName = authenticatorName;
     this.kernel = kernel;
   }
@@ -212,6 +212,6 @@ public class FabricAuthenticator implements AuthenticatorContext {
 
   protected static final int STARTED = 0x01;
 
-  protected static final AtomicIntegerFieldUpdater<FabricAuthenticator> STATUS =
-      AtomicIntegerFieldUpdater.newUpdater(FabricAuthenticator.class, "status");
+  protected static final AtomicIntegerFieldUpdater<ActorAuthenticator> STATUS =
+      AtomicIntegerFieldUpdater.newUpdater(ActorAuthenticator.class, "status");
 }
