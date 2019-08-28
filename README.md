@@ -50,6 +50,7 @@ of the following component libraries:
 - [**swim.ws**](swim-core-java/swim.ws) –
 - [**swim.warp**](swim-core-java/swim.warp) –
 - [**swim.concurrent**](swim-core-java/swim.concurrent) –
+- [**swim.db**](swim-core-java/swim.db) –
 - [**swim.io**](swim-core-java/swim.io) –
 - [**swim.io.mqtt**](swim-core-java/swim.io.mqtt) –
 - [**swim.io.http**](swim-core-java/swim.io.http) –
@@ -71,6 +72,7 @@ component libraries:
 - [**swim.actor**](swim-mesh-java/swim.actor) –
 - [**swim.service**](swim-mesh-java/swim.service) –
 - [**swim.store.mem**](swim-mesh-java/swim.store.mem) –
+- [**swim.store.db**](swim-mesh-java/swim.store.db) –
 - [**swim.remote**](swim-mesh-java/swim.remote) –
 - [**swim.service.web**](swim-mesh-java/swim.service.web) –
 - [**swim.java**](swim-mesh-java/swim.java) –

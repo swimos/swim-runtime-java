@@ -97,6 +97,10 @@ include 'swim.concurrent'
 project(':swim.concurrent').projectDir = file('swim-core-java/swim.concurrent')
 project(':swim.concurrent').name = 'swim-concurrent'
 
+include 'swim.db'
+project(':swim.db').projectDir = file('swim-core-java/swim.db')
+project(':swim.db').name = 'swim-db'
+
 include 'swim.io'
 project(':swim.io').projectDir = file('swim-core-java/swim.io')
 project(':swim.io').name = 'swim-io'
@@ -152,6 +156,10 @@ project(':swim.service').name = 'swim-service'
 include 'swim.store.mem'
 project(':swim.store.mem').projectDir = file('swim-mesh-java/swim.store.mem')
 project(':swim.store.mem').name = 'swim-store-mem'
+
+include 'swim.store.db'
+project(':swim.store.db').projectDir = file('swim-mesh-java/swim.store.db')
+project(':swim.store.db').name = 'swim-store-db'
 
 include 'swim.remote'
 project(':swim.remote').projectDir = file('swim-mesh-java/swim.remote')

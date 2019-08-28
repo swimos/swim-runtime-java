@@ -28,6 +28,7 @@ import swim.kernel.KernelLoader;
 import swim.remote.RemoteKernel;
 import swim.service.ServiceKernel;
 import swim.service.web.WebServiceKernel;
+import swim.store.db.DbStoreKernel;
 import swim.store.mem.MemStoreKernel;
 import swim.structure.Item;
 import swim.structure.Value;
@@ -81,6 +82,9 @@ public final class ServerLoader {
     }
     if (kernel.unwrapKernel(MemStoreKernel.class) == null) {
       kernel = kernel.injectKernel(new MemStoreKernel());
+    }
+    if (kernel.unwrapKernel(DbStoreKernel.class) == null) {
+      kernel = kernel.injectKernel(new DbStoreKernel());
     }
     if (kernel.unwrapKernel(RemoteKernel.class) == null) {
       kernel = kernel.injectKernel(new RemoteKernel());
