@@ -63,6 +63,14 @@ project(':swim-kernel') {
   }
 }
 
+project(':swim-meta') {
+  afterEvaluate {
+    dependencies {
+      implementation project(':swim-recon')
+    }
+  }
+}
+
 project(':swim-auth') {
   afterEvaluate {
     dependencies {
