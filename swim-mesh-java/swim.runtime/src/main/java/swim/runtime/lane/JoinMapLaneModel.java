@@ -55,7 +55,7 @@ public class JoinMapLaneModel extends WarpLaneModel<JoinMapLaneView<?, ?, ?>, Jo
 
   @Override
   protected JoinMapLaneUplink createWarpUplink(WarpBinding link) {
-    return new JoinMapLaneUplink(this, link);
+    return new JoinMapLaneUplink(this, link, createUplinkAddress(link));
   }
 
   protected void openDownlinks() {

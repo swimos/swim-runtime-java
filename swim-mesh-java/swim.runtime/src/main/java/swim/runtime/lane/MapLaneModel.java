@@ -48,7 +48,7 @@ public class MapLaneModel extends WarpLaneModel<MapLaneView<?, ?>, MapLaneUplink
 
   @Override
   protected MapLaneUplink createWarpUplink(WarpBinding link) {
-    return new MapLaneUplink(this, link);
+    return new MapLaneUplink(this, link, createUplinkAddress(link));
   }
 
   @Override

@@ -52,7 +52,7 @@ public class SpatialLaneModel<S> extends WarpLaneModel<SpatialLaneView<?, S, ?>,
 
   @Override
   protected SpatialLaneUplink<S> createWarpUplink(WarpBinding link) {
-    return new SpatialLaneUplink<S>(this, link);
+    return new SpatialLaneUplink<S>(this, link, createUplinkAddress(link));
   }
 
   @Override

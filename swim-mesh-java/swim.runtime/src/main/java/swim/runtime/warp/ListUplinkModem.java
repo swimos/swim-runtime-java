@@ -15,14 +15,15 @@
 package swim.runtime.warp;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import swim.runtime.UplinkAddress;
 import swim.runtime.WarpBinding;
 import swim.structure.Value;
 
 public abstract class ListUplinkModem extends WarpUplinkModem {
   final ConcurrentLinkedQueue<ListLinkDelta> downQueue;
 
-  public ListUplinkModem(WarpBinding linkBinding) {
-    super(linkBinding);
+  public ListUplinkModem(WarpBinding linkBinding, UplinkAddress uplinkAddress) {
+    super(linkBinding, uplinkAddress);
     this.downQueue = new ConcurrentLinkedQueue<ListLinkDelta>();
   }
 

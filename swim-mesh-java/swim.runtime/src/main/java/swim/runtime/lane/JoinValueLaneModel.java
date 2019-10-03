@@ -59,7 +59,7 @@ public class JoinValueLaneModel extends WarpLaneModel<JoinValueLaneView<?, ?>, J
 
   @Override
   protected JoinValueLaneUplink createWarpUplink(WarpBinding link) {
-    return new JoinValueLaneUplink(this, link);
+    return new JoinValueLaneUplink(this, link, createUplinkAddress(link));
   }
 
   protected void openDownlinks() {

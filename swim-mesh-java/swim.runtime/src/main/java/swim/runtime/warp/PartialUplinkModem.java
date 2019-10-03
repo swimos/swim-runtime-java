@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import swim.collections.HashTrieSet;
+import swim.runtime.UplinkAddress;
 import swim.runtime.WarpBinding;
 import swim.structure.Record;
 import swim.structure.Value;
@@ -29,8 +30,8 @@ public abstract class PartialUplinkModem extends WarpUplinkModem {
   volatile HashTrieSet<Value> keyQueue;
   volatile Value lastKey;
 
-  public PartialUplinkModem(WarpBinding linkBinding) {
-    super(linkBinding);
+  public PartialUplinkModem(WarpBinding linkBinding, UplinkAddress uplinkAddress) {
+    super(linkBinding, uplinkAddress);
     this.downQueue = new ConcurrentLinkedQueue<Value>();
     this.keyQueue = HashTrieSet.empty();
   }

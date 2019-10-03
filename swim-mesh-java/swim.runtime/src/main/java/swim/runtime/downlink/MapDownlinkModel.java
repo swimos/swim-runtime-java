@@ -104,6 +104,7 @@ public class MapDownlinkModel extends PartialDownlinkModem<MapDownlinkView<?, ?>
 
   @Override
   protected void didAddDownlink(MapDownlinkView<?, ?> view) {
+    super.didAddDownlink(view);
     if (this.views instanceof DownlinkView) {
       isStateful(((MapDownlinkView<?, ?>) view).isStateful());
     }

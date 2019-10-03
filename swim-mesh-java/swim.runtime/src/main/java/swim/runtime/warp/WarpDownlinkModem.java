@@ -15,14 +15,18 @@
 package swim.runtime.warp;
 
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+import java.util.concurrent.atomic.AtomicLongFieldUpdater;
+import swim.concurrent.Conts;
 import swim.runtime.CellContext;
 import swim.runtime.DownlinkModel;
 import swim.runtime.DownlinkView;
 import swim.runtime.LinkBinding;
 import swim.runtime.LinkContext;
+import swim.runtime.Metric;
 import swim.runtime.NodeBinding;
 import swim.runtime.WarpBinding;
 import swim.runtime.WarpContext;
+import swim.runtime.profile.WarpDownlinkProfile;
 import swim.structure.Value;
 import swim.uri.Uri;
 import swim.warp.CommandMessage;
@@ -42,6 +46,18 @@ public abstract class WarpDownlinkModem<View extends DownlinkView> extends Downl
   protected WarpContext linkContext;
   protected CellContext cellContext;
   protected volatile int status;
+
+  volatile long execDelta;
+  volatile long execTime;
+  volatile int openDelta;
+  volatile int openCount;
+  volatile int closeDelta;
+  volatile int closeCount;
+  volatile int eventDelta;
+  volatile int commandDelta;
+  volatile long eventCount;
+  volatile long commandCount;
+  volatile long lastReportTime;
 
   public WarpDownlinkModem(Uri meshUri, Uri hostUri, Uri nodeUri, Uri laneUri,
                            float prio, float rate, Value body) {
@@ -397,6 +413,17 @@ public abstract class WarpDownlinkModem<View extends DownlinkView> extends Downl
     return new UnlinkRequest(this.nodeUri, this.laneUri, this.body);
   }
 
+  protected void didAddDownlink(View view) {
+    super.didAddDownlink(view);
+    OPEN_DELTA.incrementAndGet(this);
+    flushMetrics();
+  }
+
+  protected void didRemoveDownlink(View view) {
+    super.didRemoveDownlink(view);
+    CLOSE_DELTA.incrementAndGet(this);
+  }
+
   @Override
   public void reopen() {
     // nop
@@ -439,14 +466,18 @@ public abstract class WarpDownlinkModem<View extends DownlinkView> extends Downl
 
   protected void didClose() {
     STATUS.set(this, 0);
+    removeDownlinks();
+    flushMetrics();
   }
 
   protected void onEvent(EventMessage message) {
-    // stub
+    EVENT_DELTA.incrementAndGet(this);
+    didUpdateMetrics();
   }
 
   protected void onCommand(CommandMessage message) {
-    // stub
+    COMMAND_DELTA.incrementAndGet(this);
+    didUpdateMetrics();
   }
 
   protected void willLink(LinkRequest request) {
@@ -525,7 +556,85 @@ public abstract class WarpDownlinkModem<View extends DownlinkView> extends Downl
 
   @Override
   public void openMetaDownlink(LinkBinding downlink, NodeBinding metaDownlink) {
-    this.cellContext.openMetaDownlink(downlink, metaDownlink);
+    final CellContext cellContext = this.cellContext;
+    if (cellContext != null) {
+      cellContext.openMetaDownlink(downlink, metaDownlink);
+    }
+  }
+
+  @Override
+  public void accumulateExecTime(long execDelta) {
+    EXEC_DELTA.addAndGet(this, execDelta);
+    didUpdateMetrics();
+  }
+
+  protected void didUpdateMetrics() {
+    do {
+      final long oldReportTime = this.lastReportTime;
+      final long newReportTime = System.currentTimeMillis();
+      final long dt = newReportTime - oldReportTime;
+      if (dt >= Metric.REPORT_INTERVAL) {
+        if (LAST_REPORT_TIME.compareAndSet(this, oldReportTime, newReportTime)) {
+          try {
+            reportMetrics(dt);
+          } catch (Throwable error) {
+            if (Conts.isNonFatal(error)) {
+              didFail(error);
+            } else {
+              throw error;
+            }
+          }
+          break;
+        }
+      } else {
+        break;
+      }
+    } while (true);
+  }
+
+  protected void flushMetrics() {
+    final long newReportTime = System.currentTimeMillis();
+    final long oldReportTime = LAST_REPORT_TIME.getAndSet(this, newReportTime);
+    final long dt = newReportTime - oldReportTime;
+    try {
+      reportMetrics(dt);
+    } catch (Throwable error) {
+      if (Conts.isNonFatal(error)) {
+        didFail(error);
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  protected void reportMetrics(long dt) {
+    final CellContext cellContext = this.cellContext;
+    if (cellContext != null) {
+      final WarpDownlinkProfile profile = collectProfile(dt);
+      cellContext.reportDown(profile);
+    }
+  }
+
+  protected WarpDownlinkProfile collectProfile(long dt) {
+    final long execDelta = EXEC_DELTA.getAndSet(this, 0L);
+    final long execRate = (long) Math.ceil((1000.0 * (double) execDelta) / (double) dt);
+    final long execTime = EXEC_TIME.addAndGet(this, execDelta);
+
+    final int openDelta = OPEN_DELTA.getAndSet(this, 0);
+    final int openCount = OPEN_COUNT.addAndGet(this, openDelta);
+    final int closeDelta = CLOSE_DELTA.getAndSet(this, 0);
+    final int closeCount = CLOSE_COUNT.addAndGet(this, closeDelta);
+    final int eventDelta = EVENT_DELTA.getAndSet(this, 0);
+    final int eventRate = (int) Math.ceil((1000.0 * (double) eventDelta) / (double) dt);
+    final long eventCount = EVENT_COUNT.addAndGet(this, (long) eventDelta);
+    final int commandDelta = COMMAND_DELTA.getAndSet(this, 0);
+    final int commandRate = (int) Math.ceil((1000.0 * (double) commandDelta) / (double) dt);
+    final long commandCount = COMMAND_COUNT.addAndGet(this, (long) commandDelta);
+
+    return new WarpDownlinkProfile(cellAddressDown(), execDelta, execRate, execTime,
+                                   openDelta, openCount, closeDelta, closeCount,
+                                   eventDelta, eventRate, eventCount,
+                                   commandDelta, commandRate, commandCount);
   }
 
   static final int OPENED = 1 << 0;
@@ -544,4 +653,38 @@ public abstract class WarpDownlinkModem<View extends DownlinkView> extends Downl
   @SuppressWarnings("unchecked")
   static final AtomicIntegerFieldUpdater<WarpDownlinkModem<?>> STATUS =
       AtomicIntegerFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "status");
+
+  @SuppressWarnings("unchecked")
+  protected static final AtomicLongFieldUpdater<WarpDownlinkModem<?>> EXEC_DELTA =
+      AtomicLongFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "execDelta");
+  @SuppressWarnings("unchecked")
+  protected static final AtomicLongFieldUpdater<WarpDownlinkModem<?>> EXEC_TIME =
+      AtomicLongFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "execTime");
+  @SuppressWarnings("unchecked")
+  static final AtomicIntegerFieldUpdater<WarpDownlinkModem<?>> OPEN_DELTA =
+      AtomicIntegerFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "openDelta");
+  @SuppressWarnings("unchecked")
+  static final AtomicIntegerFieldUpdater<WarpDownlinkModem<?>> OPEN_COUNT =
+      AtomicIntegerFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "openCount");
+  @SuppressWarnings("unchecked")
+  static final AtomicIntegerFieldUpdater<WarpDownlinkModem<?>> CLOSE_DELTA =
+      AtomicIntegerFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "closeDelta");
+  @SuppressWarnings("unchecked")
+  static final AtomicIntegerFieldUpdater<WarpDownlinkModem<?>> CLOSE_COUNT =
+      AtomicIntegerFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "closeCount");
+  @SuppressWarnings("unchecked")
+  static final AtomicIntegerFieldUpdater<WarpDownlinkModem<?>> EVENT_DELTA =
+      AtomicIntegerFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "eventDelta");
+  @SuppressWarnings("unchecked")
+  static final AtomicLongFieldUpdater<WarpDownlinkModem<?>> EVENT_COUNT =
+      AtomicLongFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "eventCount");
+  @SuppressWarnings("unchecked")
+  static final AtomicIntegerFieldUpdater<WarpDownlinkModem<?>> COMMAND_DELTA =
+      AtomicIntegerFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "commandDelta");
+  @SuppressWarnings("unchecked")
+  static final AtomicLongFieldUpdater<WarpDownlinkModem<?>> COMMAND_COUNT =
+      AtomicLongFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "commandCount");
+  @SuppressWarnings("unchecked")
+  static final AtomicLongFieldUpdater<WarpDownlinkModem<?>> LAST_REPORT_TIME =
+      AtomicLongFieldUpdater.newUpdater((Class<WarpDownlinkModem<?>>) (Class<?>) WarpDownlinkModem.class, "lastReportTime");
 }

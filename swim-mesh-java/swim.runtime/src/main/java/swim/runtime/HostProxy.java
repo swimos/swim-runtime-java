@@ -293,6 +293,11 @@ public class HostProxy implements HostBinding, HostContext {
   }
 
   @Override
+  public void reportDown(Metric metric) {
+    this.hostContext.reportDown(metric);
+  }
+
+  @Override
   public void openUplink(LinkBinding link) {
     this.hostBinding.openUplink(link);
   }
@@ -379,7 +384,7 @@ public class HostProxy implements HostBinding, HostContext {
 
   @Override
   public void close() {
-    this.hostBinding.close();
+    this.hostContext.close();
   }
 
   @Override
