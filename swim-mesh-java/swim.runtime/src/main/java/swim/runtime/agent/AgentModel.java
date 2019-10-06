@@ -15,7 +15,6 @@
 package swim.runtime.agent;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
@@ -27,7 +26,7 @@ import swim.api.lane.DemandMapLane;
 import swim.api.lane.SupplyLane;
 import swim.api.lane.function.OnCue;
 import swim.api.lane.function.OnCueKey;
-import swim.api.lane.function.OnSyncMap;
+import swim.api.lane.function.OnSyncKeys;
 import swim.api.warp.WarpUplink;
 import swim.concurrent.Conts;
 import swim.runtime.LaneBinding;
@@ -775,7 +774,7 @@ public class AgentModel extends AgentNode {
       AtomicLongFieldUpdater.newUpdater(AgentModel.class, "lastReportTime");
 }
 
-final class AgentModelLanesController implements OnCueKey<Uri, LaneInfo>, OnSyncMap<Uri, LaneInfo> {
+final class AgentModelLanesController implements OnCueKey<Uri, LaneInfo>, OnSyncKeys<Uri> {
   final NodeBinding node;
 
   AgentModelLanesController(NodeBinding node) {
@@ -792,8 +791,8 @@ final class AgentModelLanesController implements OnCueKey<Uri, LaneInfo>, OnSync
   }
 
   @Override
-  public Iterator<Map.Entry<Uri, LaneInfo>> onSync(WarpUplink uplink) {
-    return LaneInfo.iterator(this.node.lanes().iterator());
+  public Iterator<Uri> onSync(WarpUplink uplink) {
+    return this.node.lanes().keyIterator();
   }
 }
 

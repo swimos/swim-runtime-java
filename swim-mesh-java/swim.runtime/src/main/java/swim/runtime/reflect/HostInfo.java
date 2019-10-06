@@ -14,9 +14,6 @@
 
 package swim.runtime.reflect;
 
-import java.util.AbstractMap;
-import java.util.Iterator;
-import java.util.Map;
 import swim.runtime.HostBinding;
 import swim.structure.Form;
 import swim.structure.Item;
@@ -89,10 +86,6 @@ public class HostInfo {
                         hostBinding.isMaster(), hostBinding.isSlave());
   }
 
-  public static Iterator<Map.Entry<Uri, HostInfo>> iterator(Iterator<Map.Entry<Uri, HostBinding>> hostBindings) {
-    return new HostBindingInfoIterator(hostBindings);
-  }
-
   private static Form<HostInfo> form;
 
   @Kind
@@ -155,32 +148,5 @@ final class HostInfoForm extends Form<HostInfo> {
       return new HostInfo(hostUri, connected, remote, secure, primary, replica, master, slave);
     }
     return null;
-  }
-}
-
-final class HostBindingInfoIterator implements Iterator<Map.Entry<Uri, HostInfo>> {
-  final Iterator<Map.Entry<Uri, HostBinding>> hostBindings;
-
-  HostBindingInfoIterator(Iterator<Map.Entry<Uri, HostBinding>> hostBindings) {
-    this.hostBindings = hostBindings;
-  }
-
-  @Override
-  public boolean hasNext() {
-    return hostBindings.hasNext();
-  }
-
-  @Override
-  public Map.Entry<Uri, HostInfo> next() {
-    final Map.Entry<Uri, HostBinding> entry = this.hostBindings.next();
-    final Uri hostUri = entry.getKey();
-    final HostBinding hostBinding = entry.getValue();
-    final HostInfo hostInfo = HostInfo.from(hostBinding);
-    return new AbstractMap.SimpleImmutableEntry<Uri, HostInfo>(hostUri, hostInfo);
-  }
-
-  @Override
-  public void remove() {
-    throw new UnsupportedOperationException();
   }
 }

@@ -14,9 +14,6 @@
 
 package swim.runtime.reflect;
 
-import java.util.AbstractMap;
-import java.util.Iterator;
-import java.util.Map;
 import swim.runtime.MeshBinding;
 import swim.runtime.PartBinding;
 import swim.structure.Form;
@@ -60,10 +57,6 @@ public class MeshInfo {
                         ourself != null ? ourself.partKey() : Value.absent());
   }
 
-  public static Iterator<Map.Entry<Uri, MeshInfo>> iterator(Iterator<Map.Entry<Uri, MeshBinding>> meshBindings) {
-    return new MeshBindingInfoIterator(meshBindings);
-  }
-
   private static Form<MeshInfo> form;
 
   @Kind
@@ -104,32 +97,5 @@ final class MeshInfoForm extends Form<MeshInfo> {
       return new MeshInfo(meshUri, gatewayPartKey, ourselfPartKey);
     }
     return null;
-  }
-}
-
-final class MeshBindingInfoIterator implements Iterator<Map.Entry<Uri, MeshInfo>> {
-  final Iterator<Map.Entry<Uri, MeshBinding>> meshBindings;
-
-  MeshBindingInfoIterator(Iterator<Map.Entry<Uri, MeshBinding>> meshBindings) {
-    this.meshBindings = meshBindings;
-  }
-
-  @Override
-  public boolean hasNext() {
-    return meshBindings.hasNext();
-  }
-
-  @Override
-  public Map.Entry<Uri, MeshInfo> next() {
-    final Map.Entry<Uri, MeshBinding> entry = this.meshBindings.next();
-    final Uri meshUri = entry.getKey();
-    final MeshBinding meshBinding = entry.getValue();
-    final MeshInfo meshInfo = MeshInfo.from(meshBinding);
-    return new AbstractMap.SimpleImmutableEntry<Uri, MeshInfo>(meshUri, meshInfo);
-  }
-
-  @Override
-  public void remove() {
-    throw new UnsupportedOperationException();
   }
 }

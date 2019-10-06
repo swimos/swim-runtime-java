@@ -15,7 +15,6 @@
 package swim.runtime.lane;
 
 import java.util.Iterator;
-import java.util.Map;
 import swim.api.warp.WarpUplink;
 import swim.collections.FingerTrieSeq;
 import swim.runtime.LaneView;
@@ -70,14 +69,14 @@ public class DemandMapLaneModel extends WarpLaneModel<DemandMapLaneView<?, ?>, D
     return null;
   }
 
-  Iterator<Map.Entry<Value, Value>> syncKeys(WarpUplink uplink) {
+  Iterator<Value> syncKeys(WarpUplink uplink) {
     final Object views = this.views;
     if (views instanceof DemandMapLaneView<?, ?>) {
       return ((DemandMapLaneView<?, ?>) views).syncKeys(uplink);
     } else if (views instanceof LaneView[]) {
       final LaneView[] viewArray = (LaneView[]) views;
       for (int i = 0, n = viewArray.length; i < n; i += 1) {
-        final Iterator<Map.Entry<Value, Value>> iterator = ((DemandMapLaneView<?, ?>) viewArray[i]).syncKeys(uplink);
+        final Iterator<Value> iterator = ((DemandMapLaneView<?, ?>) viewArray[i]).syncKeys(uplink);
         if (iterator != null) {
           return iterator;
         }

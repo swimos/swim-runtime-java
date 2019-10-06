@@ -12,14 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.api.lane.function;
+package swim.uri;
 
-import java.util.Iterator;
-import java.util.Map;
-import swim.api.warp.WarpUplink;
-import swim.concurrent.Preemptive;
-
-@FunctionalInterface
-public interface OnSyncMap<K, V> extends Preemptive {
-  Iterator<Map.Entry<K, V>> onSync(WarpUplink uplink);
+public abstract class UriPart {
+  UriPart() {
+    // sealed
+  }
 }

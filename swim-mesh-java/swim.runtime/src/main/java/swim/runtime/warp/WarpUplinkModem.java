@@ -590,31 +590,43 @@ public abstract class WarpUplinkModem extends AbstractUplinkContext implements W
 
   public void sendDown(Value body) {
     queueDown(body);
-    int oldStatus;
-    int newStatus;
     do {
-      oldStatus = this.status;
-      newStatus = oldStatus | FEEDING_DOWN;
-    } while (oldStatus != newStatus && !STATUS.compareAndSet(this, oldStatus, newStatus));
-    if (oldStatus != newStatus) {
-      this.linkBinding.feedDown();
-    }
+      final int oldStatus = this.status;
+      final int newStatus = oldStatus | FEEDING_DOWN;
+      if (oldStatus != newStatus) {
+        if (STATUS.compareAndSet(this, oldStatus, newStatus)) {
+          this.linkBinding.feedDown();
+          break;
+        }
+      } else {
+        break;
+      }
+    } while (true);
   }
 
   public void cueDown() {
-    int oldStatus;
-    int newStatus;
     do {
-      oldStatus = this.status;
+      final int oldStatus = this.status;
+      final int newStatus;
       if ((oldStatus & LINKED) != 0) {
-        newStatus = oldStatus | FEEDING_DOWN | CUED_DOWN;
+        newStatus = oldStatus | (FEEDING_DOWN | CUED_DOWN);
+        if (oldStatus != newStatus) {
+          if (STATUS.compareAndSet(this, oldStatus, newStatus)) {
+            if ((oldStatus & FEEDING_DOWN) == 0) {
+              this.linkBinding.feedDown();
+            }
+            break;
+          }
+        } else {
+          break;
+        }
       } else {
         newStatus = oldStatus | CUED_DOWN;
+        if (oldStatus == newStatus || STATUS.compareAndSet(this, oldStatus, newStatus)) {
+          break;
+        }
       }
-    } while (oldStatus != newStatus && !STATUS.compareAndSet(this, oldStatus, newStatus));
-    if ((oldStatus & FEEDING_DOWN) != (newStatus & FEEDING_DOWN)) {
-      this.linkBinding.feedDown();
-    }
+    } while (true);
   }
 
   @Override
@@ -635,97 +647,109 @@ public abstract class WarpUplinkModem extends AbstractUplinkContext implements W
   }
 
   protected void pullDownEnvelope() {
-    int oldStatus;
-    int newStatus;
     do {
-      oldStatus = this.status;
+      int oldStatus = this.status;
+      int newStatus;
       if ((oldStatus & UNLINKING) != 0) {
         newStatus = oldStatus & ~UNLINKING;
+        if (STATUS.compareAndSet(this, oldStatus, newStatus)) {
+          final UnlinkedResponse response = unlinkedResponse();
+          pullDownUnlinked(response);
+          pushDown(response);
+          break;
+        }
       } else if ((oldStatus & LINKING) != 0) {
         newStatus = oldStatus & ~LINKING;
+        if (STATUS.compareAndSet(this, oldStatus, newStatus)) {
+          final LinkedResponse response = linkedResponse();
+          pullDownLinked(response);
+          pushDown(response);
+          if ((newStatus & SYNCING) != 0) {
+            this.linkBinding.feedDown();
+          } else {
+            do {
+              oldStatus = this.status;
+              if ((oldStatus & CUED_DOWN) == 0 && downQueueIsEmpty()) {
+                newStatus = oldStatus & ~FEEDING_DOWN;
+                if (oldStatus == newStatus || STATUS.compareAndSet(this, oldStatus, newStatus)) {
+                  break;
+                }
+              } else {
+                this.linkBinding.feedDown();
+                break;
+              }
+            } while (true);
+          }
+          break;
+        }
       } else {
-        newStatus = oldStatus;
+        EventMessage message = nextDownQueueEvent();
+        if (message == null && (oldStatus & CUED_DOWN) != 0) {
+          do {
+            oldStatus = this.status;
+            newStatus = oldStatus & ~CUED_DOWN;
+            if (oldStatus == newStatus || STATUS.compareAndSet(this, oldStatus, newStatus)) {
+              break;
+            }
+          } while (true);
+          message = nextDownCueEvent();
+        }
+        if (message != null) {
+          pullDownEvent(message);
+          pushDown(message);
+          do {
+            oldStatus = this.status;
+            if ((oldStatus & (SYNCING | CUED_DOWN)) == 0 && downQueueIsEmpty()) {
+              newStatus = oldStatus & ~FEEDING_DOWN;
+              if (oldStatus == newStatus || STATUS.compareAndSet(this, oldStatus, newStatus)) {
+                break;
+              }
+            } else {
+              newStatus = oldStatus | FEEDING_DOWN;
+              if (oldStatus == newStatus || STATUS.compareAndSet(this, oldStatus, newStatus)) {
+                this.linkBinding.feedDown();
+                break;
+              }
+            }
+          } while (true);
+        } else if ((oldStatus & SYNCING) != 0) {
+          final SyncedResponse response = syncedResponse();
+          pullDownSynced(response);
+          pushDown(response);
+          do {
+            oldStatus = this.status;
+            if ((oldStatus & CUED_DOWN) == 0 && downQueueIsEmpty()) {
+              newStatus = oldStatus & ~(SYNCING | FEEDING_DOWN);
+            } else {
+              newStatus = oldStatus & ~SYNCING;
+            }
+            if (STATUS.compareAndSet(this, oldStatus, newStatus)) {
+              break;
+            }
+          } while (true);
+          if ((newStatus & FEEDING_DOWN) != 0) {
+            this.linkBinding.feedDown();
+          }
+        } else {
+          this.linkBinding.skipDown();
+          do {
+            oldStatus = this.status;
+            if ((oldStatus & CUED_DOWN) == 0 && downQueueIsEmpty()) {
+              newStatus = oldStatus & ~FEEDING_DOWN;
+              if (oldStatus == newStatus || STATUS.compareAndSet(this, oldStatus, newStatus)) {
+                break;
+              }
+            } else {
+              if ((oldStatus & FEEDING_DOWN) != 0) {
+                this.linkBinding.feedDown();
+              }
+              break;
+            }
+          } while (true);
+        }
         break;
       }
-    } while (!STATUS.compareAndSet(this, oldStatus, newStatus));
-    if ((oldStatus & UNLINKING) != (newStatus & UNLINKING)) {
-      final UnlinkedResponse response = unlinkedResponse();
-      pullDownUnlinked(response);
-      pushDown(response);
-    } else if ((oldStatus & LINKING) != (newStatus & LINKING)) {
-      final LinkedResponse response = linkedResponse();
-      pullDownLinked(response);
-      pushDown(response);
-      if ((newStatus & SYNCING) != 0) {
-        this.linkBinding.feedDown();
-      } else {
-        do {
-          oldStatus = this.status;
-          if ((oldStatus & CUED_DOWN) == 0 && downQueueIsEmpty()) {
-            newStatus = oldStatus & ~FEEDING_DOWN;
-          } else {
-            newStatus = oldStatus;
-            break;
-          }
-        } while (!STATUS.compareAndSet(this, oldStatus, newStatus));
-        if (oldStatus == newStatus) {
-          this.linkBinding.feedDown();
-        }
-      }
-    } else {
-      EventMessage message = nextDownQueueEvent();
-      if (message == null && (oldStatus & CUED_DOWN) != 0) {
-        do {
-          oldStatus = this.status;
-          newStatus = oldStatus & ~CUED_DOWN;
-        } while (!STATUS.compareAndSet(this, oldStatus, newStatus));
-        message = nextDownCueEvent();
-      }
-      if (message != null) {
-        pullDownEvent(message);
-        pushDown(message);
-        do {
-          oldStatus = this.status;
-          if ((oldStatus & (SYNCING | CUED_DOWN)) == 0 && downQueueIsEmpty()) {
-            newStatus = oldStatus & ~FEEDING_DOWN;
-          } else {
-            newStatus = oldStatus | FEEDING_DOWN;
-          }
-        } while (oldStatus != newStatus && !STATUS.compareAndSet(this, oldStatus, newStatus));
-        if ((newStatus & FEEDING_DOWN) != 0) {
-          this.linkBinding.feedDown();
-        }
-      } else if ((oldStatus & SYNCING) != 0) {
-        final SyncedResponse response = syncedResponse();
-        pullDownSynced(response);
-        pushDown(response);
-        do {
-          oldStatus = this.status;
-          if ((oldStatus & CUED_DOWN) == 0 && downQueueIsEmpty()) {
-            newStatus = oldStatus & ~(SYNCING | FEEDING_DOWN);
-          } else {
-            newStatus = oldStatus & ~SYNCING;
-          }
-        } while (!STATUS.compareAndSet(this, oldStatus, newStatus));
-        if ((newStatus & FEEDING_DOWN) != 0) {
-          this.linkBinding.feedDown();
-        }
-      } else {
-        this.linkBinding.skipDown();
-        do {
-          oldStatus = this.status;
-          if ((oldStatus & CUED_DOWN) == 0 && downQueueIsEmpty()) {
-            newStatus = oldStatus & ~FEEDING_DOWN;
-          } else {
-            newStatus = oldStatus;
-            break;
-          }
-        } while (!STATUS.compareAndSet(this, oldStatus, newStatus));
-        if ((newStatus & FEEDING_DOWN) != 0) {
-          this.linkBinding.feedDown();
-        }
-      }
-    }
+    } while (true);
   }
 
   protected void pullDownEvent(EventMessage message) {
@@ -753,36 +777,42 @@ public abstract class WarpUplinkModem extends AbstractUplinkContext implements W
   }
 
   public void cueUp() {
-    int oldStatus;
-    int newStatus;
     do {
-      oldStatus = this.status;
+      final int oldStatus = this.status;
+      final int newStatus;
       if ((oldStatus & FEEDING_UP) != 0) {
         newStatus = oldStatus & ~FEEDING_UP | PULLING_UP;
+        if (STATUS.compareAndSet(this, oldStatus, newStatus)) {
+          this.linkBinding.pullUp();
+          break;
+        }
       } else {
         newStatus = oldStatus & ~PULLING_UP;
+        if (oldStatus == newStatus || STATUS.compareAndSet(this, oldStatus, newStatus)) {
+          break;
+        }
       }
-    } while (oldStatus != newStatus && !STATUS.compareAndSet(this, oldStatus, newStatus));
-    if ((oldStatus & FEEDING_UP) != 0) {
-      this.linkBinding.pullUp();
-    }
+    } while (true);
   }
 
   @Override
   public void feedUp() {
-    int oldStatus;
-    int newStatus;
     do {
-      oldStatus = this.status;
+      final int oldStatus = this.status;
+      final int newStatus;
       if ((oldStatus & PULLING_UP) == 0) {
         newStatus = oldStatus & ~FEEDING_UP | PULLING_UP;
+        if (STATUS.compareAndSet(this, oldStatus, newStatus)) {
+          this.linkBinding.pullUp();
+          break;
+        }
       } else {
         newStatus = oldStatus | FEEDING_UP;
+        if (oldStatus == newStatus || STATUS.compareAndSet(this, oldStatus, newStatus)) {
+          break;
+        }
       }
-    } while (oldStatus != newStatus && !STATUS.compareAndSet(this, oldStatus, newStatus));
-    if ((oldStatus & PULLING_UP) == 0) {
-      this.linkBinding.pullUp();
-    }
+    } while (true);
   }
 
   @Override
@@ -901,13 +931,20 @@ public abstract class WarpUplinkModem extends AbstractUplinkContext implements W
   public void unlink() {
     int oldStatus;
     int newStatus;
-    do  {
+    do {
       oldStatus = this.status;
-      newStatus = oldStatus & ~(SYNCING | LINKING | LINKED) | FEEDING_DOWN | UNLINKING;
-    } while (oldStatus != newStatus && !STATUS.compareAndSet(this, oldStatus, newStatus));
-    if ((oldStatus & FEEDING_DOWN) == 0) {
-      this.linkBinding.feedDown();
-    }
+      newStatus = oldStatus & ~(SYNCING | LINKING | LINKED) | (FEEDING_DOWN | UNLINKING);
+      if (oldStatus != newStatus) {
+        if (STATUS.compareAndSet(this, oldStatus, newStatus)) {
+          if ((oldStatus & FEEDING_DOWN) == 0) {
+            this.linkBinding.feedDown();
+          }
+          break;
+        }
+      } else {
+        break;
+      }
+    } while (true);
     if ((oldStatus & FEEDING_UP) != 0) {
       this.linkBinding.pullUp();
     }
@@ -924,22 +961,24 @@ public abstract class WarpUplinkModem extends AbstractUplinkContext implements W
   }
 
   protected void willLink(LinkRequest request) {
-    int oldStatus;
-    int newStatus;
     do {
-      oldStatus = this.status;
+      final int oldStatus = this.status;
+      final int newStatus;
       if ((oldStatus & FEEDING_UP) == 0) {
-        newStatus = oldStatus & ~PULLING_UP | FEEDING_DOWN | LINKING | LINKED;
+        newStatus = oldStatus & ~PULLING_UP | (FEEDING_DOWN | LINKING | LINKED);
       } else {
-        newStatus = oldStatus | FEEDING_DOWN | LINKING | LINKED;
+        newStatus = oldStatus | (FEEDING_DOWN | LINKING | LINKED);
       }
-    } while (oldStatus != newStatus && !STATUS.compareAndSet(this, oldStatus, newStatus));
-    if ((oldStatus & FEEDING_DOWN) == 0) {
-      this.linkBinding.feedDown();
-    }
-    if ((oldStatus & FEEDING_UP) != 0) {
-      this.linkBinding.pullUp();
-    }
+      if (oldStatus == newStatus || STATUS.compareAndSet(this, oldStatus, newStatus)) {
+        if ((oldStatus & FEEDING_DOWN) == 0) {
+          this.linkBinding.feedDown();
+        }
+        if ((oldStatus & FEEDING_UP) != 0) {
+          this.linkBinding.pullUp();
+        }
+        break;
+      }
+    } while (true);
   }
 
   protected void didLink(LinkedResponse response) {
@@ -947,30 +986,32 @@ public abstract class WarpUplinkModem extends AbstractUplinkContext implements W
   }
 
   protected void willSync(SyncRequest request) {
-    int oldStatus;
-    int newStatus;
     do {
-      oldStatus = this.status;
+      final int oldStatus = this.status;
+      final int newStatus;
       if ((oldStatus & LINKED) == 0) {
         if ((oldStatus & FEEDING_UP) == 0) {
-          newStatus = oldStatus & ~PULLING_UP | FEEDING_DOWN | SYNCING | LINKING | LINKED;
+          newStatus = oldStatus & ~PULLING_UP | (FEEDING_DOWN | SYNCING | LINKING | LINKED);
         } else {
-          newStatus = oldStatus | FEEDING_DOWN | SYNCING | LINKING | LINKED;
+          newStatus = oldStatus | (FEEDING_DOWN | SYNCING | LINKING | LINKED);
         }
       } else {
         if ((oldStatus & FEEDING_UP) == 0) {
-          newStatus = oldStatus & ~PULLING_UP | FEEDING_DOWN | SYNCING;
+          newStatus = oldStatus & ~PULLING_UP | (FEEDING_DOWN | SYNCING);
         } else {
-          newStatus = oldStatus | FEEDING_DOWN | SYNCING;
+          newStatus = oldStatus | (FEEDING_DOWN | SYNCING);
         }
       }
-    } while (oldStatus != newStatus && !STATUS.compareAndSet(this, oldStatus, newStatus));
-    if ((oldStatus & FEEDING_DOWN) == 0) {
-      this.linkBinding.feedDown();
-    }
-    if ((oldStatus & FEEDING_UP) != 0) {
-      this.linkBinding.pullUp();
-    }
+      if (oldStatus == newStatus || STATUS.compareAndSet(this, oldStatus, newStatus)) {
+        if ((oldStatus & FEEDING_DOWN) == 0) {
+          this.linkBinding.feedDown();
+        }
+        if ((oldStatus & FEEDING_UP) != 0) {
+          this.linkBinding.pullUp();
+        }
+        break;
+      }
+    } while (true);
   }
 
   protected void didSync(SyncedResponse response) {
@@ -983,17 +1024,20 @@ public abstract class WarpUplinkModem extends AbstractUplinkContext implements W
     do {
       oldStatus = this.status;
       if ((oldStatus & FEEDING_UP) == 0) {
-        newStatus = oldStatus & ~(PULLING_UP | SYNCING | LINKING | LINKED) | FEEDING_DOWN | UNLINKING;
+        newStatus = oldStatus & ~(PULLING_UP | SYNCING | LINKING | LINKED) | (FEEDING_DOWN | UNLINKING);
       } else {
-        newStatus = oldStatus & ~(SYNCING | LINKING | LINKED) | FEEDING_DOWN | UNLINKING;
+        newStatus = oldStatus & ~(SYNCING | LINKING | LINKED) | (FEEDING_DOWN | UNLINKING);
       }
-    } while (oldStatus != newStatus && !STATUS.compareAndSet(this, oldStatus, newStatus));
-    if ((oldStatus & FEEDING_DOWN) == 0) {
-      this.linkBinding.feedDown();
-    }
-    if ((oldStatus & FEEDING_UP) != 0) {
-      this.linkBinding.pullUp();
-    }
+      if (oldStatus == newStatus || STATUS.compareAndSet(this, oldStatus, newStatus)) {
+        if ((oldStatus & FEEDING_DOWN) == 0) {
+          this.linkBinding.feedDown();
+        }
+        if ((oldStatus & FEEDING_UP) != 0) {
+          this.linkBinding.pullUp();
+        }
+        break;
+      }
+    } while (true);
   }
 
   protected void didUnlink(UnlinkedResponse response) {

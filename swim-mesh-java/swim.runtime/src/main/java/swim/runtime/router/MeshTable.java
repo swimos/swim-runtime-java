@@ -15,7 +15,6 @@
 package swim.runtime.router;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
@@ -23,7 +22,7 @@ import swim.api.Downlink;
 import swim.api.lane.DemandMapLane;
 import swim.api.lane.SupplyLane;
 import swim.api.lane.function.OnCueKey;
-import swim.api.lane.function.OnSyncMap;
+import swim.api.lane.function.OnSyncKeys;
 import swim.api.policy.Policy;
 import swim.api.warp.WarpUplink;
 import swim.collections.FingerTrieSeq;
@@ -939,7 +938,7 @@ public class MeshTable extends AbstractTierBinding implements MeshBinding {
       AtomicLongFieldUpdater.newUpdater(MeshTable.class, "lastReportTime");
 }
 
-final class MeshTablePartsController implements OnCueKey<Value, PartInfo>, OnSyncMap<Value, PartInfo> {
+final class MeshTablePartsController implements OnCueKey<Value, PartInfo>, OnSyncKeys<Value> {
   final MeshBinding mesh;
 
   MeshTablePartsController(MeshBinding mesh) {
@@ -949,14 +948,37 @@ final class MeshTablePartsController implements OnCueKey<Value, PartInfo>, OnSyn
   @Override
   public PartInfo onCue(Value partKey, WarpUplink uplink) {
     final PartBinding partBinding = this.mesh.getPart(partKey);
-    if (partBinding == null) {
-      return null;
+    if (partBinding != null) {
+      return PartInfo.from(partBinding);
     }
-    return PartInfo.from(partBinding);
+    return null;
   }
 
   @Override
-  public Iterator<Map.Entry<Value, PartInfo>> onSync(WarpUplink uplink) {
-    return PartInfo.iterator(this.mesh.parts().iterator());
+  public Iterator<Value> onSync(WarpUplink uplink) {
+    return new MeshTablePartsKeyIterator(this.mesh.parts().iterator());
+  }
+}
+
+final class MeshTablePartsKeyIterator implements Iterator<Value> {
+  final Iterator<PartBinding> parts;
+
+  MeshTablePartsKeyIterator(Iterator<PartBinding> parts) {
+    this.parts = parts;
+  }
+
+  @Override
+  public boolean hasNext() {
+    return this.parts.hasNext();
+  }
+
+  @Override
+  public Value next() {
+    return this.parts.next().partKey();
+  }
+
+  @Override
+  public void remove() {
+    throw new UnsupportedOperationException();
   }
 }

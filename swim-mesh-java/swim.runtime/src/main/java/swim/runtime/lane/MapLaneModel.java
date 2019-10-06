@@ -212,6 +212,14 @@ public class MapLaneModel extends WarpLaneModel<MapLaneView<?, ?>, MapLaneUplink
     return this.data.iterator();
   }
 
+  public Iterator<Value> keyIterator() {
+    return this.data.keyIterator();
+  }
+
+  public Iterator<Value> valueIterator() {
+    return this.data.valueIterator();
+  }
+
   protected void openStore() {
     this.data = this.laneContext.store().mapData(laneUri().toString())
         .isTransient(isTransient())

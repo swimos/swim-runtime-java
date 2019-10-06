@@ -15,20 +15,19 @@
 package swim.dynamic.api.lane.function;
 
 import java.util.Iterator;
-import java.util.Map;
-import swim.api.lane.function.OnSyncMap;
+import swim.api.lane.function.OnSyncKeys;
 import swim.api.warp.WarpUplink;
 import swim.dynamic.Bridge;
 import swim.dynamic.BridgeGuest;
 
-public class GuestOnSyncMap<K, V> extends BridgeGuest implements OnSyncMap<K, V> {
-  public GuestOnSyncMap(Bridge bridge, Object guest) {
+public class GuestOnSyncKeys<K> extends BridgeGuest implements OnSyncKeys<K> {
+  public GuestOnSyncKeys(Bridge bridge, Object guest) {
     super(bridge, guest);
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public Iterator<Map.Entry<K, V>> onSync(WarpUplink uplink) {
-    return (Iterator<Map.Entry<K, V>>) this.bridge.guestExecute(this.guest, uplink);
+  public Iterator<K> onSync(WarpUplink uplink) {
+    return (Iterator<K>) this.bridge.guestExecute(this.guest, uplink);
   }
 }

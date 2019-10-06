@@ -15,14 +15,13 @@
 package swim.runtime;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import swim.api.Downlink;
 import swim.api.Lane;
 import swim.api.agent.AgentContext;
 import swim.api.lane.DemandMapLane;
 import swim.api.lane.function.OnCueKey;
-import swim.api.lane.function.OnSyncMap;
+import swim.api.lane.function.OnSyncKeys;
 import swim.api.policy.Policy;
 import swim.api.warp.WarpUplink;
 import swim.collections.FingerTrieSeq;
@@ -551,7 +550,7 @@ public abstract class LaneModel<View extends LaneView, U extends AbstractUplinkC
       AtomicReferenceFieldUpdater.newUpdater((Class<LaneModel<?, ?>>) (Class<?>) LaneModel.class, (Class<FingerTrieSeq<? extends LinkContext>>) (Class<?>) FingerTrieSeq.class, "uplinks");
 }
 
-final class LaneModelUplinksController implements OnCueKey<Value, UplinkInfo>, OnSyncMap<Value, UplinkInfo> {
+final class LaneModelUplinksController implements OnCueKey<Value, UplinkInfo>, OnSyncKeys<Value> {
   final LaneBinding lane;
 
   LaneModelUplinksController(LaneBinding lane) {
@@ -568,7 +567,30 @@ final class LaneModelUplinksController implements OnCueKey<Value, UplinkInfo>, O
   }
 
   @Override
-  public Iterator<Map.Entry<Value, UplinkInfo>> onSync(WarpUplink uplink) {
-    return UplinkInfo.iterator(this.lane.uplinks().iterator());
+  public Iterator<Value> onSync(WarpUplink uplink) {
+    return new LaneModelUplinksKeyIterator(this.lane.uplinks().iterator());
+  }
+}
+
+final class LaneModelUplinksKeyIterator implements Iterator<Value> {
+  final Iterator<LinkContext> uplinks;
+
+  LaneModelUplinksKeyIterator(Iterator<LinkContext> uplinks) {
+    this.uplinks = uplinks;
+  }
+
+  @Override
+  public boolean hasNext() {
+    return this.uplinks.hasNext();
+  }
+
+  @Override
+  public Value next() {
+    return this.uplinks.next().linkKey();
+  }
+
+  @Override
+  public void remove() {
+    throw new UnsupportedOperationException();
   }
 }

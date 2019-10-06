@@ -15,7 +15,6 @@
 package swim.runtime.router;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
@@ -23,7 +22,7 @@ import swim.api.Downlink;
 import swim.api.lane.DemandMapLane;
 import swim.api.lane.SupplyLane;
 import swim.api.lane.function.OnCueKey;
-import swim.api.lane.function.OnSyncMap;
+import swim.api.lane.function.OnSyncKeys;
 import swim.api.policy.Policy;
 import swim.api.warp.WarpUplink;
 import swim.collections.HashTrieMap;
@@ -854,7 +853,7 @@ public class EdgeTable extends AbstractTierBinding implements EdgeBinding {
       AtomicLongFieldUpdater.newUpdater(EdgeTable.class, "lastReportTime");
 }
 
-final class EdgeTableMeshesController implements OnCueKey<Uri, MeshInfo>, OnSyncMap<Uri, MeshInfo> {
+final class EdgeTableMeshesController implements OnCueKey<Uri, MeshInfo>, OnSyncKeys<Uri> {
   final EdgeBinding edge;
 
   EdgeTableMeshesController(EdgeBinding edge) {
@@ -864,14 +863,14 @@ final class EdgeTableMeshesController implements OnCueKey<Uri, MeshInfo>, OnSync
   @Override
   public MeshInfo onCue(Uri meshUri, WarpUplink uplink) {
     final MeshBinding meshBinding = this.edge.getMesh(meshUri);
-    if (meshBinding == null) {
-      return null;
+    if (meshBinding != null) {
+      return MeshInfo.from(meshBinding);
     }
-    return MeshInfo.from(meshBinding);
+    return null;
   }
 
   @Override
-  public Iterator<Map.Entry<Uri, MeshInfo>> onSync(WarpUplink uplink) {
-    return MeshInfo.iterator(this.edge.meshes().iterator());
+  public Iterator<Uri> onSync(WarpUplink uplink) {
+    return this.edge.meshes().keyIterator();
   }
 }

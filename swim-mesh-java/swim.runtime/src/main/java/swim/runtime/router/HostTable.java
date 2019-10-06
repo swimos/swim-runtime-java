@@ -15,7 +15,6 @@
 package swim.runtime.router;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
@@ -23,10 +22,9 @@ import swim.api.Downlink;
 import swim.api.lane.DemandMapLane;
 import swim.api.lane.SupplyLane;
 import swim.api.lane.function.OnCueKey;
-import swim.api.lane.function.OnSyncMap;
+import swim.api.lane.function.OnSyncKeys;
 import swim.api.policy.Policy;
 import swim.api.warp.WarpUplink;
-import swim.collections.HashTrieMap;
 import swim.concurrent.Conts;
 import swim.concurrent.Schedule;
 import swim.concurrent.Stage;
@@ -53,10 +51,15 @@ import swim.runtime.reflect.NodeInfo;
 import swim.store.StoreBinding;
 import swim.structure.Value;
 import swim.uri.Uri;
+import swim.uri.UriFragment;
+import swim.uri.UriMapper;
+import swim.uri.UriPart;
+import swim.uri.UriPath;
+import swim.uri.UriPathBuilder;
 
 public class HostTable extends AbstractTierBinding implements HostBinding {
   protected HostContext hostContext;
-  volatile HashTrieMap<Uri, NodeBinding> nodes;
+  volatile UriMapper<NodeBinding> nodes;
   volatile int flags;
 
   volatile int nodeOpenDelta;
@@ -105,7 +108,7 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
   SupplyLane<LogEntry> metaFailLog;
 
   public HostTable() {
-    this.nodes = HashTrieMap.empty();
+    this.nodes = UriMapper.empty();
   }
 
   @Override
@@ -319,7 +322,7 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
   }
 
   @Override
-  public HashTrieMap<Uri, NodeBinding> nodes() {
+  public UriMapper<NodeBinding> nodes() {
     return this.nodes;
   }
 
@@ -330,8 +333,8 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
 
   @Override
   public NodeBinding openNode(Uri nodeUri) {
-    HashTrieMap<Uri, NodeBinding> oldNodes;
-    HashTrieMap<Uri, NodeBinding> newNodes;
+    UriMapper<NodeBinding> oldNodes;
+    UriMapper<NodeBinding> newNodes;
     NodeBinding nodeBinding = null;
     do {
       oldNodes = this.nodes;
@@ -372,8 +375,8 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
 
   @Override
   public NodeBinding openNode(Uri nodeUri, NodeBinding node) {
-    HashTrieMap<Uri, NodeBinding> oldNodes;
-    HashTrieMap<Uri, NodeBinding> newNodes;
+    UriMapper<NodeBinding> oldNodes;
+    UriMapper<NodeBinding> newNodes;
     NodeBinding nodeBinding = null;
     do {
       oldNodes = this.nodes;
@@ -402,8 +405,8 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
   }
 
   public void closeNode(Uri nodeUri) {
-    HashTrieMap<Uri, NodeBinding> oldNodes;
-    HashTrieMap<Uri, NodeBinding> newNodes;
+    UriMapper<NodeBinding> oldNodes;
+    UriMapper<NodeBinding> newNodes;
     NodeBinding nodeBinding = null;
     do {
       oldNodes = this.nodes;
@@ -424,8 +427,8 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
   }
 
   public void closeNodes() {
-    HashTrieMap<Uri, NodeBinding> oldNodes;
-    final HashTrieMap<Uri, NodeBinding> newNodes = HashTrieMap.empty();
+    UriMapper<NodeBinding> oldNodes;
+    final UriMapper<NodeBinding> newNodes = UriMapper.empty();
     do {
       oldNodes = this.nodes;
     } while (oldNodes != newNodes && !NODES.compareAndSet(this, oldNodes, newNodes));
@@ -445,7 +448,9 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
   protected void didOpenNode(NodeBinding node) {
     final DemandMapLane<Uri, NodeInfo> metaNodes = this.metaNodes;
     if (metaNodes != null) {
-      metaNodes.cue(node.nodeUri());
+      final Uri nodeUri = node.nodeUri();
+      metaNodes.cue(nodeUri);
+      cueAncestorNodes(nodeUri);
     }
     NODE_OPEN_DELTA.incrementAndGet(this);
     flushMetrics();
@@ -454,10 +459,35 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
   protected void didCloseNode(NodeBinding node) {
     final DemandMapLane<Uri, NodeInfo> metaNodes = this.metaNodes;
     if (metaNodes != null) {
-      metaNodes.remove(node.nodeUri());
+      final Uri nodeUri = node.nodeUri();
+      metaNodes.remove(nodeUri);
+      cueAncestorNodes(nodeUri);
     }
     NODE_CLOSE_DELTA.incrementAndGet(this);
     flushMetrics();
+  }
+
+  protected void cueAncestorNodes(Uri nodeUri) {
+    final DemandMapLane<Uri, NodeInfo> metaNodes = this.metaNodes;
+    if (metaNodes != null) {
+      UriPath nodePath = nodeUri.path();
+      final UriPathBuilder ancestorPathBuilder = UriPath.builder();
+      while (!nodePath.isEmpty()) {
+        if (nodePath.isAbsolute()) {
+          ancestorPathBuilder.addSlash();
+          nodePath = nodePath.tail();
+        } else {
+          ancestorPathBuilder.addSegment(nodePath.head());
+          nodePath = nodePath.tail();
+          if (nodePath.isAbsolute()) {
+            final Uri ancestorUri = nodeUri.path(ancestorPathBuilder.bind());
+            metaNodes.cue(ancestorUri);
+            ancestorPathBuilder.addSlash();
+            nodePath = nodePath.tail();
+          }
+        }
+      }
+    }
   }
 
   @Override
@@ -806,8 +836,8 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
   static final Uri NODES_URI = Uri.parse("nodes");
 
   @SuppressWarnings("unchecked")
-  static final AtomicReferenceFieldUpdater<HostTable, HashTrieMap<Uri, NodeBinding>> NODES =
-      AtomicReferenceFieldUpdater.newUpdater(HostTable.class, (Class<HashTrieMap<Uri, NodeBinding>>) (Class<?>) HashTrieMap.class, "nodes");
+  static final AtomicReferenceFieldUpdater<HostTable, UriMapper<NodeBinding>> NODES =
+      AtomicReferenceFieldUpdater.newUpdater(HostTable.class, (Class<UriMapper<NodeBinding>>) (Class<?>) UriMapper.class, "nodes");
 
   static final AtomicIntegerFieldUpdater<HostTable> FLAGS =
       AtomicIntegerFieldUpdater.newUpdater(HostTable.class, "flags");
@@ -884,7 +914,7 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
       AtomicLongFieldUpdater.newUpdater(HostTable.class, "lastReportTime");
 }
 
-final class HostTableNodesController implements OnCueKey<Uri, NodeInfo>, OnSyncMap<Uri, NodeInfo> {
+final class HostTableNodesController implements OnCueKey<Uri, NodeInfo>, OnSyncKeys<Uri> {
   final HostBinding host;
 
   HostTableNodesController(HostBinding host) {
@@ -893,15 +923,63 @@ final class HostTableNodesController implements OnCueKey<Uri, NodeInfo>, OnSyncM
 
   @Override
   public NodeInfo onCue(Uri nodeUri, WarpUplink uplink) {
-    final NodeBinding nodeBinding = this.host.getNode(nodeUri);
-    if (nodeBinding == null) {
-      return null;
+    final NodeBinding nodeBinding;
+    final UriFragment laneFragment = uplink.laneUri().fragment();
+    if (laneFragment.isDefined()) {
+      final Uri parentUri = Uri.parse(laneFragment.identifier());
+      if (nodeUri.isChildOf(parentUri)) {
+        nodeBinding = this.host.getNode(nodeUri);
+        final Uri directoryUri = nodeUri.appendedSlash();
+        final UriMapper<NodeBinding> directory = this.host.nodes().getSuffix(directoryUri);
+        if (nodeBinding != null) {
+          return NodeInfo.from(nodeBinding, directory.childCount());
+        } else if (!directory.isEmpty()) {
+          return new NodeInfo(nodeUri, 0L, directory.childCount()); // synthetic directory node
+        }
+      }
+    } else {
+      nodeBinding = this.host.getNode(nodeUri);
+      if (nodeBinding != null) {
+        return NodeInfo.from(nodeBinding);
+      }
     }
-    return NodeInfo.from(nodeBinding);
+    return null;
   }
 
   @Override
-  public Iterator<Map.Entry<Uri, NodeInfo>> onSync(WarpUplink uplink) {
-    return NodeInfo.iterator(this.host.nodes().iterator());
+  public Iterator<Uri> onSync(WarpUplink uplink) {
+    final UriFragment laneFragment = uplink.laneUri().fragment();
+    if (laneFragment.isDefined()) {
+      final Uri parentUri = Uri.parse(laneFragment.identifier());
+      final UriMapper<NodeBinding> parentSuffix = this.host.nodes().getSuffix(parentUri);
+      return new HostTableNodesChildIterator(parentUri, parentSuffix.childIterator());
+    }
+    return this.host.nodes().keyIterator();
+  }
+}
+
+final class HostTableNodesChildIterator implements Iterator<Uri> {
+  final Uri parentUri;
+  final Iterator<UriPart> childSegments;
+
+  HostTableNodesChildIterator(Uri parentUri, Iterator<UriPart> childSegments) {
+    this.parentUri = parentUri;
+    this.childSegments = childSegments;
+  }
+
+  @Override
+  public boolean hasNext() {
+    return this.childSegments.hasNext();
+  }
+
+  @Override
+  public Uri next() {
+    final UriPart childSegment = this.childSegments.next();
+    return this.parentUri.appendedPath((UriPath) childSegment);
+  }
+
+  @Override
+  public void remove() {
+    throw new UnsupportedOperationException();
   }
 }

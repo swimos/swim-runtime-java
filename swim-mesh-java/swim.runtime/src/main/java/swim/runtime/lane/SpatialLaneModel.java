@@ -240,6 +240,14 @@ public class SpatialLaneModel<S> extends WarpLaneModel<SpatialLaneView<?, S, ?>,
     return this.data.iterator();
   }
 
+  public Iterator<Value> keyIterator() {
+    return this.data.keyIterator();
+  }
+
+  public Iterator<Value> valueIterator() {
+    return this.data.valueIterator();
+  }
+
   protected void openStore() {
     this.data = this.laneContext.store().spatialData(laneUri().toString(), shapeForm)
         .isTransient(isTransient())

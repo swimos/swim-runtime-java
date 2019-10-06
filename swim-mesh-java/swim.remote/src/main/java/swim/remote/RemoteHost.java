@@ -56,6 +56,7 @@ import swim.structure.Value;
 import swim.uri.Uri;
 import swim.uri.UriAuthority;
 import swim.uri.UriHost;
+import swim.uri.UriMapper;
 import swim.uri.UriPath;
 import swim.uri.UriPort;
 import swim.uri.UriScheme;
@@ -386,8 +387,8 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
   }
 
   @Override
-  public HashTrieMap<Uri, NodeBinding> nodes() {
-    return HashTrieMap.empty();
+  public UriMapper<NodeBinding> nodes() {
+    return UriMapper.empty();
   }
 
   @Override

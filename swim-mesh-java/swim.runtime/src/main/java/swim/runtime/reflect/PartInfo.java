@@ -14,9 +14,6 @@
 
 package swim.runtime.reflect;
 
-import java.util.AbstractMap;
-import java.util.Iterator;
-import java.util.Map;
 import swim.runtime.HostBinding;
 import swim.runtime.PartBinding;
 import swim.runtime.PartPredicate;
@@ -59,10 +56,6 @@ public class PartInfo {
     return new PartInfo(partBinding.partKey(), partBinding.predicate(), master != null ? master.hostUri() : Uri.empty());
   }
 
-  public static Iterator<Map.Entry<Value, PartInfo>> iterator(Iterator<PartBinding> partBindings) {
-    return new PartBindingInfoIterator(partBindings);
-  }
-
   private static Form<PartInfo> form;
 
   @Kind
@@ -103,30 +96,5 @@ final class PartInfoForm extends Form<PartInfo> {
       return new PartInfo(partKey, predicate, masterHostUri);
     }
     return null;
-  }
-}
-
-final class PartBindingInfoIterator implements Iterator<Map.Entry<Value, PartInfo>> {
-  final Iterator<PartBinding> partBindings;
-
-  PartBindingInfoIterator(Iterator<PartBinding> partBindings) {
-    this.partBindings = partBindings;
-  }
-
-  @Override
-  public boolean hasNext() {
-    return partBindings.hasNext();
-  }
-
-  @Override
-  public Map.Entry<Value, PartInfo> next() {
-    final PartBinding partBinding = this.partBindings.next();
-    final PartInfo partInfo = PartInfo.from(partBinding);
-    return new AbstractMap.SimpleImmutableEntry<Value, PartInfo>(partBinding.partKey(), partInfo);
-  }
-
-  @Override
-  public void remove() {
-    throw new UnsupportedOperationException();
   }
 }

@@ -22,12 +22,12 @@ import swim.api.auth.Credentials;
 import swim.api.auth.Identity;
 import swim.api.policy.Policy;
 import swim.api.policy.PolicyDirective;
-import swim.collections.HashTrieMap;
 import swim.concurrent.Schedule;
 import swim.concurrent.Stage;
 import swim.store.StoreBinding;
 import swim.structure.Value;
 import swim.uri.Uri;
+import swim.uri.UriMapper;
 
 public class HostProxy implements HostBinding, HostContext {
   protected final HostBinding hostBinding;
@@ -183,7 +183,7 @@ public class HostProxy implements HostBinding, HostContext {
   }
 
   @Override
-  public HashTrieMap<Uri, NodeBinding> nodes() {
+  public UriMapper<NodeBinding> nodes() {
     return this.hostBinding.nodes();
   }
 

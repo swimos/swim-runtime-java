@@ -15,7 +15,6 @@
 package swim.runtime.router;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
@@ -23,7 +22,7 @@ import swim.api.Downlink;
 import swim.api.lane.DemandMapLane;
 import swim.api.lane.SupplyLane;
 import swim.api.lane.function.OnCueKey;
-import swim.api.lane.function.OnSyncMap;
+import swim.api.lane.function.OnSyncKeys;
 import swim.api.policy.Policy;
 import swim.api.warp.WarpUplink;
 import swim.collections.HashTrieMap;
@@ -885,7 +884,7 @@ public class PartTable extends AbstractTierBinding implements PartBinding {
       AtomicLongFieldUpdater.newUpdater(PartTable.class, "lastReportTime");
 }
 
-final class PartTableHostsController implements OnCueKey<Uri, HostInfo>, OnSyncMap<Uri, HostInfo> {
+final class PartTableHostsController implements OnCueKey<Uri, HostInfo>, OnSyncKeys<Uri> {
   final PartBinding part;
 
   PartTableHostsController(PartBinding part) {
@@ -895,14 +894,14 @@ final class PartTableHostsController implements OnCueKey<Uri, HostInfo>, OnSyncM
   @Override
   public HostInfo onCue(Uri hostUri, WarpUplink uplink) {
     final HostBinding hostBinding = this.part.getHost(hostUri);
-    if (hostBinding == null) {
-      return null;
+    if (hostBinding != null) {
+      return HostInfo.from(hostBinding);
     }
-    return HostInfo.from(hostBinding);
+    return null;
   }
 
   @Override
-  public Iterator<Map.Entry<Uri, HostInfo>> onSync(WarpUplink uplink) {
-    return HostInfo.iterator(this.part.hosts().iterator());
+  public Iterator<Uri> onSync(WarpUplink uplink) {
+    return this.part.hosts().keyIterator();
   }
 }

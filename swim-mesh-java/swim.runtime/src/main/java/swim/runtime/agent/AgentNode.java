@@ -176,13 +176,13 @@ public class AgentNode extends AbstractTierBinding implements NodeBinding, CellC
     return this.nodeContext.nodeUri();
   }
 
-  public final Identity identity() {
-    return this.nodeContext.identity();
-  }
-
   @Override
   public long createdTime() {
     return this.createdTime;
+  }
+
+  public final Identity identity() {
+    return this.nodeContext.identity();
   }
 
   @Override
