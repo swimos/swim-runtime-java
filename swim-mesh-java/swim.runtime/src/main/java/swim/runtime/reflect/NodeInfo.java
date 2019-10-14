@@ -54,7 +54,7 @@ public class NodeInfo {
   }
 
   public static NodeInfo from(NodeBinding nodeBinding) {
-    return new NodeInfo(nodeBinding.nodeUri(), nodeBinding.createdTime(), 0L);
+    return from(nodeBinding, 0L);
   }
 
   private static Form<NodeInfo> form;

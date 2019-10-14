@@ -27,11 +27,13 @@ public class MeshInfo {
   protected final Uri meshUri;
   protected final Value gatewayPartKey;
   protected final Value ourselfPartKey;
+  protected final int partCount;
 
-  public MeshInfo(Uri meshUri, Value gatewayPartKey, Value ourselfPartKey) {
+  public MeshInfo(Uri meshUri, Value gatewayPartKey, Value ourselfPartKey, int partCount) {
     this.meshUri = meshUri;
     this.gatewayPartKey = gatewayPartKey;
     this.ourselfPartKey = ourselfPartKey;
+    this.partCount = partCount;
   }
 
   public final Uri meshUri() {
@@ -54,7 +56,8 @@ public class MeshInfo {
     final PartBinding gateway = meshBinding.gateway();
     final PartBinding ourself = meshBinding.ourself();
     return new MeshInfo(meshBinding.meshUri(), gateway != null ? gateway.partKey() : Value.absent(),
-                        ourself != null ? ourself.partKey() : Value.absent());
+                        ourself != null ? ourself.partKey() : Value.absent(),
+                        meshBinding.parts().size());
   }
 
   private static Form<MeshInfo> form;
@@ -77,10 +80,17 @@ final class MeshInfoForm extends Form<MeshInfo> {
   @Override
   public Item mold(MeshInfo info) {
     if (info != null) {
-      final Record record = Record.create(3);
+      final Record record = Record.create(4);
       record.slot("meshUri", info.meshUri.toString());
-      record.slot("gatewayPartKey", info.gatewayPartKey);
-      record.slot("ourselfPartKey", info.ourselfPartKey);
+      if (info.gatewayPartKey.isDefined()) {
+        record.slot("gatewayPartKey", info.gatewayPartKey);
+      }
+      if (info.ourselfPartKey.isDefined()) {
+        record.slot("ourselfPartKey", info.ourselfPartKey);
+      }
+      if (info.partCount != 0) {
+        record.slot("partCount", info.partCount);
+      }
       return record;
     } else {
       return Item.extant();
@@ -94,7 +104,8 @@ final class MeshInfoForm extends Form<MeshInfo> {
     if (meshUri != null) {
       final Value gatewayPartKey = value.get("gatewayPartKey");
       final Value ourselfPartKey = value.get("ourselfPartKey");
-      return new MeshInfo(meshUri, gatewayPartKey, ourselfPartKey);
+      final int partCount = value.get("partCount").intValue(0);
+      return new MeshInfo(meshUri, gatewayPartKey, ourselfPartKey, partCount);
     }
     return null;
   }

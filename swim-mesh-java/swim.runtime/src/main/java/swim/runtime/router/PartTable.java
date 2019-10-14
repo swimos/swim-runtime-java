@@ -19,8 +19,10 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import swim.api.Downlink;
+import swim.api.lane.DemandLane;
 import swim.api.lane.DemandMapLane;
 import swim.api.lane.SupplyLane;
+import swim.api.lane.function.OnCue;
 import swim.api.lane.function.OnCueKey;
 import swim.api.lane.function.OnSyncKeys;
 import swim.api.policy.Policy;
@@ -51,8 +53,12 @@ import swim.runtime.agent.AgentNode;
 import swim.runtime.profile.HostProfile;
 import swim.runtime.profile.PartProfile;
 import swim.runtime.profile.WarpDownlinkProfile;
+import swim.runtime.reflect.AgentPulse;
 import swim.runtime.reflect.HostInfo;
 import swim.runtime.reflect.LogEntry;
+import swim.runtime.reflect.PartPulse;
+import swim.runtime.reflect.WarpDownlinkPulse;
+import swim.runtime.reflect.WarpUplinkPulse;
 import swim.store.StoreBinding;
 import swim.structure.Value;
 import swim.uri.Uri;
@@ -103,9 +109,11 @@ public class PartTable extends AbstractTierBinding implements PartBinding {
   volatile int uplinkCommandRate;
   volatile long uplinkCommandCount;
   volatile long lastReportTime;
+  PartPulse pulse;
 
   AgentNode metaNode;
   DemandMapLane<Uri, HostInfo> metaHosts;
+  DemandLane<PartPulse> metaPulse;
   SupplyLane<LogEntry> metaTraceLog;
   SupplyLane<LogEntry> metaDebugLog;
   SupplyLane<LogEntry> metaInfoLog;
@@ -227,6 +235,11 @@ public class PartTable extends AbstractTierBinding implements PartBinding {
         .valueForm(HostInfo.form())
         .observe(new PartTableHostsController(part));
     metaPart.openLane(HOSTS_URI, this.metaHosts);
+
+    this.metaPulse = metaNode.demandLane()
+        .valueForm(PartPulse.form())
+        .observe(new PartTablePulseController(this));
+    metaNode.openLane(PartPulse.PULSE_URI, this.metaPulse);
   }
 
   protected void openLogLanes(PartBinding part, AgentNode metaPart) {
@@ -780,6 +793,22 @@ public class PartTable extends AbstractTierBinding implements PartBinding {
     final int uplinkCommandRate = UPLINK_COMMAND_RATE.getAndSet(this, 0);
     final long uplinkCommandCount = UPLINK_COMMAND_COUNT.addAndGet(this, (long) uplinkCommandDelta);
 
+    final int hostCount = (int) (hostOpenCount - hostCloseCount);
+    final long nodeCount = nodeOpenCount - nodeCloseCount;
+    final long agentCount = agentOpenCount - agentCloseCount;
+    final AgentPulse agentPulse = new AgentPulse(agentCount, agentExecRate, agentExecTime, timerEventRate, timerEventCount);
+    final long downlinkCount = downlinkOpenCount - downlinkCloseCount;
+    final WarpDownlinkPulse downlinkPulse = new WarpDownlinkPulse(downlinkCount, downlinkEventRate, downlinkEventCount,
+                                                                  downlinkCommandRate, downlinkCommandCount);
+    final long uplinkCount = uplinkOpenCount - uplinkCloseCount;
+    final WarpUplinkPulse uplinkPulse = new WarpUplinkPulse(uplinkCount, uplinkEventRate, uplinkEventCount,
+                                                            uplinkCommandRate, uplinkCommandCount);
+    this.pulse = new PartPulse(hostCount, nodeCount, agentPulse, downlinkPulse, uplinkPulse);
+    final DemandLane<PartPulse> metaPulse = this.metaPulse;
+    if (metaPulse != null) {
+      metaPulse.cue();
+    }
+
     return new PartProfile(cellAddress(),
                            hostOpenDelta, hostOpenCount, hostCloseDelta, hostCloseCount,
                            nodeOpenDelta, nodeOpenCount, nodeCloseDelta, nodeCloseCount,
@@ -903,5 +932,18 @@ final class PartTableHostsController implements OnCueKey<Uri, HostInfo>, OnSyncK
   @Override
   public Iterator<Uri> onSync(WarpUplink uplink) {
     return this.part.hosts().keyIterator();
+  }
+}
+
+final class PartTablePulseController implements OnCue<PartPulse> {
+  final PartTable part;
+
+  PartTablePulseController(PartTable part) {
+    this.part = part;
+  }
+
+  @Override
+  public PartPulse onCue(WarpUplink uplink) {
+    return this.part.pulse;
   }
 }

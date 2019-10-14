@@ -19,8 +19,10 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import swim.api.Downlink;
+import swim.api.lane.DemandLane;
 import swim.api.lane.DemandMapLane;
 import swim.api.lane.SupplyLane;
+import swim.api.lane.function.OnCue;
 import swim.api.lane.function.OnCueKey;
 import swim.api.lane.function.OnSyncKeys;
 import swim.api.policy.Policy;
@@ -50,8 +52,12 @@ import swim.runtime.agent.AgentNode;
 import swim.runtime.profile.EdgeProfile;
 import swim.runtime.profile.MeshProfile;
 import swim.runtime.profile.WarpDownlinkProfile;
+import swim.runtime.reflect.AgentPulse;
+import swim.runtime.reflect.EdgePulse;
 import swim.runtime.reflect.LogEntry;
 import swim.runtime.reflect.MeshInfo;
+import swim.runtime.reflect.WarpDownlinkPulse;
+import swim.runtime.reflect.WarpUplinkPulse;
 import swim.store.StoreBinding;
 import swim.uri.Uri;
 
@@ -107,9 +113,11 @@ public class EdgeTable extends AbstractTierBinding implements EdgeBinding {
   volatile int uplinkCommandRate;
   volatile long uplinkCommandCount;
   volatile long lastReportTime;
+  EdgePulse pulse;
 
   AgentNode metaNode;
   DemandMapLane<Uri, MeshInfo> metaMeshes;
+  DemandLane<EdgePulse> metaPulse;
   SupplyLane<LogEntry> metaTraceLog;
   SupplyLane<LogEntry> metaDebugLog;
   SupplyLane<LogEntry> metaInfoLog;
@@ -210,6 +218,11 @@ public class EdgeTable extends AbstractTierBinding implements EdgeBinding {
         .valueForm(MeshInfo.form())
         .observe(new EdgeTableMeshesController(edge));
     metaEdge.openLane(MESHES_URI, this.metaMeshes);
+
+    this.metaPulse = metaNode.demandLane()
+        .valueForm(EdgePulse.form())
+        .observe(new EdgeTablePulseController(this));
+    metaNode.openLane(EdgePulse.PULSE_URI, this.metaPulse);
   }
 
   protected void openLogLanes(EdgeBinding edge, AgentNode metaEdge) {
@@ -735,6 +748,24 @@ public class EdgeTable extends AbstractTierBinding implements EdgeBinding {
     final int uplinkCommandRate = UPLINK_COMMAND_RATE.getAndSet(this, 0);
     final long uplinkCommandCount = UPLINK_COMMAND_COUNT.addAndGet(this, (long) uplinkCommandDelta);
 
+    final int meshCount = (int) (meshOpenCount - meshCloseCount);
+    final int partCount = (int) (partOpenCount - partCloseCount);
+    final int hostCount = (int) (hostOpenCount - hostCloseCount);
+    final long nodeCount = nodeOpenCount - nodeCloseCount;
+    final long agentCount = agentOpenCount - agentCloseCount;
+    final AgentPulse agentPulse = new AgentPulse(agentCount, agentExecRate, agentExecTime, timerEventRate, timerEventCount);
+    final long downlinkCount = downlinkOpenCount - downlinkCloseCount;
+    final WarpDownlinkPulse downlinkPulse = new WarpDownlinkPulse(downlinkCount, downlinkEventRate, downlinkEventCount,
+                                                                  downlinkCommandRate, downlinkCommandCount);
+    final long uplinkCount = uplinkOpenCount - uplinkCloseCount;
+    final WarpUplinkPulse uplinkPulse = new WarpUplinkPulse(uplinkCount, uplinkEventRate, uplinkEventCount,
+                                                            uplinkCommandRate, uplinkCommandCount);
+    this.pulse = new EdgePulse(meshCount, partCount, hostCount, nodeCount, agentPulse, downlinkPulse, uplinkPulse);
+    final DemandLane<EdgePulse> metaPulse = this.metaPulse;
+    if (metaPulse != null) {
+      metaPulse.cue();
+    }
+
     return new EdgeProfile(cellAddress(),
                            meshOpenDelta, meshOpenCount, meshCloseDelta, meshCloseCount,
                            partOpenDelta, partOpenCount, partCloseDelta, partCloseCount,
@@ -872,5 +903,18 @@ final class EdgeTableMeshesController implements OnCueKey<Uri, MeshInfo>, OnSync
   @Override
   public Iterator<Uri> onSync(WarpUplink uplink) {
     return this.edge.meshes().keyIterator();
+  }
+}
+
+final class EdgeTablePulseController implements OnCue<EdgePulse> {
+  final EdgeTable edge;
+
+  EdgeTablePulseController(EdgeTable edge) {
+    this.edge = edge;
+  }
+
+  @Override
+  public EdgePulse onCue(WarpUplink uplink) {
+    return this.edge.pulse;
   }
 }

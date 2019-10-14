@@ -683,7 +683,7 @@ public class AgentModel extends AgentNode {
     final int uplinkCommandRate = UPLINK_COMMAND_RATE.getAndSet(this, 0);
     final long uplinkCommandCount = UPLINK_COMMAND_COUNT.addAndGet(this, (long) uplinkCommandDelta);
 
-    final long agentCount = (long) (agentOpenCount - agentCloseCount);
+    final long agentCount = agentOpenCount - agentCloseCount;
     final AgentPulse agentPulse = new AgentPulse(agentCount, agentExecRate, agentExecTime, timerEventRate, timerEventCount);
     final long downlinkCount = downlinkOpenCount - downlinkCloseCount;
     final WarpDownlinkPulse downlinkPulse = new WarpDownlinkPulse(downlinkCount, downlinkEventRate, downlinkEventCount,
@@ -691,7 +691,7 @@ public class AgentModel extends AgentNode {
     final long uplinkCount = uplinkOpenCount - uplinkCloseCount;
     final WarpUplinkPulse uplinkPulse = new WarpUplinkPulse(uplinkCount, uplinkEventRate, uplinkEventCount,
                                                             uplinkCommandRate, uplinkCommandCount);
-    this.pulse = new NodePulse(0, agentPulse, downlinkPulse, uplinkPulse);
+    this.pulse = new NodePulse(agentPulse, downlinkPulse, uplinkPulse);
     final DemandLane<NodePulse> metaPulse = this.metaPulse;
     if (metaPulse != null) {
       metaPulse.cue();

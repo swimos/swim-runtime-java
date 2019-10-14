@@ -20,12 +20,15 @@ import swim.structure.Kind;
 import swim.structure.Record;
 import swim.structure.Value;
 
-public class NodePulse extends Pulse {
+public class HostPulse extends Pulse {
+  protected final long nodeCount;
   protected final AgentPulse agents;
   protected final WarpDownlinkPulse downlinks;
   protected final WarpUplinkPulse uplinks;
 
-  public NodePulse(AgentPulse agents, WarpDownlinkPulse downlinks, WarpUplinkPulse uplinks) {
+  public HostPulse(long nodeCount, AgentPulse agents,
+                   WarpDownlinkPulse downlinks, WarpUplinkPulse uplinks) {
+    this.nodeCount = nodeCount;
     this.agents = agents;
     this.downlinks = downlinks;
     this.uplinks = uplinks;
@@ -33,7 +36,12 @@ public class NodePulse extends Pulse {
 
   @Override
   public boolean isDefined() {
-    return this.agents.isDefined() || this.downlinks.isDefined() || this.uplinks.isDefined();
+    return this.nodeCount != 0L || this.agents.isDefined()
+        || this.downlinks.isDefined() || this.uplinks.isDefined();
+  }
+
+  public final long nodeCount() {
+    return this.nodeCount;
   }
 
   public final AgentPulse agents() {
@@ -53,27 +61,30 @@ public class NodePulse extends Pulse {
     return form().mold(this).toValue();
   }
 
-  private static Form<NodePulse> form;
+  private static Form<HostPulse> form;
 
   @Kind
-  public static Form<NodePulse> form() {
+  public static Form<HostPulse> form() {
     if (form == null) {
-      form = new NodePulseForm();
+      form = new HostPulseForm();
     }
     return form;
   }
 }
 
-final class NodePulseForm extends Form<NodePulse> {
+final class HostPulseForm extends Form<HostPulse> {
   @Override
   public Class<?> type() {
-    return NodePulse.class;
+    return HostPulse.class;
   }
 
   @Override
-  public Item mold(NodePulse pulse) {
+  public Item mold(HostPulse pulse) {
     if (pulse != null) {
-      final Record record = Record.create(3);
+      final Record record = Record.create(4);
+      if (pulse.nodeCount > 0L) {
+        record.slot("nodeCount", pulse.nodeCount);
+      }
       if (pulse.agents.isDefined()) {
         record.slot("agents", pulse.agents.toValue());
       }
@@ -90,11 +101,12 @@ final class NodePulseForm extends Form<NodePulse> {
   }
 
   @Override
-  public NodePulse cast(Item item) {
+  public HostPulse cast(Item item) {
     final Value value = item.toValue();
+    final long nodeCount = value.get("nodeCount").longValue(0L);
     final AgentPulse agents = value.get("agents").coerce(AgentPulse.form());
     final WarpDownlinkPulse downlinks = value.get("downlinks").coerce(WarpDownlinkPulse.form());
     final WarpUplinkPulse uplinks = value.get("uplinks").coerce(WarpUplinkPulse.form());
-    return new NodePulse(agents, downlinks, uplinks);
+    return new HostPulse(nodeCount, agents, downlinks, uplinks);
   }
 }

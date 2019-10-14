@@ -20,12 +20,21 @@ import swim.structure.Kind;
 import swim.structure.Record;
 import swim.structure.Value;
 
-public class NodePulse extends Pulse {
+public class EdgePulse extends Pulse {
+  protected final int meshCount;
+  protected final int partCount;
+  protected final int hostCount;
+  protected final long nodeCount;
   protected final AgentPulse agents;
   protected final WarpDownlinkPulse downlinks;
   protected final WarpUplinkPulse uplinks;
 
-  public NodePulse(AgentPulse agents, WarpDownlinkPulse downlinks, WarpUplinkPulse uplinks) {
+  public EdgePulse(int meshCount, int partCount, int hostCount, long nodeCount,
+                   AgentPulse agents, WarpDownlinkPulse downlinks, WarpUplinkPulse uplinks) {
+    this.meshCount = meshCount;
+    this.partCount = partCount;
+    this.hostCount = hostCount;
+    this.nodeCount = nodeCount;
     this.agents = agents;
     this.downlinks = downlinks;
     this.uplinks = uplinks;
@@ -33,7 +42,24 @@ public class NodePulse extends Pulse {
 
   @Override
   public boolean isDefined() {
-    return this.agents.isDefined() || this.downlinks.isDefined() || this.uplinks.isDefined();
+    return this.meshCount != 0 || this.partCount != 0 || this.hostCount != 0 || this.nodeCount != 0L
+        || this.agents.isDefined() || this.downlinks.isDefined() || this.uplinks.isDefined();
+  }
+
+  public final int meshCount() {
+    return this.meshCount;
+  }
+
+  public final int partCount() {
+    return this.partCount;
+  }
+
+  public final int hostCount() {
+    return this.hostCount;
+  }
+
+  public final long nodeCount() {
+    return this.nodeCount;
   }
 
   public final AgentPulse agents() {
@@ -53,27 +79,39 @@ public class NodePulse extends Pulse {
     return form().mold(this).toValue();
   }
 
-  private static Form<NodePulse> form;
+  private static Form<EdgePulse> form;
 
   @Kind
-  public static Form<NodePulse> form() {
+  public static Form<EdgePulse> form() {
     if (form == null) {
-      form = new NodePulseForm();
+      form = new EdgePulseForm();
     }
     return form;
   }
 }
 
-final class NodePulseForm extends Form<NodePulse> {
+final class EdgePulseForm extends Form<EdgePulse> {
   @Override
   public Class<?> type() {
-    return NodePulse.class;
+    return EdgePulse.class;
   }
 
   @Override
-  public Item mold(NodePulse pulse) {
+  public Item mold(EdgePulse pulse) {
     if (pulse != null) {
-      final Record record = Record.create(3);
+      final Record record = Record.create(7);
+      if (pulse.meshCount > 0) {
+        record.slot("meshCount", pulse.meshCount);
+      }
+      if (pulse.partCount > 0) {
+        record.slot("partCount", pulse.partCount);
+      }
+      if (pulse.hostCount > 0) {
+        record.slot("hostCount", pulse.hostCount);
+      }
+      if (pulse.nodeCount > 0L) {
+        record.slot("nodeCount", pulse.nodeCount);
+      }
       if (pulse.agents.isDefined()) {
         record.slot("agents", pulse.agents.toValue());
       }
@@ -90,11 +128,15 @@ final class NodePulseForm extends Form<NodePulse> {
   }
 
   @Override
-  public NodePulse cast(Item item) {
+  public EdgePulse cast(Item item) {
     final Value value = item.toValue();
+    final int edgeCount = value.get("edgeCount").intValue(0);
+    final int partCount = value.get("partCount").intValue(0);
+    final int hostCount = value.get("hostCount").intValue(0);
+    final long nodeCount = value.get("nodeCount").longValue(0L);
     final AgentPulse agents = value.get("agents").coerce(AgentPulse.form());
     final WarpDownlinkPulse downlinks = value.get("downlinks").coerce(WarpDownlinkPulse.form());
     final WarpUplinkPulse uplinks = value.get("uplinks").coerce(WarpUplinkPulse.form());
-    return new NodePulse(agents, downlinks, uplinks);
+    return new EdgePulse(edgeCount, partCount, hostCount, nodeCount, agents, downlinks, uplinks);
   }
 }

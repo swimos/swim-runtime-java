@@ -68,6 +68,10 @@ public class MetaKernel extends KernelProxy {
   protected NodeBinding createMeta(EdgeBinding edge, UriPath nodePath) {
     if (!nodePath.isEmpty()) {
       if ("meta:edge".equals(nodePath.head())) {
+        nodePath = nodePath.tail(); // drop meta:edge
+        if (!nodePath.isEmpty()) {
+          nodePath = nodePath.tail(); // drop /
+        }
         return createMetaEdge(edge, nodePath);
       } else if ("meta:mesh".equals(nodePath.head())) {
         nodePath = nodePath.tail(); // drop meta:mesh

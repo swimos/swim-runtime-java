@@ -19,8 +19,10 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import swim.api.Downlink;
+import swim.api.lane.DemandLane;
 import swim.api.lane.DemandMapLane;
 import swim.api.lane.SupplyLane;
+import swim.api.lane.function.OnCue;
 import swim.api.lane.function.OnCueKey;
 import swim.api.lane.function.OnSyncKeys;
 import swim.api.policy.Policy;
@@ -49,8 +51,12 @@ import swim.runtime.agent.AgentNode;
 import swim.runtime.profile.MeshProfile;
 import swim.runtime.profile.PartProfile;
 import swim.runtime.profile.WarpDownlinkProfile;
+import swim.runtime.reflect.AgentPulse;
 import swim.runtime.reflect.LogEntry;
+import swim.runtime.reflect.MeshPulse;
 import swim.runtime.reflect.PartInfo;
+import swim.runtime.reflect.WarpDownlinkPulse;
+import swim.runtime.reflect.WarpUplinkPulse;
 import swim.store.StoreBinding;
 import swim.structure.Extant;
 import swim.structure.Form;
@@ -107,9 +113,11 @@ public class MeshTable extends AbstractTierBinding implements MeshBinding {
   volatile int uplinkCommandRate;
   volatile long uplinkCommandCount;
   volatile long lastReportTime;
+  MeshPulse pulse;
 
   AgentNode metaNode;
   DemandMapLane<Value, PartInfo> metaParts;
+  DemandLane<MeshPulse> metaPulse;
   SupplyLane<LogEntry> metaTraceLog;
   SupplyLane<LogEntry> metaDebugLog;
   SupplyLane<LogEntry> metaInfoLog;
@@ -215,6 +223,11 @@ public class MeshTable extends AbstractTierBinding implements MeshBinding {
         .valueForm(PartInfo.form())
         .observe(new MeshTablePartsController(mesh));
     metaMesh.openLane(PARTS_URI, this.metaParts);
+
+    this.metaPulse = metaNode.demandLane()
+        .valueForm(MeshPulse.form())
+        .observe(new MeshTablePulseController(this));
+    metaNode.openLane(MeshPulse.PULSE_URI, this.metaPulse);
   }
 
   protected void openLogLanes(MeshBinding mesh, AgentNode metaMesh) {
@@ -829,6 +842,23 @@ public class MeshTable extends AbstractTierBinding implements MeshBinding {
     final int uplinkCommandRate = UPLINK_COMMAND_RATE.getAndSet(this, 0);
     final long uplinkCommandCount = UPLINK_COMMAND_COUNT.addAndGet(this, (long) uplinkCommandDelta);
 
+    final int partCount = (int) (partOpenCount - partCloseCount);
+    final int hostCount = (int) (hostOpenCount - hostCloseCount);
+    final long nodeCount = nodeOpenCount - nodeCloseCount;
+    final long agentCount = agentOpenCount - agentCloseCount;
+    final AgentPulse agentPulse = new AgentPulse(agentCount, agentExecRate, agentExecTime, timerEventRate, timerEventCount);
+    final long downlinkCount = downlinkOpenCount - downlinkCloseCount;
+    final WarpDownlinkPulse downlinkPulse = new WarpDownlinkPulse(downlinkCount, downlinkEventRate, downlinkEventCount,
+                                                                  downlinkCommandRate, downlinkCommandCount);
+    final long uplinkCount = uplinkOpenCount - uplinkCloseCount;
+    final WarpUplinkPulse uplinkPulse = new WarpUplinkPulse(uplinkCount, uplinkEventRate, uplinkEventCount,
+                                                            uplinkCommandRate, uplinkCommandCount);
+    this.pulse = new MeshPulse(partCount, hostCount, nodeCount, agentPulse, downlinkPulse, uplinkPulse);
+    final DemandLane<MeshPulse> metaPulse = this.metaPulse;
+    if (metaPulse != null) {
+      metaPulse.cue();
+    }
+
     return new MeshProfile(cellAddress(),
                            partOpenDelta, partOpenCount, partCloseDelta, partCloseCount,
                            hostOpenDelta, hostOpenCount, hostCloseDelta, hostCloseCount,
@@ -980,5 +1010,18 @@ final class MeshTablePartsKeyIterator implements Iterator<Value> {
   @Override
   public void remove() {
     throw new UnsupportedOperationException();
+  }
+}
+
+final class MeshTablePulseController implements OnCue<MeshPulse> {
+  final MeshTable mesh;
+
+  MeshTablePulseController(MeshTable mesh) {
+    this.mesh = mesh;
+  }
+
+  @Override
+  public MeshPulse onCue(WarpUplink uplink) {
+    return this.mesh.pulse;
   }
 }

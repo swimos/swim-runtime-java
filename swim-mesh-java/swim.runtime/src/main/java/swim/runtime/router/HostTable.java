@@ -19,8 +19,10 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import swim.api.Downlink;
+import swim.api.lane.DemandLane;
 import swim.api.lane.DemandMapLane;
 import swim.api.lane.SupplyLane;
+import swim.api.lane.function.OnCue;
 import swim.api.lane.function.OnCueKey;
 import swim.api.lane.function.OnSyncKeys;
 import swim.api.policy.Policy;
@@ -46,8 +48,12 @@ import swim.runtime.agent.AgentNode;
 import swim.runtime.profile.HostProfile;
 import swim.runtime.profile.NodeProfile;
 import swim.runtime.profile.WarpDownlinkProfile;
+import swim.runtime.reflect.AgentPulse;
+import swim.runtime.reflect.HostPulse;
 import swim.runtime.reflect.LogEntry;
 import swim.runtime.reflect.NodeInfo;
+import swim.runtime.reflect.WarpDownlinkPulse;
+import swim.runtime.reflect.WarpUplinkPulse;
 import swim.store.StoreBinding;
 import swim.structure.Value;
 import swim.uri.Uri;
@@ -97,9 +103,11 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
   volatile int uplinkCommandRate;
   volatile long uplinkCommandCount;
   volatile long lastReportTime;
+  HostPulse pulse;
 
   AgentNode metaNode;
   DemandMapLane<Uri, NodeInfo> metaNodes;
+  DemandLane<HostPulse> metaPulse;
   SupplyLane<LogEntry> metaTraceLog;
   SupplyLane<LogEntry> metaDebugLog;
   SupplyLane<LogEntry> metaInfoLog;
@@ -293,6 +301,11 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
         .valueForm(NodeInfo.form())
         .observe(new HostTableNodesController(host));
     metaHost.openLane(NODES_URI, this.metaNodes);
+
+    this.metaPulse = metaNode.demandLane()
+        .valueForm(HostPulse.form())
+        .observe(new HostTablePulseController(this));
+    metaNode.openLane(HostPulse.PULSE_URI, this.metaPulse);
   }
 
   protected void openLogLanes(HostBinding host, AgentNode metaHost) {
@@ -815,6 +828,21 @@ public class HostTable extends AbstractTierBinding implements HostBinding {
     final int uplinkCommandRate = UPLINK_COMMAND_RATE.getAndSet(this, 0);
     final long uplinkCommandCount = UPLINK_COMMAND_COUNT.addAndGet(this, (long) uplinkCommandDelta);
 
+    final long nodeCount = nodeOpenCount - nodeCloseCount;
+    final long agentCount = agentOpenCount - agentCloseCount;
+    final AgentPulse agentPulse = new AgentPulse(agentCount, agentExecRate, agentExecTime, timerEventRate, timerEventCount);
+    final long downlinkCount = downlinkOpenCount - downlinkCloseCount;
+    final WarpDownlinkPulse downlinkPulse = new WarpDownlinkPulse(downlinkCount, downlinkEventRate, downlinkEventCount,
+                                                                  downlinkCommandRate, downlinkCommandCount);
+    final long uplinkCount = uplinkOpenCount - uplinkCloseCount;
+    final WarpUplinkPulse uplinkPulse = new WarpUplinkPulse(uplinkCount, uplinkEventRate, uplinkEventCount,
+                                                            uplinkCommandRate, uplinkCommandCount);
+    this.pulse = new HostPulse(nodeCount, agentPulse, downlinkPulse, uplinkPulse);
+    final DemandLane<HostPulse> metaPulse = this.metaPulse;
+    if (metaPulse != null) {
+      metaPulse.cue();
+    }
+
     return new HostProfile(cellAddress(),
                            nodeOpenDelta, nodeOpenCount, nodeCloseDelta, nodeCloseCount,
                            agentOpenDelta, agentOpenCount, agentCloseDelta, agentCloseCount,
@@ -981,5 +1009,18 @@ final class HostTableNodesChildIterator implements Iterator<Uri> {
   @Override
   public void remove() {
     throw new UnsupportedOperationException();
+  }
+}
+
+final class HostTablePulseController implements OnCue<HostPulse> {
+  final HostTable host;
+
+  HostTablePulseController(HostTable host) {
+    this.host = host;
+  }
+
+  @Override
+  public HostPulse onCue(WarpUplink uplink) {
+    return this.host.pulse;
   }
 }
