@@ -196,8 +196,8 @@ public class TraitSpec {
           .observe(new ValueLinkController())
           .open();
       valueLink.set(testValue);
-      valueDidReceive.await(1, TimeUnit.SECONDS);
-      valueDidSet.await(1, TimeUnit.SECONDS);
+      valueDidReceive.await(10, TimeUnit.SECONDS);
+      valueDidSet.await(10, TimeUnit.SECONDS);
       assertEquals(valueDidReceive.getCount(), 0);
       assertEquals(valueDidSet.getCount(), 0);
       assertEquals(valueLink.get(), testValue);
