@@ -378,7 +378,9 @@ public class TestTheaterSpec {
     final CountDownLatch callWillTrap = new CountDownLatch(1);
     final CountDownLatch callDidTrap = new CountDownLatch(1);
     final CountDownLatch callDidFail = new CountDownLatch(1);
-    final TestTheater theater = new TestTheater() {
+
+    // Required to be single threaded due to blocking task
+    final TestTheater theater = new TestTheater(1) {
       @Override
       protected void didStart() {
         assertEquals(didStart.getCount(), 1);
