@@ -587,8 +587,14 @@ public class Database {
   }
 
   private static void assertStep(OutputBuffer<?> output, long base, long step) {
-    if (output.index() != (int) (step - base)) {
-      throw new StoreException("chunk offset skew: " + (output.index() - (int) (step - base)));
+    final int skew = output.index() - (int) (step - base);
+    if (skew != 0) {
+      final StoreException error = new StoreException("chunk offset skew: " + skew + "; base: " + base + "; step: " + step);
+      if (skew < 0) {
+        throw error;
+      } else {
+        error.printStackTrace();
+      }
     }
   }
 
