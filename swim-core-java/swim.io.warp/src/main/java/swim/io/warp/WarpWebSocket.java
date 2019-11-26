@@ -480,7 +480,7 @@ public class WarpWebSocket implements WebSocket<Envelope, Envelope>, WarpSocketC
     try {
       targetDemand = Integer.parseInt(System.getProperty("swim.warp.demand.target"));
     } catch (NumberFormatException e) {
-      targetDemand = 32;
+      targetDemand = Math.min(Math.max(32, 4 * Runtime.getRuntime().availableProcessors()), (int) DEMAND_MAX - 1);
     }
     TARGET_DEMAND = targetDemand;
 

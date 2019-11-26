@@ -36,6 +36,7 @@ import swim.concurrent.Schedule;
 import swim.concurrent.Stage;
 import swim.http.HttpRequest;
 import swim.http.HttpResponse;
+import swim.io.FlowModifier;
 import swim.io.IpSocket;
 import swim.io.warp.WarpSocket;
 import swim.io.warp.WarpSocketContext;
@@ -95,6 +96,8 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
   volatile Identity remoteIdentity;
   volatile HashTrieMap<Uri, HashTrieMap<Uri, RemoteWarpDownlink>> downlinks;
   volatile HashTrieMap<Uri, HashTrieMap<Uri, HashTrieSet<RemoteWarpUplink>>> uplinks;
+  volatile int messageBacklog;
+  RemoteHostMessageCont messageCont;
   final HashGenCacheMap<Uri, Uri> resolveCache;
 
   public RemoteHost(Uri requestUri, Uri baseUri) {
@@ -368,12 +371,6 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
     return new RemoteWarpUplink(this, link, remoteNodeUri);
   }
 
-  <E extends Envelope> Push<E> createPush(float prio, E envelope) {
-    final Uri nodeUri = envelope.nodeUri();
-    final Uri laneUri = envelope instanceof LaneAddressed ? ((LaneAddressed) envelope).laneUri() : Uri.empty();
-    return new Push<E>(Uri.empty(), Uri.empty(), nodeUri, laneUri, prio, null, envelope, null);
-  }
-
   <E extends Envelope> PullRequest<E> createPull(float prio, E envelope, Cont<E> cont) {
     return new RemoteHostPull<E>(this, prio, envelope, cont);
   }
@@ -508,6 +505,7 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
 
   @Override
   public void didConnect() {
+    this.messageCont = new RemoteHostMessageCont(this);
     final InetSocketAddress remoteAddress = this.warpSocketContext.remoteAddress();
     final UriAuthority remoteAuthority = UriAuthority.from(UriHost.inetAddress(remoteAddress.getAddress()),
         UriPort.from(remoteAddress.getPort()));
@@ -605,7 +603,10 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
         final EventMessage resolvedMessage = message.nodeUri(nodeUri);
         final Iterator<RemoteWarpUplink> uplinksIterator = laneUplinks.iterator();
         while (uplinksIterator.hasNext()) {
-          uplinksIterator.next().queueDown(resolvedMessage);
+          willPushMessage(resolvedMessage);
+          final RemoteWarpUplink uplink = uplinksIterator.next();
+          uplink.queueDown(new Push<Envelope>(Uri.empty(), Uri.empty(), uplink.nodeUri(), uplink.laneUri(),
+                                              uplink.prio(), remoteIdentity(), resolvedMessage, this.messageCont));
         }
       }
     }
@@ -641,8 +642,55 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
       }
     }
 
-    final Push<Envelope> push = createPush(0.0f, resolvedMessage);
-    this.hostContext.pushDown(push);
+    willPushMessage(resolvedMessage);
+    this.hostContext.pushDown(new Push<Envelope>(Uri.empty(), Uri.empty(), nodeUri, laneUri,
+                              0.0f, null, resolvedMessage, this.messageCont));
+  }
+
+  protected void willPushMessage(Envelope envelope) {
+    //do {
+    //  final int oldMessageBacklog = this.messageBacklog;
+    //  final int newMessageBacklog = oldMessageBacklog + 1;
+    //  if (MESSAGE_BACKLOG.compareAndSet(this, oldMessageBacklog, newMessageBacklog)) {
+    //    if (newMessageBacklog == MAX_MESSAGE_BACKLOG) {
+    //      this.warpSocketContext.flowControl(FlowModifier.DISABLE_READ);
+    //      if (newMessageBacklog != this.messageBacklog) {
+    //        reconcileMessageBacklog();
+    //      }
+    //    }
+    //    break;
+    //  }
+    //} while (true);
+  }
+
+  protected void didPushMessage(Envelope envelope) {
+    //do {
+    //  final int oldMessageBacklog = this.messageBacklog;
+    //  final int newMessageBacklog = oldMessageBacklog - 1;
+    //  if (MESSAGE_BACKLOG.compareAndSet(this, oldMessageBacklog, newMessageBacklog)) {
+    //    if (oldMessageBacklog == MAX_MESSAGE_BACKLOG) {
+    //      this.warpSocketContext.flowControl(FlowModifier.ENABLE_READ);
+    //      if (newMessageBacklog != this.messageBacklog) {
+    //        reconcileMessageBacklog();
+    //      }
+    //    }
+    //    break;
+    //  }
+    //} while (true);
+  }
+
+  protected void reconcileMessageBacklog() {
+    do {
+      final int messageBacklog = this.messageBacklog;
+      if (messageBacklog < MAX_MESSAGE_BACKLOG) {
+        this.warpSocketContext.flowControl(FlowModifier.ENABLE_READ);
+      } else {
+        this.warpSocketContext.flowControl(FlowModifier.DISABLE_READ);
+      }
+      if (messageBacklog == this.messageBacklog) {
+        break;
+      }
+    } while (true);
   }
 
   protected void routeDownlink(LinkAddressed envelope) {
@@ -699,7 +747,9 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
         final LaneAddressed resolvedEnvelope = envelope.nodeUri(nodeUri);
         final Iterator<RemoteWarpUplink> uplinksIterator = laneUplinks.iterator();
         while (uplinksIterator.hasNext()) {
-          uplinksIterator.next().queueDown(resolvedEnvelope);
+          final RemoteWarpUplink uplink = uplinksIterator.next();
+          uplink.queueDown(new Push<Envelope>(Uri.empty(), Uri.empty(), uplink.nodeUri(), uplink.laneUri(),
+                                              uplink.prio(), remoteIdentity(), resolvedEnvelope, null));
         }
       }
     }
@@ -825,7 +875,9 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
       final UnlinkedResponse resolvedResponse = response.nodeUri(nodeUri);
       final Iterator<RemoteWarpUplink> uplinksIterator = laneUplinks.iterator();
       while (uplinksIterator.hasNext()) {
-        uplinksIterator.next().queueDown(resolvedResponse);
+        final RemoteWarpUplink uplink = uplinksIterator.next();
+        uplink.queueDown(new Push<Envelope>(Uri.empty(), Uri.empty(), uplink.nodeUri(), uplink.laneUri(),
+                                            uplink.prio(), remoteIdentity(), resolvedResponse, null));
       }
     }
   }
@@ -900,6 +952,12 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
 
   @Override
   public void didDisconnect() {
+    final RemoteHostMessageCont messageCont = this.messageCont;
+    if (messageCont != null) {
+      messageCont.host = null;
+      this.messageCont = null;
+    }
+    MESSAGE_BACKLOG.set(this, 0);
     disconnectUplinks();
     this.hostContext.didDisconnect();
     reconnect();
@@ -1107,6 +1165,7 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
   static final int MASTER = 1 << 2;
   static final int SLAVE = 1 << 3;
 
+  static final int MAX_MESSAGE_BACKLOG;
   static final int URI_RESOLUTION_CACHE_SIZE;
 
   static final AtomicIntegerFieldUpdater<RemoteHost> FLAGS =
@@ -1114,6 +1173,9 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
 
   static final AtomicReferenceFieldUpdater<RemoteHost, Identity> REMOTE_IDENTITY =
       AtomicReferenceFieldUpdater.newUpdater(RemoteHost.class, Identity.class, "remoteIdentity");
+
+  static final AtomicIntegerFieldUpdater<RemoteHost> MESSAGE_BACKLOG =
+      AtomicIntegerFieldUpdater.newUpdater(RemoteHost.class, "messageBacklog");
 
   @SuppressWarnings("unchecked")
   static final AtomicReferenceFieldUpdater<RemoteHost, HashTrieMap<Uri, HashTrieMap<Uri, RemoteWarpDownlink>>> DOWNLINKS =
@@ -1124,6 +1186,14 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
       AtomicReferenceFieldUpdater.newUpdater(RemoteHost.class, (Class<HashTrieMap<Uri, HashTrieMap<Uri, HashTrieSet<RemoteWarpUplink>>>>) (Class<?>) HashTrieMap.class, "uplinks");
 
   static {
+    int maxMessageBacklog;
+    try {
+      maxMessageBacklog = Integer.parseInt(System.getProperty("swim.remote.max.message.backlog"));
+    } catch (NumberFormatException e) {
+      maxMessageBacklog = Math.max(512, 128 * Runtime.getRuntime().availableProcessors());
+    }
+    MAX_MESSAGE_BACKLOG = maxMessageBacklog;
+
     int uriResolutionCacheSize;
     try {
       uriResolutionCacheSize = Integer.parseInt(System.getProperty("swim.remote.uri.resolution.cache.size"));
@@ -1131,6 +1201,30 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
       uriResolutionCacheSize = 8;
     }
     URI_RESOLUTION_CACHE_SIZE = uriResolutionCacheSize;
+  }
+}
+
+final class RemoteHostMessageCont implements Cont<Envelope> {
+  volatile RemoteHost host;
+
+  RemoteHostMessageCont(RemoteHost host) {
+    this.host = host;
+  }
+
+  @Override
+  public void bind(Envelope envelope) {
+    final RemoteHost host = this.host;
+    if (host != null) {
+      host.didPushMessage(envelope);
+    }
+  }
+
+  @Override
+  public void trap(Throwable error) {
+    final RemoteHost host = this.host;
+    if (host != null) {
+      host.didPushMessage(null);
+    }
   }
 }
 
