@@ -79,6 +79,8 @@ public class MapDownlinkSpec {
     final CountDownLatch linkDidUpdate = new CountDownLatch(4);
     final CountDownLatch linkDidSync = new CountDownLatch(1);
     final CountDownLatch readOnlyLinkDidReceive = new CountDownLatch(2);
+    final CountDownLatch didSyncLatch = new CountDownLatch(2);
+
     class MapLinkController implements WillUpdateKey<String, String>,
         DidUpdateKey<String, String>, WillReceive, DidReceive, DidSync {
       @Override
@@ -126,6 +128,7 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new MapLinkController())
+          .didSync(didSyncLatch::countDown)
           .open();
       final MapDownlink<String, String> readOnlyMapLink = plane.downlinkMap()
           .keyClass(String.class)
@@ -134,7 +137,11 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new ReadOnlyMapLinkController())
+          .didSync(didSyncLatch::countDown)
           .open();
+
+      didSyncLatch.await();
+
       mapLink.put("a", "indefinite article");
       mapLink.put("the", "definite article");
       linkWillReceive.await(1, TimeUnit.SECONDS);
@@ -170,6 +177,7 @@ public class MapDownlinkSpec {
     final CountDownLatch didRemove = new CountDownLatch(2);
     final CountDownLatch readOnlyLinkDidReceive = new CountDownLatch(2);
     final CountDownLatch readOnlyLinkDidRemove = new CountDownLatch(1);
+    final CountDownLatch didSyncLatch = new CountDownLatch(2);
 
     class MapLinkController implements DidReceive, WillRemoveKey<String>, DidRemoveKey<String, String> {
       @Override
@@ -215,6 +223,7 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new MapLinkController())
+          .didSync(didSyncLatch::countDown)
           .open();
       final MapDownlink<String, String> readOnlyMapLink = plane.downlinkMap()
           .keyClass(String.class)
@@ -223,7 +232,10 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new ReadOnlyMapLinkController())
+          .didSync(didSyncLatch::countDown)
           .open();
+
+      didSyncLatch.await();
 
       mapLink.put("a", "indefinite article");
       mapLink.put("the", "definite article");
@@ -265,6 +277,7 @@ public class MapDownlinkSpec {
     final CountDownLatch didClear = new CountDownLatch(2);
     final CountDownLatch readOnlyLinkDidReceive = new CountDownLatch(2);
     final CountDownLatch readOnlyLinkDidClear = new CountDownLatch(1);
+    final CountDownLatch didSyncLatch = new CountDownLatch(2);
 
     class MapLinkController implements DidReceive, WillClear, DidClear {
       @Override
@@ -310,6 +323,7 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new MapLinkController())
+          .didSync(didSyncLatch::countDown)
           .open();
       final MapDownlink<String, String> readOnlyMapLink = plane.downlinkMap()
           .keyClass(String.class)
@@ -318,7 +332,10 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new ReadOnlyMapLinkController())
+          .didSync(didSyncLatch::countDown)
           .open();
+
+      didSyncLatch.await();
 
       mapLink.put("a", "indefinite article");
       mapLink.put("the", "definite article");
@@ -354,6 +371,7 @@ public class MapDownlinkSpec {
     final CountDownLatch didDrop = new CountDownLatch(1);
     final CountDownLatch readOnlyLinkDidReceive = new CountDownLatch(5);
     final CountDownLatch readOnlyLinkDidDrop = new CountDownLatch(1);
+    final CountDownLatch didSyncLatch = new CountDownLatch(2);
 
     class MapLinkController implements DidReceive, WillDrop, DidDrop {
       @Override
@@ -399,6 +417,7 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new MapLinkController())
+          .didSync(didSyncLatch::countDown)
           .open();
       final MapDownlink<String, String> readOnlyMapLink = plane.downlinkMap()
           .keyClass(String.class)
@@ -407,7 +426,10 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new ReadOnlyMapLinkController())
+          .didSync(didSyncLatch::countDown)
           .open();
+
+      didSyncLatch.await();
 
       mapLink.put("a", "alpha");
       mapLink.put("b", "bravo");
@@ -456,6 +478,7 @@ public class MapDownlinkSpec {
     final CountDownLatch didTake = new CountDownLatch(1);
     final CountDownLatch readOnlyLinkDidReceive = new CountDownLatch(5);
     final CountDownLatch readOnlyLinkDidTake = new CountDownLatch(1);
+    final CountDownLatch didSyncLatch = new CountDownLatch(2);
 
     class MapLinkController implements DidReceive, WillTake, DidTake {
       @Override
@@ -501,6 +524,7 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new MapLinkController())
+          .didSync(didSyncLatch::countDown)
           .open();
       final MapDownlink<String, String> readOnlyMapLink = plane.downlinkMap()
           .keyClass(String.class)
@@ -509,7 +533,10 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new ReadOnlyMapLinkController())
+          .didSync(didSyncLatch::countDown)
           .open();
+
+      didSyncLatch.await();
 
       mapLink.put("a", "alpha");
       mapLink.put("b", "bravo");
