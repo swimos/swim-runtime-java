@@ -14,32 +14,38 @@
 
 package swim.deflate;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import org.testng.TestException;
 import org.testng.annotations.Test;
 import swim.codec.Binary;
 import swim.codec.Decoder;
 import swim.codec.Output;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
+/*
+  Disabled until tests have been further investigated on Windows.
+  Ref: https://github.com/swimos/swim/issues/20
+ */
+@Test(groups = {"ignoreOnWindows"})
 public class InflateSpec {
+
   @Test
   public void inflateFixed() {
     assertInflates(byteArray(0xf2, 0x48, 0xcd, 0xc9, 0xc9, 0x07, 0x00, 0x00, 0x00, 0xff, 0xff),
-                   "Hello",
-                   Inflate.Z_NO_WRAP, Inflate.DEF_WBITS);
+        "Hello",
+        Inflate.Z_NO_WRAP, Inflate.DEF_WBITS);
   }
 
   @Test
   public void inflateLencode() {
     assertInflates(byteArray(0xf2, 0x48, 0xcd, 0xc9, 0xc9, 0xf7, 0x80, 0x13, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff),
-                   "HelloHelloHello",
-                   Inflate.Z_NO_WRAP, Inflate.DEF_WBITS);
+        "HelloHelloHello",
+        Inflate.Z_NO_WRAP, Inflate.DEF_WBITS);
   }
 
   @Test
@@ -53,36 +59,36 @@ public class InflateSpec {
   @Test
   public void inflateLoremIncrementally() {
     assertInflates(readResource("/lorem.txt.deflate"),
-                   readResource("/lorem.txt"),
-                   Inflate.Z_NO_WRAP, Inflate.DEF_WBITS, 128);
+        readResource("/lorem.txt"),
+        Inflate.Z_NO_WRAP, Inflate.DEF_WBITS, 128);
   }
 
   @Test
   public void inflateImage() {
     assertInflates(readResource("/image.tiff.deflate"),
-                   readResource("/image.tiff"),
-                   Inflate.Z_NO_WRAP, Inflate.DEF_WBITS);
+        readResource("/image.tiff"),
+        Inflate.Z_NO_WRAP, Inflate.DEF_WBITS);
   }
 
   @Test
   public void inflateImageIncrementally() {
     assertInflates(readResource("/image.tiff.deflate"),
-                   readResource("/image.tiff"),
-                   Inflate.Z_NO_WRAP, Inflate.DEF_WBITS, 1024);
+        readResource("/image.tiff"),
+        Inflate.Z_NO_WRAP, Inflate.DEF_WBITS, 1024);
   }
 
   @Test
   public void gunzipImage() {
     assertInflates(readResource("/image.tiff.gz"),
-                   readResource("/image.tiff"),
-                   Inflate.Z_WRAP_GZIP, Inflate.DEF_WBITS);
+        readResource("/image.tiff"),
+        Inflate.Z_WRAP_GZIP, Inflate.DEF_WBITS);
   }
 
   @Test
   public void gunzipImageIncrementally() {
     assertInflates(readResource("/image.tiff.gz"),
-                   readResource("/image.tiff"),
-                   Inflate.Z_WRAP_GZIP, Inflate.DEF_WBITS, 1024);
+        readResource("/image.tiff"),
+        Inflate.Z_WRAP_GZIP, Inflate.DEF_WBITS, 1024);
   }
 
   static void assertInflates(byte[] deflated, byte[] inflated, int wrap, int windowBits, int bufferSize) {
@@ -144,4 +150,5 @@ public class InflateSpec {
       throw new TestException(cause);
     }
   }
+
 }

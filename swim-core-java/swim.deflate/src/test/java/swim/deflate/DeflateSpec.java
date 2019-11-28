@@ -14,32 +14,38 @@
 
 package swim.deflate;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import org.testng.TestException;
 import org.testng.annotations.Test;
 import swim.codec.Binary;
 import swim.codec.Encoder;
 import swim.codec.OutputBuffer;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
+/*
+  Disabled until tests have been further investigated on Windows.
+  Ref: https://github.com/swimos/swim/issues/20
+ */
+@Test(groups = {"ignoreOnWindows"})
 public class DeflateSpec {
+
   @Test
   public void deflateFixed() {
     assertDeflates("Hello",
-                   byteArray(0xf2, 0x48, 0xcd, 0xc9, 0xc9, 0x07, 0x00, 0x00, 0x00, 0xff, 0xff),
-                   Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH);
+        byteArray(0xf2, 0x48, 0xcd, 0xc9, 0xc9, 0x07, 0x00, 0x00, 0x00, 0xff, 0xff),
+        Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH);
   }
 
   @Test
   public void deflateLencode() {
     assertDeflates("HelloHelloHello",
-                   byteArray(0xf2, 0x48, 0xcd, 0xc9, 0xc9, 0xf7, 0x80, 0x13, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff),
-                   Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH);
+        byteArray(0xf2, 0x48, 0xcd, 0xc9, 0xc9, 0xf7, 0x80, 0x13, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff),
+        Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH);
   }
 
   @Test
@@ -48,15 +54,15 @@ public class DeflateSpec {
     //                  "lorem.txt.deflate",
     //                  Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH);
     assertDeflates(readResource("/lorem.txt"),
-                   readResource("/lorem.txt.deflate"),
-                   Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH);
+        readResource("/lorem.txt.deflate"),
+        Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH);
   }
 
   @Test
   public void deflateLoremIncrementally() {
     assertDeflates(readResource("/lorem.txt"),
-                   readResource("/lorem.txt.deflate"),
-                   Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH, 128);
+        readResource("/lorem.txt.deflate"),
+        Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH, 128);
   }
 
   @Test
@@ -65,15 +71,15 @@ public class DeflateSpec {
     //                  "image.tiff.deflate",
     //                  Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH);
     assertDeflates(readResource("/image.tiff"),
-                   readResource("/image.tiff.deflate"),
-                   Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH);
+        readResource("/image.tiff.deflate"),
+        Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH);
   }
 
   @Test
   public void deflateImageIncrementally() {
     assertDeflates(readResource("/image.tiff"),
-                   readResource("/image.tiff.deflate"),
-                   Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH, 1024);
+        readResource("/image.tiff.deflate"),
+        Deflate.Z_NO_WRAP, Deflate.MAX_WBITS, Deflate.Z_SYNC_FLUSH, 1024);
   }
 
   @Test
@@ -82,8 +88,8 @@ public class DeflateSpec {
     //                  "image.tiff.gz",
     //                  Deflate.Z_WRAP_GZIP, Deflate.MAX_WBITS, Z_FINISH);
     assertDeflates(readResource("/image.tiff"),
-                   readResource("/image.tiff.gz"),
-                   Deflate.Z_WRAP_GZIP, Deflate.MAX_WBITS, Deflate.Z_FINISH);
+        readResource("/image.tiff.gz"),
+        Deflate.Z_WRAP_GZIP, Deflate.MAX_WBITS, Deflate.Z_FINISH);
   }
 
   static void assertDeflates(byte[] inflated, byte[] deflated, int wrap, int windowBits, int flush, int bufferSize) {
@@ -159,4 +165,5 @@ public class DeflateSpec {
       throw new TestException(cause);
     }
   }
+
 }
