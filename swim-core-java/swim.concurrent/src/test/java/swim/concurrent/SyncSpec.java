@@ -59,7 +59,7 @@ public class SyncSpec {
       timeout *= 1e6;
 
       assertTrue(dt > timeout, "Timeout too soon: dt: " + dt);
-      assertTrue(dt < 2L * timeout, "long too soon: dt: " + dt);
+      assertTrue(dt < 3L * timeout, "long too soon: dt: " + dt);
     }
   }
 
