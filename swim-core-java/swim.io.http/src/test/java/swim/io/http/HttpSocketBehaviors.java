@@ -14,8 +14,8 @@
 
 package swim.io.http;
 
-import java.util.concurrent.CountDownLatch;
 import org.testng.TestException;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import swim.codec.Utf8;
 import swim.concurrent.Theater;
@@ -27,9 +27,13 @@ import swim.http.MediaType;
 import swim.io.IpServiceRef;
 import swim.io.IpSocketRef;
 import swim.uri.Uri;
+import java.util.concurrent.CountDownLatch;
 import static org.testng.Assert.assertEquals;
 
+// See other tests in this package for notes
+@Ignore
 public abstract class HttpSocketBehaviors {
+
   protected abstract IpServiceRef bind(HttpEndpoint endpoint, HttpService service);
 
   protected abstract IpSocketRef connect(HttpEndpoint endpoint, HttpClient client);
@@ -47,10 +51,12 @@ public abstract class HttpSocketBehaviors {
       public void doRequest() {
         writeRequest(HttpRequest.post(Uri.parse("/")).body("clientToServer"));
       }
+
       @Override
       public void didRequest(HttpRequest<?> request) {
         clientRequest.countDown();
       }
+
       @Override
       public void didRespond(HttpResponse<String> response) {
         assertEquals(response.entity().get(), "serverToClient");
@@ -71,6 +77,7 @@ public abstract class HttpSocketBehaviors {
         serverRequest.countDown();
         writeResponse(HttpResponse.from(HttpStatus.OK).body("serverToClient"));
       }
+
       @Override
       public void didRespond(HttpResponse<?> response) {
         serverResponse.countDown();
@@ -127,10 +134,12 @@ public abstract class HttpSocketBehaviors {
             public void doRequest() {
               writeRequest(HttpRequest.post(Uri.parse("/")).body("clientToServer"));
             }
+
             @Override
             public void didRequest(HttpRequest<?> request) {
               clientRequest.countDown();
             }
+
             @Override
             public void didRespond(HttpResponse<String> response) {
               assertEquals(response.entity().get(), "serverToClient");
@@ -150,6 +159,7 @@ public abstract class HttpSocketBehaviors {
             serverRequest.countDown();
             writeResponse(HttpResponse.from(HttpStatus.OK).body("serverToClient"));
           }
+
           @Override
           public void didRespond(HttpResponse<?> response) {
             serverResponse.countDown();
@@ -196,12 +206,14 @@ public abstract class HttpSocketBehaviors {
       public void doRequest() {
         writeRequest(HttpRequest.post(Uri.parse("/"))
             .content(HttpChunked.from(Utf8.stringWriter("clientTo").andThen(Utf8.stringWriter("Server")),
-                                      MediaType.textPlain())));
+                MediaType.textPlain())));
       }
+
       @Override
       public void didRequest(HttpRequest<?> request) {
         clientRequest.countDown();
       }
+
       @Override
       public void didRespond(HttpResponse<String> response) {
         assertEquals(response.entity().get(), "serverToClient");
@@ -222,8 +234,9 @@ public abstract class HttpSocketBehaviors {
         serverRequest.countDown();
         writeResponse(HttpResponse.from(HttpStatus.OK)
             .content(HttpChunked.from(Utf8.stringWriter("serverTo").andThen(Utf8.stringWriter("Client")),
-                                       MediaType.textPlain())));
+                MediaType.textPlain())));
       }
+
       @Override
       public void didRespond(HttpResponse<?> response) {
         serverResponse.countDown();
@@ -260,4 +273,5 @@ public abstract class HttpSocketBehaviors {
       stage.stop();
     }
   }
+
 }
