@@ -14,16 +14,16 @@
 
 package swim.io;
 
-import java.net.InetSocketAddress;
-import java.security.Principal;
-import java.security.cert.Certificate;
-import java.util.Collection;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import swim.codec.Decoder;
 import swim.codec.Encoder;
 import swim.codec.InputBuffer;
 import swim.codec.OutputBuffer;
 import swim.concurrent.Conts;
+import java.net.InetSocketAddress;
+import java.security.Principal;
+import java.security.cert.Certificate;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Adapter from a flow-controlled {@link IpSocket} to a decoder/encoder
@@ -240,7 +240,8 @@ public class IpSocketModem<I, O> implements IpSocket, IpModemContext<I, O> {
   @Override
   public void didWrite() {
     Encoder<?, ? extends O> writer = this.writing;
-    if (!writer.isCont()) {
+
+    if (writer != null && !writer.isCont()) {
       if (writer.isDone()) {
         this.modem.didWrite(writer.bind());
       } else if (writer.isError()) {
