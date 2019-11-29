@@ -46,6 +46,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import static org.testng.Assert.assertEquals;
 
+/*
+ * Disabled until further investigation in to the initial value duplication is resolved:
+ * Ref: https://github.com/swimos/swim/issues/21
+ */
+//@Ignore
 public class ListDownlinkSpec {
 
   static class TestListLaneAgent extends AbstractAgent {
@@ -113,7 +118,7 @@ public class ListDownlinkSpec {
     final CountDownLatch linkDidUpdateLower = new CountDownLatch(6);
     final CountDownLatch linkDidUpdateUpper = new CountDownLatch(6);
     final CountDownLatch readOnlyLinkDidUpdate = new CountDownLatch(6);
-    final CountDownLatch didSyncListLinkLatch = new CountDownLatch(1);
+    final CountDownLatch didSyncListLinkLatch = new CountDownLatch(2);
 
     class ListLinkController implements WillUpdateIndex<String>, DidUpdateIndex<String>, WillReceive, DidReceive {
       @Override
@@ -222,6 +227,7 @@ public class ListDownlinkSpec {
     final CountDownLatch linkDidMove = new CountDownLatch(4);
     final CountDownLatch readOnlyLinkDidUpdate = new CountDownLatch(3);
     final CountDownLatch readOnlyLinkDidMove = new CountDownLatch(2);
+    final CountDownLatch didSyncListLinkLatch = new CountDownLatch(2);
 
     class ListLinkController implements DidUpdateIndex<String>, WillMoveIndex<String>, DidMoveIndex<String> {
       @Override
@@ -265,6 +271,7 @@ public class ListDownlinkSpec {
           .hostUri("warp://localhost:53556")
           .nodeUri("/list/todo")
           .laneUri("list")
+          .didSync(didSyncListLinkLatch::countDown)
           .observe(new ListLinkController())
           .open();
       final ListDownlink<String> readOnlyListLink = plane.downlinkList()
@@ -272,8 +279,11 @@ public class ListDownlinkSpec {
           .hostUri("warp://localhost:53556")
           .nodeUri("/list/todo")
           .laneUri("list")
+          .didSync(didSyncListLinkLatch::countDown)
           .observe(new ReadOnlyListLinkController())
           .open();
+
+      didSyncListLinkLatch.await();
 
       listLink.add(0, "a");
       listLink.add(1, "b");
@@ -317,6 +327,7 @@ public class ListDownlinkSpec {
     final CountDownLatch linkDidRemove = new CountDownLatch(2);
     final CountDownLatch readOnlyLinkDidUpdate = new CountDownLatch(3);
     final CountDownLatch readOnlyLinkDidRemove = new CountDownLatch(1);
+    final CountDownLatch didSyncListLinkLatch = new CountDownLatch(2);
 
     class ListLinkController implements DidUpdateIndex<String>, WillRemoveIndex, DidRemoveIndex<String> {
       @Override
@@ -360,6 +371,7 @@ public class ListDownlinkSpec {
           .hostUri("warp://localhost:53556")
           .nodeUri("/list/todo")
           .laneUri("list")
+          .didSync(didSyncListLinkLatch::countDown)
           .observe(new ListLinkController())
           .open();
       final ListDownlink<String> readOnlyListLink = plane.downlinkList()
@@ -367,8 +379,12 @@ public class ListDownlinkSpec {
           .hostUri("warp://localhost:53556")
           .nodeUri("/list/todo")
           .laneUri("list")
+          .didSync(didSyncListLinkLatch::countDown)
           .observe(new ReadOnlyListLinkController())
           .open();
+
+      didSyncListLinkLatch.await();
+
       listLink.add(0, "a");
       listLink.add(1, "b");
       listLink.add(2, "c");
@@ -689,5 +705,4 @@ public class ListDownlinkSpec {
       kernel.stop();
     }
   }
-
 }
