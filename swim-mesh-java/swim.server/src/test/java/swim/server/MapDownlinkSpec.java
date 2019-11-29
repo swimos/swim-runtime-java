@@ -14,12 +14,6 @@
 
 package swim.server;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import org.testng.annotations.Test;
 import swim.actor.ActorSpaceDef;
 import swim.api.SwimLane;
@@ -49,6 +43,12 @@ import swim.recon.Recon;
 import swim.service.web.WebServiceDef;
 import swim.structure.Form;
 import swim.structure.Value;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -77,10 +77,8 @@ public class MapDownlinkSpec {
     final CountDownLatch linkWillReceive = new CountDownLatch(2);
     final CountDownLatch linkDidReceive = new CountDownLatch(2);
     final CountDownLatch linkDidUpdate = new CountDownLatch(4);
-    final CountDownLatch linkDidSync = new CountDownLatch(1);
+    final CountDownLatch linkDidSync = new CountDownLatch(2);
     final CountDownLatch readOnlyLinkDidReceive = new CountDownLatch(2);
-    final CountDownLatch didSyncLatch = new CountDownLatch(2);
-
     class MapLinkController implements WillUpdateKey<String, String>,
         DidUpdateKey<String, String>, WillReceive, DidReceive, DidSync {
       @Override
@@ -88,21 +86,25 @@ public class MapDownlinkSpec {
         System.out.println("MapLinkController- link willUpdate key: " + Format.debug(key) + "; newValue: " + Format.debug(newValue));
         return newValue;
       }
+
       @Override
       public void didUpdate(String key, String newValue, String oldValue) {
         System.out.println("MapLinkController- link didUpdate key: " + Format.debug(key) + "; newValue: " + Format.debug(newValue));
         linkDidUpdate.countDown();
       }
+
       @Override
       public void willReceive(Value body) {
         System.out.println("MapLinkController- link willReceive body: " + Recon.toString(body));
         linkWillReceive.countDown();
       }
+
       @Override
       public void didReceive(Value body) {
         System.out.println("MapLinkController- link didReceive body: " + Recon.toString(body));
         linkDidReceive.countDown();
       }
+
       @Override
       public void didSync() {
         System.out.println("MapLinkController- link didSync");
@@ -128,7 +130,7 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new MapLinkController())
-          .didSync(didSyncLatch::countDown)
+          .didSync(linkDidSync::countDown)
           .open();
       final MapDownlink<String, String> readOnlyMapLink = plane.downlinkMap()
           .keyClass(String.class)
@@ -137,17 +139,16 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new ReadOnlyMapLinkController())
-          .didSync(didSyncLatch::countDown)
+          .didSync(linkDidSync::countDown)
           .open();
 
-      didSyncLatch.await();
+      linkDidSync.await();
 
       mapLink.put("a", "indefinite article");
       mapLink.put("the", "definite article");
-      linkWillReceive.await(1, TimeUnit.SECONDS);
-      linkDidReceive.await(1, TimeUnit.SECONDS);
-      linkDidUpdate.await(1, TimeUnit.SECONDS);
-      linkDidSync.await(1, TimeUnit.SECONDS);
+      linkWillReceive.await(10, TimeUnit.SECONDS);
+      linkDidReceive.await(10, TimeUnit.SECONDS);
+      linkDidUpdate.await(10, TimeUnit.SECONDS);
       assertEquals(linkWillReceive.getCount(), 0);
       assertEquals(linkDidReceive.getCount(), 0);
       assertEquals(linkDidUpdate.getCount(), 0);
@@ -156,7 +157,7 @@ public class MapDownlinkSpec {
       assertEquals(mapLink.get("a"), "indefinite article");
       assertEquals(mapLink.get("the"), "definite article");
 
-      readOnlyLinkDidReceive.await(1, TimeUnit.SECONDS);
+      readOnlyLinkDidReceive.await(10, TimeUnit.SECONDS);
       assertEquals(readOnlyLinkDidReceive.getCount(), 0);
       assertEquals(readOnlyMapLink.size(), 2);
       assertEquals(readOnlyMapLink.get("a"), "indefinite article");
@@ -177,7 +178,6 @@ public class MapDownlinkSpec {
     final CountDownLatch didRemove = new CountDownLatch(2);
     final CountDownLatch readOnlyLinkDidReceive = new CountDownLatch(2);
     final CountDownLatch readOnlyLinkDidRemove = new CountDownLatch(1);
-    final CountDownLatch didSyncLatch = new CountDownLatch(2);
 
     class MapLinkController implements DidReceive, WillRemoveKey<String>, DidRemoveKey<String, String> {
       @Override
@@ -223,7 +223,6 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new MapLinkController())
-          .didSync(didSyncLatch::countDown)
           .open();
       final MapDownlink<String, String> readOnlyMapLink = plane.downlinkMap()
           .keyClass(String.class)
@@ -232,31 +231,28 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new ReadOnlyMapLinkController())
-          .didSync(didSyncLatch::countDown)
           .open();
-
-      didSyncLatch.await();
 
       mapLink.put("a", "indefinite article");
       mapLink.put("the", "definite article");
-      didReceive.await(2, TimeUnit.SECONDS);
+      didReceive.await(10, TimeUnit.SECONDS);
       assertEquals(didReceive.getCount(), 0);
       assertEquals(mapLink.size(), 2);
 
-      readOnlyLinkDidReceive.await(2, TimeUnit.SECONDS);
+      readOnlyLinkDidReceive.await(10, TimeUnit.SECONDS);
       assertEquals(readOnlyLinkDidReceive.getCount(), 0);
       assertEquals(readOnlyMapLink.size(), 2);
 
       mapLink.remove("the");
-      willRemove.await(2, TimeUnit.SECONDS);
-      didRemove.await(2, TimeUnit.SECONDS);
+      willRemove.await(10, TimeUnit.SECONDS);
+      didRemove.await(10, TimeUnit.SECONDS);
       assertEquals(willRemove.getCount(), 0);
       assertEquals(didRemove.getCount(), 0);
       assertEquals(mapLink.size(), 1);
       assertEquals(mapLink.get("a"), "indefinite article");
       assertEquals(mapLink.get("the"), Form.forString().unit());
 
-      readOnlyLinkDidRemove.await(2, TimeUnit.SECONDS);
+      readOnlyLinkDidRemove.await(10, TimeUnit.SECONDS);
       assertEquals(readOnlyLinkDidRemove.getCount(), 0);
       assertEquals(readOnlyMapLink.size(), 1);
       assertEquals(readOnlyMapLink.get("a"), "indefinite article");
@@ -277,7 +273,7 @@ public class MapDownlinkSpec {
     final CountDownLatch didClear = new CountDownLatch(2);
     final CountDownLatch readOnlyLinkDidReceive = new CountDownLatch(2);
     final CountDownLatch readOnlyLinkDidClear = new CountDownLatch(1);
-    final CountDownLatch didSyncLatch = new CountDownLatch(2);
+    final CountDownLatch linkDidSync = new CountDownLatch(2);
 
     class MapLinkController implements DidReceive, WillClear, DidClear {
       @Override
@@ -323,7 +319,7 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new MapLinkController())
-          .didSync(didSyncLatch::countDown)
+          .didSync(linkDidSync::countDown)
           .open();
       final MapDownlink<String, String> readOnlyMapLink = plane.downlinkMap()
           .keyClass(String.class)
@@ -332,26 +328,26 @@ public class MapDownlinkSpec {
           .nodeUri("/map/words")
           .laneUri("map")
           .observe(new ReadOnlyMapLinkController())
-          .didSync(didSyncLatch::countDown)
+          .didSync(linkDidSync::countDown)
           .open();
 
-      didSyncLatch.await();
+      linkDidSync.await();
 
       mapLink.put("a", "indefinite article");
       mapLink.put("the", "definite article");
-      didReceive.await(2, TimeUnit.SECONDS);
+      didReceive.await(10, TimeUnit.SECONDS);
       assertEquals(didReceive.getCount(), 0);
       assertEquals(mapLink.size(), 2);
-      readOnlyLinkDidReceive.await(2, TimeUnit.SECONDS);
+      readOnlyLinkDidReceive.await(10, TimeUnit.SECONDS);
       assertEquals(readOnlyLinkDidReceive.getCount(), 0);
       assertEquals(readOnlyMapLink.size(), 2);
 
       mapLink.clear();
-      didClear.await(2, TimeUnit.SECONDS);
+      didClear.await(10, TimeUnit.SECONDS);
       assertEquals(didClear.getCount(), 0);
       assertEquals(mapLink.size(), 0);
 
-      readOnlyLinkDidClear.await(2, TimeUnit.SECONDS);
+      readOnlyLinkDidClear.await(10, TimeUnit.SECONDS);
       assertEquals(readOnlyLinkDidClear.getCount(), 0);
       assertEquals(readOnlyMapLink.size(), 0);
 
@@ -366,12 +362,12 @@ public class MapDownlinkSpec {
     final TestMapPlane plane = kernel.openSpace(ActorSpaceDef.fromName("test"))
         .openPlane("test", TestMapPlane.class);
 
+    final CountDownLatch didSyncLatch = new CountDownLatch(2);
     final CountDownLatch didReceive = new CountDownLatch(5);
     final CountDownLatch willDrop = new CountDownLatch(1);
     final CountDownLatch didDrop = new CountDownLatch(1);
     final CountDownLatch readOnlyLinkDidReceive = new CountDownLatch(5);
     final CountDownLatch readOnlyLinkDidDrop = new CountDownLatch(1);
-    final CountDownLatch didSyncLatch = new CountDownLatch(2);
 
     class MapLinkController implements DidReceive, WillDrop, DidDrop {
       @Override
@@ -436,17 +432,17 @@ public class MapDownlinkSpec {
       mapLink.put("c", "charlie");
       mapLink.put("d", "delta");
       mapLink.put("e", "echo");
-      didReceive.await(2, TimeUnit.SECONDS);
+      didReceive.await(10, TimeUnit.SECONDS);
       assertEquals(didReceive.getCount(), 0);
       assertEquals(mapLink.size(), 5);
 
-      readOnlyLinkDidReceive.await(2, TimeUnit.SECONDS);
+      readOnlyLinkDidReceive.await(10, TimeUnit.SECONDS);
       assertEquals(readOnlyLinkDidReceive.getCount(), 0);
       assertEquals(readOnlyMapLink.size(), 5);
 
       mapLink.drop(2);
-      willDrop.await(2, TimeUnit.SECONDS);
-      didDrop.await(2, TimeUnit.SECONDS);
+      willDrop.await(10, TimeUnit.SECONDS);
+      didDrop.await(10, TimeUnit.SECONDS);
       assertEquals(willDrop.getCount(), 0);
       assertEquals(didDrop.getCount(), 0);
       assertEquals(mapLink.size(), 3);
@@ -456,7 +452,7 @@ public class MapDownlinkSpec {
       assertEquals(mapLink.get("a"), Form.forString().unit());
       assertEquals(mapLink.get("b"), Form.forString().unit());
 
-      readOnlyLinkDidDrop.await(2, TimeUnit.SECONDS);
+      readOnlyLinkDidDrop.await(10, TimeUnit.SECONDS);
       assertEquals(readOnlyLinkDidDrop.getCount(), 0);
       assertEquals(readOnlyMapLink.size(), 3);
       assertEquals(readOnlyMapLink.get("c"), "charlie");
@@ -501,9 +497,10 @@ public class MapDownlinkSpec {
     }
 
     class ReadOnlyMapLinkController implements DidReceive, DidTake {
+
       @Override
       public void didReceive(Value body) {
-        System.out.println("MapLinkController- link didReceive body: " + Recon.toString(body));
+        System.out.println("ReadOnlyMapLinkController- link didReceive body: " + Recon.toString(body));
         readOnlyLinkDidReceive.countDown();
       }
 
@@ -517,6 +514,7 @@ public class MapDownlinkSpec {
     try {
       kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
       kernel.start();
+
       final MapDownlink<String, String> mapLink = plane.downlinkMap()
           .keyClass(String.class)
           .valueClass(String.class)
@@ -543,24 +541,24 @@ public class MapDownlinkSpec {
       mapLink.put("c", "charlie");
       mapLink.put("d", "delta");
       mapLink.put("e", "echo");
-      didReceive.await(2, TimeUnit.SECONDS);
+      didReceive.await(10, TimeUnit.SECONDS);
       assertEquals(didReceive.getCount(), 0);
       assertEquals(mapLink.size(), 5);
 
-      readOnlyLinkDidReceive.await(2, TimeUnit.SECONDS);
+      readOnlyLinkDidReceive.await(10, TimeUnit.SECONDS);
       assertEquals(readOnlyLinkDidReceive.getCount(), 0);
       assertEquals(readOnlyMapLink.size(), 5);
 
       mapLink.take(2);
-      willTake.await(2, TimeUnit.SECONDS);
-      didTake.await(2, TimeUnit.SECONDS);
+      willTake.await(10, TimeUnit.SECONDS);
+      didTake.await(10, TimeUnit.SECONDS);
       assertEquals(willTake.getCount(), 0);
       assertEquals(didTake.getCount(), 0);
       assertEquals(mapLink.size(), 2);
       assertEquals(mapLink.get("a"), "alpha");
       assertEquals(mapLink.get("b"), "bravo");
 
-      readOnlyLinkDidTake.await(2, TimeUnit.SECONDS);
+      readOnlyLinkDidTake.await(10, TimeUnit.SECONDS);
       assertEquals(readOnlyLinkDidTake.getCount(), 0);
       assertEquals(readOnlyMapLink.size(), 2);
       assertEquals(readOnlyMapLink.size(), 2);
@@ -608,7 +606,7 @@ public class MapDownlinkSpec {
       mapLink.put("a", "indefinite article");
       mapLink.put("the", "definite article");
 
-      didReceive.await(2, TimeUnit.SECONDS);
+      didReceive.await(10, TimeUnit.SECONDS);
       assertEquals(didReceive.getCount(), 0);
       assertEquals(mapLink.size(), 2);
       assertEquals(mapLink1.size(), 2);
@@ -688,4 +686,5 @@ public class MapDownlinkSpec {
       }
     }
   }
+
 }
