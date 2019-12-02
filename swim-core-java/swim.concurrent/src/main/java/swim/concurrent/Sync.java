@@ -90,6 +90,7 @@ public class Sync<T> implements Cont<T>, ForkJoinPool.ManagedBlocker {
     final long t0 = System.nanoTime();
     // The remaining number milliseconds to wait for continuation completion.
     long waitMillis = timeout;
+
     // Loop until the continuation has been completed, or the timeout has elapsed.
     do {
       // Check if the continuation is uncompleted.
@@ -175,4 +176,5 @@ public class Sync<T> implements Cont<T>, ForkJoinPool.ManagedBlocker {
    * {@code ForkJoinPool.managedBlock}.
    */
   static final ThreadLocal<Long> TIMEOUT = new ThreadLocal<Long>();
+
 }
