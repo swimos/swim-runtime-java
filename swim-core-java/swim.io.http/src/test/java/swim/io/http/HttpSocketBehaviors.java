@@ -31,14 +31,13 @@ import java.util.concurrent.CountDownLatch;
 import static org.testng.Assert.assertEquals;
 
 // See other tests in this package for notes
-//@Ignore
+@Ignore
 public abstract class HttpSocketBehaviors {
 
   protected abstract IpServiceRef bind(HttpEndpoint endpoint, HttpService service);
 
   protected abstract IpSocketRef connect(HttpEndpoint endpoint, HttpClient client);
 
-  @Test(invocationCount = 1000)
   public void testRequestResponse() {
     final Theater stage = new Theater();
     final HttpEndpoint endpoint = new HttpEndpoint(stage);
