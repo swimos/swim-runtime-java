@@ -131,10 +131,9 @@ gradle.projectsEvaluated {
       if (useModules) {
         def modules = javaProjects.collect { project -> project.moduleName }
         options.addStringOption('-module', modules.join(','))
-        options.addStringOption('-module-source-path', [
-          "${projectDir}/swim-core-java/*/src/main/java",
-          "${projectDir}/swim-mesh-java/*/src/main/java",
-          "${projectDir}/swim-polyglot-java/*/src/main/java"].join(':'))
+        options.addStringOption('-module-source-path', String.join(File.pathSeparator, subprojects.collect {
+          "${projectDir}" + File.separator + it.name + File.separator + "src" + File.separator + "main" + File.separator + "java"
+        }.toSet()))
         def classpaths = javaProjects.collect { project -> project.sourceSets.main.compileClasspath.asPath }
         options.addStringOption('-module-path', classpaths.join(':'))
         classpath = files()
