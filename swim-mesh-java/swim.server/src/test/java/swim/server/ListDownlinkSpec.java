@@ -562,7 +562,7 @@ public class ListDownlinkSpec {
     }
   }
 
-  @Test(invocationCount = 1000)
+  @Test
   public void testTake() throws InterruptedException {
     final Kernel kernel = ServerLoader.loadServerStack();
     final TestListPlane plane = kernel.openSpace(ActorSpaceDef.fromName("test"))
