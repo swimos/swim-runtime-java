@@ -224,7 +224,7 @@ public class ListDownlinkSpec {
           .nodeUri("/list/todo")
           .laneUri("list")
           .observe(new ReadOnlyListLinkController())
-          .didSync(readOnlyLinkDidUpdate::countDown)
+          .didSync(didSyncReadOnlyListLinkLatch::countDown)
           .open();
 
       didSyncListLinkLatch.await();
