@@ -164,8 +164,10 @@ public class Theater implements MainStage, Thread.UncaughtExceptionHandler {
       Clock must be stopped to ensure that clock events
       don't continue to run after the Kernel is stopped
      */
-    Clock clock = (Clock) schedule;
-    clock.stop();
+    if (schedule instanceof Clock) {
+      final Clock clock = (Clock) schedule;
+      clock.stop();
+    }
   }
 
   @Override
