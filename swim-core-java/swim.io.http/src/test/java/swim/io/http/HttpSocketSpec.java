@@ -14,17 +14,10 @@
 
 package swim.io.http;
 
-import org.testng.annotations.Ignore;
 import swim.io.IpServiceRef;
 import swim.io.IpSocketRef;
 
-/*
-  Tests here are currently failing and require further investigation.
-  Ref:
-    https://github.com/swimos/swim/issues/25
-    https://github.com/swimos/swim/issues/22
- */
-@Ignore
+
 public class HttpSocketSpec extends HttpSocketBehaviors {
 
   final HttpSettings httpSettings = HttpSettings.standard();

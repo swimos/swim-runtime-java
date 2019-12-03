@@ -32,6 +32,7 @@ public final class TestTlsSettings {
   private static TlsSettings tlsSettings;
   private static IpSettings ipSettings;
   private static HttpSettings httpSettings;
+
   private TestTlsSettings() {
     // stub
   }

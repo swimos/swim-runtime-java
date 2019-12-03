@@ -15,7 +15,6 @@
 package swim.io.http;
 
 import org.testng.TestException;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import swim.codec.Utf8;
 import swim.concurrent.Theater;
@@ -30,14 +29,13 @@ import swim.uri.Uri;
 import java.util.concurrent.CountDownLatch;
 import static org.testng.Assert.assertEquals;
 
-// See other tests in this package for notes
-@Ignore
 public abstract class HttpSocketBehaviors {
 
   protected abstract IpServiceRef bind(HttpEndpoint endpoint, HttpService service);
 
   protected abstract IpSocketRef connect(HttpEndpoint endpoint, HttpClient client);
 
+  @Test
   public void testRequestResponse() {
     final Theater stage = new Theater();
     final HttpEndpoint endpoint = new HttpEndpoint(stage);
