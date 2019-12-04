@@ -29,18 +29,19 @@ import swim.structure.Text;
 import swim.uri.UriPath;
 
 public class JsAgentSpec {
+
   @Test
   public void testJsAgentCommands() throws InterruptedException {
     final JsKernel jsKernel = new JsKernel();
     jsKernel.setRootPath(UriPath.parse(System.getProperty("project.dir")));
-    final Kernel kernel = ServerLoader.loadServerStack().injectKernel(jsKernel);
 
+    final Kernel kernel = ServerLoader.loadServerStack().injectKernel(jsKernel);
     final ActorSpaceDef spaceDef = ActorSpaceDef.fromName("test")
         .nodeDef(ActorNodeDef.fromNodePattern("/command/:name")
-                             .agentDef(JsAgentDef.fromModulePath("./src/test/js/TestCommandAgent")));
+            .agentDef(JsAgentDef.fromModulePath("./src/test/js/TestCommandAgent")));
     final ActorSpace space = (ActorSpace) kernel.openSpace(spaceDef);
-
     final CountDownLatch linkOnEvent = new CountDownLatch(1);
+
     class CommandLinkController implements OnEvent<String> {
       @Override
       public void onEvent(String value) {
@@ -65,4 +66,5 @@ public class JsAgentSpec {
       kernel.stop();
     }
   }
+
 }
