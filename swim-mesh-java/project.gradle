@@ -117,6 +117,11 @@ afterEvaluate {
   }
 
   checkstyle {
+    if (project.hasProperty('enforceCheckstyle')) {
+      ignoreFailures = false
+      maxWarnings = 0
+    }
+
     configFile = new File(rootDir, 'checkstyle.xml')
     toolVersion "8.22"
     checkstyleMain {

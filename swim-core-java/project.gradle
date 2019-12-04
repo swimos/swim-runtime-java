@@ -106,9 +106,9 @@ afterEvaluate {
             if (!project.hasProperty('benchmark')) {
                 excludeGroups 'benchmark'
             }
-            // Exclude certain test until fixed for Windows
-            if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-                excludeGroups 'ignoreOnWindows'
+            // Run `gradle -PbuildServer test` to exclude ignoredOnCi tests.
+            if (project.hasProperty('buildServer')) {
+                excludeGroups 'ignoredOnCi'
             }
         }
 
@@ -129,6 +129,13 @@ afterEvaluate {
     checkstyle {
         configFile = new File(rootDir, 'checkstyle.xml')
         toolVersion "8.22"
+
+        // Enforce checkstyle and fail the build if there are any violations
+        if (project.hasProperty('enforceCheckstyle')) {
+            ignoreFailures = false
+            maxWarnings = 0
+        }
+
         checkstyleMain {
             source = sourceSets.main.allJava
             exclude '*module-info*'
