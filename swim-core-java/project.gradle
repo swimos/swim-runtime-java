@@ -121,12 +121,20 @@ afterEvaluate {
   }
 
   checkstyle {
+    // Enforce checkstyle and fail the build if there are any violations
+    if (project.hasProperty('enforceCheckstyle')) {
+      ignoreFailures = false
+      maxWarnings = 0
+    }
+
     configFile = new File(rootDir, 'checkstyle.xml')
     toolVersion "8.22"
+
     checkstyleMain {
       source = sourceSets.main.allJava
       exclude '*module-info*'
     }
+
     checkstyleTest {
       source = sourceSets.test.allJava
       exclude '*module-info*'
