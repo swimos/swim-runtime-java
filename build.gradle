@@ -41,6 +41,17 @@ subprojects {
   }
 }
 
+allprojects {
+  apply plugin: 'java'
+
+  test {
+    // Add the time that the test started running. This is useful for debugging on CI agents
+    beforeTest { descriptor ->
+      logger.lifecycle("[" + new Date().toString() + "] Running :  ${descriptor}")
+    }
+  }
+}
+
 gradle.projectsEvaluated {
   apply plugin: 'java'
 
