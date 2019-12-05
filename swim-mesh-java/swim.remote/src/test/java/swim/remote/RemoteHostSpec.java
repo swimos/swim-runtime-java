@@ -181,7 +181,7 @@ public class RemoteHostSpec {
     }
   }
 
-  @Test(invocationCount = 100)
+  @Test
   public void testRemoteHostReconnectAfterError() throws InterruptedException {
     final Theater stage = new Theater();
     final HttpEndpoint endpoint = new HttpEndpoint(stage);
