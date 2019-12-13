@@ -347,17 +347,20 @@ public class TestTheaterSpec {
 
   @Test
   public void awaitSyncContTimeout() {
+    long timeout = 200L;
     final TestTheater theater = new TestTheater();
-    final long timeout = 1000L;
-    final long t0 = System.currentTimeMillis();
+    final long t0 = System.nanoTime();
+
     try {
       theater.start();
-      final Sync<String> sync = new Sync<String>();
+      final Sync<String> sync = new Sync<>();
       theater.await(sync, timeout);
     } catch (SyncException e) {
-      final long dt = System.currentTimeMillis() - t0;
-      assertTrue(dt >= timeout, "timeout too soon");
-      assertTrue(dt <= 2L * timeout, "timeout too long");
+      final long dt = System.nanoTime() - t0;
+      timeout *= 1e6;
+
+      assertTrue(dt > timeout, "Timeout too soon: dt: " + dt);
+      assertTrue(dt < 2L * timeout, "long too soon: dt: " + dt);
     } finally {
       theater.stop();
     }
