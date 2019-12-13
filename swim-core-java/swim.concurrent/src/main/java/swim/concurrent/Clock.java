@@ -183,6 +183,11 @@ public class Clock implements Schedule {
    * {@code Clock} is guaranteed to be in the <em>stopped</em> state.
    */
   public final void stop() {
+    // Clock hasn't been started
+    if ((STATUS.get(this) & STARTED) == 0) {
+      return;
+    }
+
     boolean interrupted = false;
     do {
       final int oldStatus = STATUS.get(this);
