@@ -14,8 +14,8 @@
 
 package swim.server;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import swim.actor.ActorSpaceDef;
 import swim.api.SwimLane;
@@ -44,9 +44,16 @@ import swim.observable.function.WillUpdateIndex;
 import swim.recon.Recon;
 import swim.service.web.WebServiceDef;
 import swim.structure.Value;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 public class ListDownlinkSpec {
+
+  private Kernel kernel;
+  private TestListPlane plane;
+
   static class TestListLaneAgent extends AbstractAgent {
     @SwimLane("list")
     ListLane<String> testList = listLane()
@@ -58,18 +65,30 @@ public class ListDownlinkSpec {
     AgentRoute<TestListLaneAgent> listRoute;
   }
 
+
+  @BeforeMethod
+  public void setTestPlane() {
+    kernel = ServerLoader.loadServerStack();
+    plane = kernel.openSpace(ActorSpaceDef.fromName("test")).openPlane("test", TestListPlane.class);
+
+    kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
+    kernel.start();
+  }
+
+  @AfterMethod
+  public void stop() {
+    if (kernel != null && kernel.isStarted()) {
+      kernel.stop();
+    }
+  }
+
   @Test
   public void testInsert() throws InterruptedException {
-    final Kernel kernel = ServerLoader.loadServerStack();
-    final TestListPlane plane = kernel.openSpace(ActorSpaceDef.fromName("test"))
-        .openPlane("test", TestListPlane.class);
-  
-    final CountDownLatch didSyncListLinkLatch = new CountDownLatch(1);
-    final CountDownLatch didSyncReadOnlyListLinkLatch = new CountDownLatch(1);
     final CountDownLatch linkDidReceive = new CountDownLatch(3);
     final CountDownLatch linkWillUpdate = new CountDownLatch(6);
     final CountDownLatch linkDidUpdate = new CountDownLatch(3);
     final CountDownLatch readOnlyLinkDidUpdate = new CountDownLatch(3);
+
     class ListLinkController implements WillUpdateIndex<String>, DidUpdateIndex<String>, WillReceive, DidReceive {
       @Override
       public String willUpdate(int index, String newValue) {
@@ -77,14 +96,17 @@ public class ListDownlinkSpec {
         linkWillUpdate.countDown();
         return newValue;
       }
+
       @Override
       public void didUpdate(int index, String newValue, String oldValue) {
         System.out.println("ListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
         linkDidUpdate.countDown();
       }
+
       public void willReceive(Value body) {
         System.out.println("ListLinkController- link willReceive body " + Recon.toString(body));
       }
+
       @Override
       public void didReceive(Value body) {
         System.out.println("ListLinkController- link didReceive body " + Recon.toString(body));
@@ -100,57 +122,54 @@ public class ListDownlinkSpec {
       }
     }
 
-    try {
-      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
-      kernel.start();
-      final ListDownlink<String> listLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ListLinkController())
-          .didSync(didSyncListLinkLatch::countDown)
-          .open();
-      final ListDownlink<String> readOnlyListLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ReadOnlyListLinkController())
-          .didSync(didSyncReadOnlyListLinkLatch::countDown)
-          .open();
-      
-      didSyncListLinkLatch.await();
-      didSyncReadOnlyListLinkLatch.await();
-      
-      listLink.add(0, "a");
-      listLink.add(1, "b");
-      listLink.add(2, "c");
-      linkDidReceive.await();
-      linkDidUpdate.await();
-      assertEquals(linkDidReceive.getCount(), 0);
-      assertEquals(linkWillUpdate.getCount(), 0);
-      assertEquals(linkDidUpdate.getCount(), 0);
-      assertEquals(listLink.size(), 3);
-      assertEquals(listLink.get(0), "a");
-      assertEquals(listLink.get(1), "b");
-      assertEquals(listLink.get(2), "c");
-      readOnlyLinkDidUpdate.await();
-      assertEquals(readOnlyListLink.size(), 3);
-      assertEquals(readOnlyListLink.get(0), "a");
-      assertEquals(readOnlyListLink.get(1), "b");
-      assertEquals(readOnlyListLink.get(2), "c");
-    } finally {
-      kernel.stop();
+    final ListDownlink<String> listLink = getDownlink(new ListLinkController());
+    final ListDownlink<String> readOnlyListLink = getDownlink(new ReadOnlyListLinkController());
+
+    listLink.add(0, "a");
+    listLink.add(1, "b");
+    listLink.add(2, "c");
+    linkDidReceive.await();
+    linkDidUpdate.await();
+    assertEquals(linkDidReceive.getCount(), 0);
+    assertEquals(linkWillUpdate.getCount(), 0);
+    assertEquals(linkDidUpdate.getCount(), 0);
+    assertEquals(listLink.size(), 3);
+    assertEquals(listLink.get(0), "a");
+    assertEquals(listLink.get(1), "b");
+    assertEquals(listLink.get(2), "c");
+    readOnlyLinkDidUpdate.await();
+    assertEquals(readOnlyListLink.size(), 3);
+    assertEquals(readOnlyListLink.get(0), "a");
+    assertEquals(readOnlyListLink.get(1), "b");
+    assertEquals(readOnlyListLink.get(2), "c");
+  }
+
+  private ListDownlink<String> getDownlink(Object observer) {
+    final CountDownLatch didSyncLatch = new CountDownLatch(1);
+    final ListDownlink<String> listLink = plane.downlinkList()
+        .valueClass(String.class)
+        .hostUri("warp://localhost:53556")
+        .nodeUri("/list/todo")
+        .laneUri("list")
+        .didSync(didSyncLatch::countDown);
+
+    if (observer != null) {
+      listLink.observe(observer);
     }
+
+    listLink.open();
+
+    try {
+      didSyncLatch.await();
+    } catch (InterruptedException e) {
+      fail("Failed to open list downlink", e);
+    }
+
+    return listLink;
   }
 
   @Test
   public void testUpdate() throws InterruptedException {
-    final Kernel kernel = ServerLoader.loadServerStack();
-    final TestListPlane plane = kernel.openSpace(ActorSpaceDef.fromName("test"))
-        .openPlane("test", TestListPlane.class);
-
     final CountDownLatch linkDidReceiveLower = new CountDownLatch(3);
     final CountDownLatch linkDidReceiveUpper = new CountDownLatch(3);
     final CountDownLatch linkDidUpdateLower = new CountDownLatch(6);
@@ -163,6 +182,7 @@ public class ListDownlinkSpec {
         System.out.println("ListLinkController- link willUpdate index: " + index);
         return newValue;
       }
+
       @Override
       public void didUpdate(int index, String newValue, String oldValue) {
         System.out.println("ListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
@@ -173,10 +193,12 @@ public class ListDownlinkSpec {
           linkDidUpdateUpper.countDown();
         }
       }
+
       @Override
       public void willReceive(Value body) {
         System.out.println("link willReceive body " + Recon.toString(body));
       }
+
       @Override
       public void didReceive(Value body) {
         System.out.println("ListLinkController- link didReceive body " + Recon.toString(body));
@@ -198,59 +220,38 @@ public class ListDownlinkSpec {
       }
     }
 
-    try {
-      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
-      kernel.start();
-      final ListDownlink<String> listLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ListLinkController())
-          .open();
-      final ListDownlink<String> readOnlyListLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ReadOnlyListLinkController())
-          .open();
-      listLink.add(0, "a");
-      listLink.add(1, "b");
-      listLink.add(2, "c");
-      linkDidReceiveLower.await(1, TimeUnit.SECONDS);
-      linkDidUpdateLower.await(1, TimeUnit.SECONDS);
-      assertEquals(linkDidReceiveLower.getCount(), 0);
-      assertEquals(linkDidUpdateLower.getCount(), 0);
+    final ListDownlink<String> listLink = getDownlink(new ListLinkController());
+    final ListDownlink<String> readOnlyListLink = getDownlink(new ReadOnlyListLinkController());
 
-      listLink.add(0, "A");
-      listLink.add(1, "B");
-      listLink.add(2, "C");
-      linkDidReceiveUpper.await(1, TimeUnit.SECONDS);
-      linkDidUpdateUpper.await(1, TimeUnit.SECONDS);
-      assertEquals(linkDidReceiveUpper.getCount(), 0);
-      assertEquals(linkDidUpdateUpper.getCount(), 0);
-      assertEquals(listLink.size(), 3);
-      assertEquals(listLink.get(0), "A");
-      assertEquals(listLink.get(1), "B");
-      assertEquals(listLink.get(2), "C");
-      readOnlyLinkDidUpdate.await(1, TimeUnit.SECONDS);
-      assertEquals(readOnlyLinkDidUpdate.getCount(), 0);
-      assertEquals(readOnlyListLink.size(), 3);
-      assertEquals(readOnlyListLink.get(0), "A");
-      assertEquals(readOnlyListLink.get(1), "B");
-      assertEquals(readOnlyListLink.get(2), "C");
-    } finally {
-      kernel.stop();
-    }
+    listLink.add(0, "a");
+    listLink.add(1, "b");
+    listLink.add(2, "c");
+    linkDidReceiveLower.await();
+    linkDidUpdateLower.await();
+    assertEquals(linkDidReceiveLower.getCount(), 0);
+    assertEquals(linkDidUpdateLower.getCount(), 0);
+
+    listLink.add(0, "A");
+    listLink.add(1, "B");
+    listLink.add(2, "C");
+    linkDidReceiveUpper.await();
+    linkDidUpdateUpper.await();
+    assertEquals(linkDidReceiveUpper.getCount(), 0);
+    assertEquals(linkDidUpdateUpper.getCount(), 0);
+    assertEquals(listLink.size(), 3);
+    assertEquals(listLink.get(0), "A");
+    assertEquals(listLink.get(1), "B");
+    assertEquals(listLink.get(2), "C");
+    readOnlyLinkDidUpdate.await();
+    assertEquals(readOnlyLinkDidUpdate.getCount(), 0);
+    assertEquals(readOnlyListLink.size(), 3);
+    assertEquals(readOnlyListLink.get(0), "A");
+    assertEquals(readOnlyListLink.get(1), "B");
+    assertEquals(readOnlyListLink.get(2), "C");
   }
 
   @Test
   public void testMove() throws InterruptedException {
-    final Kernel kernel = ServerLoader.loadServerStack();
-    final TestListPlane plane = kernel.openSpace(ActorSpaceDef.fromName("test"))
-        .openPlane("test", TestListPlane.class);
-
     final CountDownLatch linkDidUpdate = new CountDownLatch(6);
     final CountDownLatch linkWillMove = new CountDownLatch(4);
     final CountDownLatch linkDidMove = new CountDownLatch(4);
@@ -263,11 +264,13 @@ public class ListDownlinkSpec {
         System.out.println("ListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
         linkDidUpdate.countDown();
       }
+
       @Override
       public void willMove(int fromIndex, int toIndex, String value) {
         System.out.println("ListLinkController- link willMove fromIndex: " + fromIndex + "; toIndex: " + toIndex + "; value: " + Format.debug(value));
         linkWillMove.countDown();
       }
+
       @Override
       public void didMove(int fromIndex, int toIndex, String value) {
         System.out.println("ListLinkController- link didMove fromIndex: " + fromIndex + "; toIndex: " + toIndex + "; value: " + Format.debug(value));
@@ -281,6 +284,7 @@ public class ListDownlinkSpec {
         System.out.println("ReadOnlyListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
         readOnlyLinkDidUpdate.countDown();
       }
+
       @Override
       public void didMove(int fromIndex, int toIndex, String value) {
         System.out.println("ReadOnlyListLinkController- link didMove fromIndex: " + fromIndex + "; toIndex: " + toIndex + "; value: " + Format.debug(value));
@@ -288,61 +292,39 @@ public class ListDownlinkSpec {
       }
     }
 
-    try {
-      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
-      kernel.start();
-      final ListDownlink<String> listLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ListLinkController())
-          .open();
-      final ListDownlink<String> readOnlyListLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ReadOnlyListLinkController())
-          .open();
+    final ListDownlink<String> listLink = getDownlink(new ListLinkController());
+    final ListDownlink<String> readOnlyListLink = getDownlink(new ReadOnlyListLinkController());
 
-      listLink.add(0, "a");
-      listLink.add(1, "b");
-      listLink.add(2, "c");
-      linkDidUpdate.await(1, TimeUnit.SECONDS);
-      assertEquals(linkDidUpdate.getCount(), 0);
-      assertEquals(listLink.size(), 3);
-      readOnlyLinkDidUpdate.await(1, TimeUnit.SECONDS);
-      assertEquals(readOnlyLinkDidUpdate.getCount(), 0);
-      assertEquals(readOnlyListLink.size(), 3);
+    listLink.add(0, "a");
+    listLink.add(1, "b");
+    listLink.add(2, "c");
+    linkDidUpdate.await();
+    assertEquals(linkDidUpdate.getCount(), 0);
+    assertEquals(listLink.size(), 3);
+    readOnlyLinkDidUpdate.await();
+    assertEquals(readOnlyLinkDidUpdate.getCount(), 0);
+    assertEquals(readOnlyListLink.size(), 3);
 
-      listLink.move(1, 0);
-      listLink.move(2, 1);
-      linkDidMove.await(1, TimeUnit.SECONDS);
-      assertEquals(linkWillMove.getCount(), 0);
-      assertEquals(linkDidMove.getCount(), 0);
-      assertEquals(listLink.size(), 3);
-      assertEquals(listLink.get(0), "b");
-      assertEquals(listLink.get(1), "c");
-      assertEquals(listLink.get(2), "a");
+    listLink.move(1, 0);
+    listLink.move(2, 1);
+    linkDidMove.await();
+    assertEquals(linkWillMove.getCount(), 0);
+    assertEquals(linkDidMove.getCount(), 0);
+    assertEquals(listLink.size(), 3);
+    assertEquals(listLink.get(0), "b");
+    assertEquals(listLink.get(1), "c");
+    assertEquals(listLink.get(2), "a");
 
-      readOnlyLinkDidMove.await(1, TimeUnit.SECONDS);
-      assertEquals(readOnlyLinkDidMove.getCount(), 0);
-      assertEquals(readOnlyListLink.size(), 3);
-      assertEquals(readOnlyListLink.get(0), "b");
-      assertEquals(readOnlyListLink.get(1), "c");
-      assertEquals(readOnlyListLink.get(2), "a");
-    } finally {
-      kernel.stop();
-    }
+    readOnlyLinkDidMove.await();
+    assertEquals(readOnlyLinkDidMove.getCount(), 0);
+    assertEquals(readOnlyListLink.size(), 3);
+    assertEquals(readOnlyListLink.get(0), "b");
+    assertEquals(readOnlyListLink.get(1), "c");
+    assertEquals(readOnlyListLink.get(2), "a");
   }
 
   @Test
   public void testRemove() throws InterruptedException {
-    final Kernel kernel = ServerLoader.loadServerStack();
-    final TestListPlane plane = kernel.openSpace(ActorSpaceDef.fromName("test"))
-        .openPlane("test", TestListPlane.class);
-
     final CountDownLatch linkDidUpdate = new CountDownLatch(6);
     final CountDownLatch linkWillRemove = new CountDownLatch(2);
     final CountDownLatch linkDidRemove = new CountDownLatch(2);
@@ -355,11 +337,13 @@ public class ListDownlinkSpec {
         System.out.println("ListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
         linkDidUpdate.countDown();
       }
+
       @Override
       public void willRemove(int index) {
         System.out.println("ListLinkController- link willRemove index: " + index);
         linkWillRemove.countDown();
       }
+
       @Override
       public void didRemove(int index, String oldValue) {
         System.out.println("ListLinkController- link didRemove index: " + index + "; oldValue: " + Format.debug(oldValue));
@@ -373,6 +357,7 @@ public class ListDownlinkSpec {
         System.out.println("ReadOnlyListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
         readOnlyLinkDidUpdate.countDown();
       }
+
       @Override
       public void didRemove(int index, String oldValue) {
         System.out.println("ReadOnlyListLinkController- link didRemove index: " + index + "; oldValue: " + Format.debug(oldValue));
@@ -380,55 +365,35 @@ public class ListDownlinkSpec {
       }
     }
 
-    try {
-      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
-      kernel.start();
-      final ListDownlink<String> listLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ListLinkController())
-          .open();
-      final ListDownlink<String> readOnlyListLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ReadOnlyListLinkController())
-          .open();
-      listLink.add(0, "a");
-      listLink.add(1, "b");
-      listLink.add(2, "c");
-      linkDidUpdate.await(2, TimeUnit.SECONDS);
-      assertEquals(linkDidUpdate.getCount(), 0);
-      assertEquals(listLink.size(), 3);
-      readOnlyLinkDidUpdate.await(2, TimeUnit.SECONDS);
-      assertEquals(readOnlyLinkDidUpdate.getCount(), 0);
-      assertEquals(readOnlyListLink.size(), 3);
+    final ListDownlink<String> listLink = getDownlink(new ListLinkController());
+    final ListDownlink<String> readOnlyListLink = getDownlink(new ReadOnlyListLinkController());
 
-      listLink.remove(1);
-      linkDidRemove.await(2, TimeUnit.SECONDS);
-      assertEquals(linkWillRemove.getCount(), 0);
-      assertEquals(linkDidRemove.getCount(), 0);
-      assertEquals(listLink.size(), 2);
-      assertEquals(listLink.get(0), "a");
-      assertEquals(listLink.get(1), "c");
+    listLink.add(0, "a");
+    listLink.add(1, "b");
+    listLink.add(2, "c");
+    linkDidUpdate.await();
+    assertEquals(linkDidUpdate.getCount(), 0);
+    assertEquals(listLink.size(), 3);
+    readOnlyLinkDidUpdate.await();
+    assertEquals(readOnlyLinkDidUpdate.getCount(), 0);
+    assertEquals(readOnlyListLink.size(), 3);
 
-      readOnlyLinkDidRemove.await(1, TimeUnit.SECONDS);
-      assertEquals(readOnlyListLink.size(), 2);
-      assertEquals(readOnlyListLink.get(0), "a");
-      assertEquals(readOnlyListLink.get(1), "c");
-    } finally {
-      kernel.stop();
-    }
+    listLink.remove(1);
+    linkDidRemove.await();
+    assertEquals(linkWillRemove.getCount(), 0);
+    assertEquals(linkDidRemove.getCount(), 0);
+    assertEquals(listLink.size(), 2);
+    assertEquals(listLink.get(0), "a");
+    assertEquals(listLink.get(1), "c");
+
+    readOnlyLinkDidRemove.await();
+    assertEquals(readOnlyListLink.size(), 2);
+    assertEquals(readOnlyListLink.get(0), "a");
+    assertEquals(readOnlyListLink.get(1), "c");
   }
 
   @Test
   public void testDrop() throws InterruptedException {
-    final Kernel kernel = ServerLoader.loadServerStack();
-    final TestListPlane plane = kernel.openSpace(ActorSpaceDef.fromName("test"))
-        .openPlane("test", TestListPlane.class);
     final int total = 5;
     final CountDownLatch didUpdate = new CountDownLatch(2 * total);
     final CountDownLatch willDrop = new CountDownLatch(2);
@@ -470,60 +435,40 @@ public class ListDownlinkSpec {
       }
     }
 
-    try {
-      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
-      kernel.start();
-      final ListDownlink<String> listLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ListLinkController())
-          .open();
+    final ListDownlink<String> listLink = getDownlink(new ListLinkController());
+    listLink.observe(new ListLinkController()).open();
 
-      final ListDownlink<String> readOnlyListLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ReadOnlyListLinkController())
-          .open();
+    final ListDownlink<String> readOnlyListLink = getDownlink(new ReadOnlyListLinkController());
 
-      listLink.observe(new ListLinkController()).open();
-      for (int i = 0; i < total; i++) {
-        listLink.add(i, Integer.toString(i));
-      }
-      didUpdate.await(1, TimeUnit.SECONDS);
-      assertEquals(didUpdate.getCount(), 0);
-      assertEquals(listLink.size(), total);
-      readOnlyDidUpdate.await(1, TimeUnit.SECONDS);
-      assertEquals(readOnlyDidUpdate.getCount(), 0);
-      assertEquals(readOnlyListLink.size(), total);
-
-      listLink.drop(2);
-      didDrop.await(2, TimeUnit.SECONDS);
-      assertEquals(willDrop.getCount(), 0);
-      assertEquals(didDrop.getCount(), 0);
-      assertEquals(listLink.size(), 3);
-      assertEquals(listLink.get(0), "2");
-      assertEquals(listLink.get(1), "3");
-      assertEquals(listLink.get(2), "4");
-
-      readOnlyDidDrop.await(2, TimeUnit.SECONDS);
-      assertEquals(readOnlyListLink.size(), 3);
-      assertEquals(readOnlyListLink.get(0), "2");
-      assertEquals(readOnlyListLink.get(1), "3");
-      assertEquals(readOnlyListLink.get(2), "4");
-    } finally {
-      kernel.stop();
+    for (int i = 0; i < total; i++) {
+      listLink.add(i, Integer.toString(i));
     }
+
+    didUpdate.await();
+    assertEquals(didUpdate.getCount(), 0);
+    assertEquals(listLink.size(), total);
+    readOnlyDidUpdate.await();
+    assertEquals(readOnlyDidUpdate.getCount(), 0);
+    assertEquals(readOnlyListLink.size(), total);
+
+    listLink.drop(2);
+    didDrop.await();
+    assertEquals(willDrop.getCount(), 0);
+    assertEquals(didDrop.getCount(), 0);
+    assertEquals(listLink.size(), 3);
+    assertEquals(listLink.get(0), "2");
+    assertEquals(listLink.get(1), "3");
+    assertEquals(listLink.get(2), "4");
+
+    readOnlyDidDrop.await();
+    assertEquals(readOnlyListLink.size(), 3);
+    assertEquals(readOnlyListLink.get(0), "2");
+    assertEquals(readOnlyListLink.get(1), "3");
+    assertEquals(readOnlyListLink.get(2), "4");
   }
 
   @Test
   public void testTake() throws InterruptedException {
-    final Kernel kernel = ServerLoader.loadServerStack();
-    final TestListPlane plane = kernel.openSpace(ActorSpaceDef.fromName("test"))
-        .openPlane("test", TestListPlane.class);
     final int total = 5;
     final CountDownLatch didUpdate = new CountDownLatch(2 * total);
     final CountDownLatch willTake = new CountDownLatch(2);
@@ -565,62 +510,38 @@ public class ListDownlinkSpec {
       }
     }
 
-    try {
-      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
-      kernel.start();
-      final ListDownlink<String> listLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ListLinkController())
-          .open();
-      final ListDownlink<String> readOnlyListLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ReadOnlyListLinkController())
-          .open();
-      listLink.observe(new ListLinkController()).open();
-      for (int i = 0; i < total; i++) {
-        listLink.add(i, Integer.toString(i));
-      }
+    final ListDownlink<String> listLink = getDownlink(new ListLinkController());
+    listLink.observe(new ListLinkController()).open();
+    final ListDownlink<String> readOnlyListLink = getDownlink(new ReadOnlyListLinkController());
 
-      didUpdate.await(1, TimeUnit.SECONDS);
-      assertEquals(didUpdate.getCount(), 0);
-      assertEquals(listLink.size(), total);
-      readOnlyDidUpdate.await(1, TimeUnit.SECONDS);
-      assertEquals(readOnlyDidUpdate.getCount(), 0);
-      assertEquals(readOnlyListLink.size(), total);
-
-      listLink.take(2);
-      didTake.await(2, TimeUnit.SECONDS);
-      assertEquals(willTake.getCount(), 0);
-      assertEquals(didTake.getCount(), 0);
-      assertEquals(listLink.size(), 2);
-      assertEquals(listLink.get(0), "0");
-      assertEquals(listLink.get(1), "1");
-
-      readOnlyDidTake.await(2, TimeUnit.SECONDS);
-      assertEquals(readOnlyListLink.size(), 2);
-      assertEquals(readOnlyListLink.get(0), "0");
-      assertEquals(readOnlyListLink.get(1), "1");
-    } finally {
-      kernel.stop();
+    for (int i = 0; i < total; i++) {
+      listLink.add(i, Integer.toString(i));
     }
+
+    didUpdate.await();
+    assertEquals(didUpdate.getCount(), 0);
+    assertEquals(listLink.size(), total);
+    readOnlyDidUpdate.await();
+    assertEquals(readOnlyDidUpdate.getCount(), 0);
+    assertEquals(readOnlyListLink.size(), total);
+
+    listLink.take(2);
+    didTake.await();
+    assertEquals(willTake.getCount(), 0);
+    assertEquals(didTake.getCount(), 0);
+    assertEquals(listLink.size(), 2);
+    assertEquals(listLink.get(0), "0");
+    assertEquals(listLink.get(1), "1");
+
+    readOnlyDidTake.await();
+    assertEquals(readOnlyListLink.size(), 2);
+    assertEquals(readOnlyListLink.get(0), "0");
+    assertEquals(readOnlyListLink.get(1), "1");
   }
 
   @Test
   public void testClear() throws InterruptedException {
-    final Kernel kernel = ServerLoader.loadServerStack();
-    final TestListPlane plane = kernel.openSpace(ActorSpaceDef.fromName("test"))
-        .openPlane("test", TestListPlane.class);
     final int total = 3;
-  
-  
-    final CountDownLatch didSyncListLinkLatch = new CountDownLatch(1);
-    final CountDownLatch didSyncReadOnlyListLinkLatch = new CountDownLatch(1);
     final CountDownLatch didUpdate = new CountDownLatch(2 * total);
     final CountDownLatch willClear = new CountDownLatch(2);
     final CountDownLatch didClear = new CountDownLatch(2);
@@ -663,51 +584,30 @@ public class ListDownlinkSpec {
 
     }
 
-    try {
-      kernel.openService(WebServiceDef.standard().port(53556).spaceName("test"));
-      kernel.start();
-      final ListDownlink<String> listLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ListLinkController())
-          .didSync(didSyncListLinkLatch::countDown)
-          .open();
-      final ListDownlink<String> readOnlyListLink = plane.downlinkList()
-          .valueClass(String.class)
-          .hostUri("warp://localhost:53556")
-          .nodeUri("/list/todo")
-          .laneUri("list")
-          .observe(new ReadOnlyListLinkController())
-          .didSync(didSyncReadOnlyListLinkLatch::countDown)
-          .open();
-      listLink.observe(new ListLinkController()).open();
-  
-      didSyncListLinkLatch.await();
-      didSyncReadOnlyListLinkLatch.await();
-      
-      for (int i = 0; i < total; i++) {
-        listLink.add(i, Integer.toString(i));
-      }
-      
-      didUpdate.await();
-      assertEquals(didUpdate.getCount(), 0);
-      assertEquals(listLink.size(), total);
-      readOnlyDidUpdate.await();
-      assertEquals(didUpdate.getCount(), 0);
-      assertEquals(readOnlyListLink.size(), total);
+    final ListDownlink<String> listLink = getDownlink(new ListLinkController());
+    listLink.observe(new ListLinkController()).open();
 
-      listLink.clear();
-      didClear.await();
-      assertEquals(willClear.getCount(), 0);
-      assertEquals(didClear.getCount(), 0);
-      assertEquals(listLink.size(), 0);
+    final ListDownlink<String> readOnlyListLink = getDownlink(new ReadOnlyListLinkController());
 
-      readOnlyDidClear.await();
-      assertEquals(readOnlyListLink.size(), 0);
-    } finally {
-      kernel.stop();
+    for (int i = 0; i < total; i++) {
+      listLink.add(i, Integer.toString(i));
     }
+
+    didUpdate.await();
+    assertEquals(didUpdate.getCount(), 0);
+    assertEquals(listLink.size(), total);
+    readOnlyDidUpdate.await();
+    assertEquals(didUpdate.getCount(), 0);
+    assertEquals(readOnlyListLink.size(), total);
+
+    listLink.clear();
+    didClear.await();
+    assertEquals(willClear.getCount(), 0);
+    assertEquals(didClear.getCount(), 0);
+    assertEquals(listLink.size(), 0);
+
+    readOnlyDidClear.await();
+    assertEquals(readOnlyListLink.size(), 0);
   }
+
 }

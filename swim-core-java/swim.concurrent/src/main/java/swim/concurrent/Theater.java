@@ -159,6 +159,15 @@ public class Theater implements MainStage, Thread.UncaughtExceptionHandler {
         Thread.currentThread().interrupt();
       }
     }
+
+    /*
+      Clock must be stopped to ensure that clock events
+      don't continue to run after the Kernel is stopped
+    */
+    if (schedule instanceof Clock) {
+      Clock clock = (Clock) schedule;
+      clock.stop();
+    }
   }
 
   @Override

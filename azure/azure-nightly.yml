@@ -1,6 +1,8 @@
 # Nightly build that runs all tests and benchmarks on the master branch only with a removed timeout
 # This build does not fail on checkstyle violations.
 
+trigger: none
+
 schedules:
   - cron: "0 0 * * *"
     displayName: Daily midnight build
