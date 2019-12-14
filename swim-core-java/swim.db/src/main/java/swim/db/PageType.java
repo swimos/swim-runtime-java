@@ -27,6 +27,16 @@ public enum PageType implements Debug {
     this.tag = tag;
   }
 
+  public static PageType fromTag(String tag) {
+    if ("node".equals(tag)) {
+      return NODE;
+    } else if ("leaf".equals(tag)) {
+      return LEAF;
+    } else {
+      return null;
+    }
+  }
+
   public boolean isNode() {
     return this == NODE;
   }
@@ -42,15 +52,5 @@ public enum PageType implements Debug {
   @Override
   public void debug(Output<?> output) {
     output.write("PageType").write('.').write(name());
-  }
-
-  public static PageType fromTag(String tag) {
-    if ("node".equals(tag)) {
-      return NODE;
-    } else if ("leaf".equals(tag)) {
-      return LEAF;
-    } else {
-      return null;
-    }
   }
 }

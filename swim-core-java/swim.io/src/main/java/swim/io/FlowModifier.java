@@ -82,6 +82,37 @@ public enum FlowModifier implements Debug {
     this.flags = flags;
   }
 
+  private static FlowModifier fromFlags(int flags) {
+    if ((flags ^ 0x5) == 0) {
+      flags &= ~0x1; // ENABLE_READ takes precedence over DISABLE_READ
+    }
+    if ((flags ^ 0xa) == 0) {
+      flags &= ~0x2; // ENABLE_WRITE takes precedence over DISABLE_WRITE
+    }
+    switch (flags) {
+      case 0x0:
+        return RESELECT;
+      case 0x1:
+        return DISABLE_READ;
+      case 0x2:
+        return DISABLE_WRITE;
+      case 0x3:
+        return DISABLE_READ_WRITE;
+      case 0x4:
+        return ENABLE_READ;
+      case 0x6:
+        return DISABLE_WRITE_ENABLE_READ;
+      case 0x8:
+        return ENABLE_WRITE;
+      case 0x9:
+        return DISABLE_READ_ENABLE_WRITE;
+      case 0xc:
+        return ENABLE_READ_WRITE;
+      default:
+        throw new IllegalArgumentException("0x" + Integer.toHexString(flags));
+    }
+  }
+
   /**
    * Returns {@code true} if the <em>read</em> operation should be disabled.
    */
@@ -150,26 +181,5 @@ public enum FlowModifier implements Debug {
   @Override
   public void debug(Output<?> output) {
     output = output.write("FlowModifier").write('.').write(name());
-  }
-
-  private static FlowModifier fromFlags(int flags) {
-    if ((flags ^ 0x5) == 0) {
-      flags &= ~0x1; // ENABLE_READ takes precedence over DISABLE_READ
-    }
-    if ((flags ^ 0xa) == 0) {
-      flags &= ~0x2; // ENABLE_WRITE takes precedence over DISABLE_WRITE
-    }
-    switch (flags) {
-      case 0x0: return RESELECT;
-      case 0x1: return DISABLE_READ;
-      case 0x2: return DISABLE_WRITE;
-      case 0x3: return DISABLE_READ_WRITE;
-      case 0x4: return ENABLE_READ;
-      case 0x6: return DISABLE_WRITE_ENABLE_READ;
-      case 0x8: return ENABLE_WRITE;
-      case 0x9: return DISABLE_READ_ENABLE_WRITE;
-      case 0xc: return ENABLE_READ_WRITE;
-      default: throw new IllegalArgumentException("0x" + Integer.toHexString(flags));
-    }
   }
 }

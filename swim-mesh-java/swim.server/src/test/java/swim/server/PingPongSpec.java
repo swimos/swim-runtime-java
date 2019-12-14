@@ -14,6 +14,8 @@
 
 package swim.server;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.testng.annotations.Test;
 import swim.actor.ActorSpaceDef;
 import swim.api.SwimLane;
@@ -29,39 +31,9 @@ import swim.service.web.WebServiceDef;
 import swim.structure.Attr;
 import swim.structure.Record;
 import swim.structure.Value;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import static org.testng.Assert.assertEquals;
 
 public class PingPongSpec {
-
-  static class TestPingAgent extends AbstractAgent {
-    @SwimLane("ping")
-    CommandLane<Value> ping = this.<Value>commandLane()
-        .onCommand(value -> {
-          System.out.println(nodeUri() + " onPing: " + Recon.toString(value));
-          context.command("warp://localhost:53556", "/pong", "pong", Record.of(Attr.of("pong")));
-        });
-
-    @Override
-    public void didStart() {
-      System.out.println("Ping did start");
-    }
-  }
-
-  static class TestPongAgent extends AbstractAgent {
-    @SwimLane("pong")
-    CommandLane<Value> pong = this.<Value>commandLane()
-        .onCommand(value -> System.out.println(nodeUri() + " onPong: " + Recon.toString(value)));
-  }
-
-  static class TestPingPongPlane extends AbstractPlane {
-    @SwimRoute("/ping")
-    AgentRoute<TestPingAgent> ping;
-
-    @SwimRoute("/pong")
-    AgentRoute<TestPongAgent> pong;
-  }
 
   @Test
   public void testCommandPingPong() throws InterruptedException {
@@ -89,6 +61,40 @@ public class PingPongSpec {
     } finally {
       kernel.stop();
     }
+  }
+
+  static class TestPingAgent extends AbstractAgent {
+
+    @SwimLane("ping")
+    CommandLane<Value> ping = this.<Value>commandLane()
+        .onCommand(value -> {
+          System.out.println(nodeUri() + " onPing: " + Recon.toString(value));
+          context.command("warp://localhost:53556", "/pong", "pong", Record.of(Attr.of("pong")));
+        });
+
+    @Override
+    public void didStart() {
+      System.out.println("Ping did start");
+    }
+
+  }
+
+  static class TestPongAgent extends AbstractAgent {
+
+    @SwimLane("pong")
+    CommandLane<Value> pong = this.<Value>commandLane()
+        .onCommand(value -> System.out.println(nodeUri() + " onPong: " + Recon.toString(value)));
+
+  }
+
+  static class TestPingPongPlane extends AbstractPlane {
+
+    @SwimRoute("/ping")
+    AgentRoute<TestPingAgent> ping;
+
+    @SwimRoute("/pong")
+    AgentRoute<TestPongAgent> pong;
+
   }
 
 }

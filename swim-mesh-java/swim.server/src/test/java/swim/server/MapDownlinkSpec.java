@@ -32,7 +32,6 @@ import swim.api.downlink.MapDownlink;
 import swim.api.lane.MapLane;
 import swim.api.plane.AbstractPlane;
 import swim.api.warp.function.DidReceive;
-import swim.api.warp.function.DidSync;
 import swim.api.warp.function.WillReceive;
 import swim.codec.Format;
 import swim.collections.HashTrieMap;
@@ -56,20 +55,6 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 public class MapDownlinkSpec {
-  static class TestMapLaneAgent extends AbstractAgent {
-    @SwimLane("map")
-    MapLane<String, String> testMap = this.<String, String>mapLane()
-        .keyClass(String.class)
-        .valueClass(String.class);
-
-    @SwimLane("map1")
-    MapLane<Value, Value> testMap1 = this.<Value, Value>mapLane();
-  }
-
-  static class TestMapPlane extends AbstractPlane {
-    @SwimRoute("/map/:name")
-    AgentRoute<TestMapLaneAgent> mapRoute;
-  }
 
   private Kernel kernel;
   private TestMapPlane plane;
@@ -120,6 +105,7 @@ public class MapDownlinkSpec {
     final CountDownLatch readOnlyLinkDidReceive = new CountDownLatch(2);
 
     class MapLinkController implements WillUpdateKey<String, String>, DidUpdateKey<String, String>, WillReceive, DidReceive {
+
       @Override
       public String willUpdate(String key, String newValue) {
         System.out.println("MapLinkController- link willUpdate key: " + Format.debug(key) + "; newValue: " + Format.debug(newValue));
@@ -143,14 +129,17 @@ public class MapDownlinkSpec {
         System.out.println("MapLinkController- link didReceive body: " + Recon.toString(body));
         linkDidReceive.countDown();
       }
+
     }
 
     class ReadOnlyMapLinkController implements DidReceive {
+
       @Override
       public void didReceive(Value body) {
         System.out.println("ReadOnlyMapLinkController- link didReceive body: " + Recon.toString(body));
         readOnlyLinkDidReceive.countDown();
       }
+
     }
 
     final MapDownlink<String, String> mapLink = getDownlink("/map/words", "map", new MapLinkController());
@@ -184,6 +173,7 @@ public class MapDownlinkSpec {
     final CountDownLatch readOnlyLinkDidRemove = new CountDownLatch(1);
 
     class MapLinkController implements DidReceive, WillRemoveKey<String>, DidRemoveKey<String, String> {
+
       @Override
       public void didReceive(Value body) {
         System.out.println("MapLinkController- didReceive");
@@ -201,9 +191,11 @@ public class MapDownlinkSpec {
         System.out.println("MapLinkController- didRemove key: " + key + "; oldValue: " + oldValue);
         didRemove.countDown();
       }
+
     }
 
     class ReadOnlyMapLinkController implements DidReceive, DidRemoveKey<String, String> {
+
       @Override
       public void didReceive(Value body) {
         System.out.println("ReadOnlyMapLinkController- link didReceive body: " + Recon.toString(body));
@@ -215,10 +207,11 @@ public class MapDownlinkSpec {
         System.out.println("ReadOnlyMapLinkController- didRemove key: " + key + "; oldValue: " + oldValue);
         readOnlyLinkDidRemove.countDown();
       }
+
     }
 
-    final MapDownlink<String, String> mapLink = getDownlink("/map/words","map",new MapLinkController());
-    final MapDownlink<String, String> readOnlyMapLink = getDownlink("/map/words","map",new ReadOnlyMapLinkController());
+    final MapDownlink<String, String> mapLink = getDownlink("/map/words", "map", new MapLinkController());
+    final MapDownlink<String, String> readOnlyMapLink = getDownlink("/map/words", "map", new ReadOnlyMapLinkController());
 
     mapLink.put("a", "indefinite article");
     mapLink.put("the", "definite article");
@@ -255,6 +248,7 @@ public class MapDownlinkSpec {
     final CountDownLatch readOnlyLinkDidClear = new CountDownLatch(1);
 
     class MapLinkController implements DidReceive, WillClear, DidClear {
+
       @Override
       public void didReceive(Value body) {
         System.out.println("MapLinkController- didReceive");
@@ -272,9 +266,11 @@ public class MapDownlinkSpec {
         System.out.println("MapLinkController- willClear");
         willClear.countDown();
       }
+
     }
 
     class ReadOnlyMapLinkController implements DidReceive, DidClear {
+
       @Override
       public void didReceive(Value body) {
         System.out.println("ReadOnlyMapLinkController- link didReceive body: " + Recon.toString(body));
@@ -286,10 +282,11 @@ public class MapDownlinkSpec {
         System.out.println("ReadOnlyMapLinkController- didClear");
         readOnlyLinkDidClear.countDown();
       }
+
     }
 
-    final MapDownlink<String, String> mapLink = getDownlink("/map/words","map",new MapLinkController());
-    final MapDownlink<String, String> readOnlyMapLink =getDownlink("/map/words","map",new ReadOnlyMapLinkController());
+    final MapDownlink<String, String> mapLink = getDownlink("/map/words", "map", new MapLinkController());
+    final MapDownlink<String, String> readOnlyMapLink = getDownlink("/map/words", "map", new ReadOnlyMapLinkController());
 
     mapLink.put("a", "indefinite article");
     mapLink.put("the", "definite article");
@@ -319,6 +316,7 @@ public class MapDownlinkSpec {
     final CountDownLatch readOnlyLinkDidDrop = new CountDownLatch(1);
 
     class MapLinkController implements DidReceive, WillDrop, DidDrop {
+
       @Override
       public void didReceive(Value body) {
         System.out.println("MapLinkController- didReceive");
@@ -336,9 +334,11 @@ public class MapDownlinkSpec {
         System.out.println("MapLinkController- willDrop: " + lower);
         willDrop.countDown();
       }
+
     }
 
     class ReadOnlyMapLinkController implements DidReceive, DidDrop {
+
       @Override
       public void didReceive(Value body) {
         System.out.println("ReadOnlyMapLinkController- link didReceive body: " + Recon.toString(body));
@@ -350,10 +350,11 @@ public class MapDownlinkSpec {
         System.out.println("ReadOnlyMapLinkController- didDrop");
         readOnlyLinkDidDrop.countDown();
       }
+
     }
 
-    final MapDownlink<String, String> mapLink = getDownlink("/map/words","map",new MapLinkController());
-    final MapDownlink<String, String> readOnlyMapLink =getDownlink("/map/words","map",new ReadOnlyMapLinkController());
+    final MapDownlink<String, String> mapLink = getDownlink("/map/words", "map", new MapLinkController());
+    final MapDownlink<String, String> readOnlyMapLink = getDownlink("/map/words", "map", new ReadOnlyMapLinkController());
 
 
     mapLink.put("a", "alpha");
@@ -398,6 +399,7 @@ public class MapDownlinkSpec {
     final CountDownLatch readOnlyLinkDidTake = new CountDownLatch(1);
 
     class MapLinkController implements DidReceive, WillTake, DidTake {
+
       @Override
       public void didReceive(Value body) {
         System.out.println("MapLinkController- didReceive");
@@ -415,9 +417,11 @@ public class MapDownlinkSpec {
         System.out.println("MapLinkController- willTake: " + upper);
         willTake.countDown();
       }
+
     }
 
     class ReadOnlyMapLinkController implements DidReceive, DidTake {
+
       @Override
       public void didReceive(Value body) {
         System.out.println("MapLinkController- link didReceive body: " + Recon.toString(body));
@@ -429,10 +433,11 @@ public class MapDownlinkSpec {
         System.out.println("ReadOnlyMapLinkController- didTake");
         readOnlyLinkDidTake.countDown();
       }
+
     }
 
-    final MapDownlink<String, String> mapLink = getDownlink("/map/words","map",new MapLinkController());
-    final MapDownlink<String, String> readOnlyMapLink =getDownlink("/map/words","map",new ReadOnlyMapLinkController());
+    final MapDownlink<String, String> mapLink = getDownlink("/map/words", "map", new MapLinkController());
+    final MapDownlink<String, String> readOnlyMapLink = getDownlink("/map/words", "map", new ReadOnlyMapLinkController());
 
     mapLink.put("a", "alpha");
     mapLink.put("b", "bravo");
@@ -470,14 +475,16 @@ public class MapDownlinkSpec {
     final CountDownLatch didSync = new CountDownLatch(1);
 
     class MapLinkController implements DidReceive {
+
       @Override
       public void didReceive(Value body) {
         System.out.println("MapLinkController- link didReceive body: " + Recon.toString(body));
         didReceive.countDown();
       }
+
     }
 
-    final MapDownlink<String, String> mapLink = getDownlink("/map/words","map",new MapLinkController());
+    final MapDownlink<String, String> mapLink = getDownlink("/map/words", "map", new MapLinkController());
     final MapDownlink<Value, Value> mapLink1 = plane.downlinkMap()
         .hostUri("warp://localhost:53556")
         .nodeUri("/map/words")
@@ -565,4 +572,24 @@ public class MapDownlinkSpec {
       }
     }
   }
+
+  static class TestMapLaneAgent extends AbstractAgent {
+
+    @SwimLane("map")
+    MapLane<String, String> testMap = this.<String, String>mapLane()
+        .keyClass(String.class)
+        .valueClass(String.class);
+
+    @SwimLane("map1")
+    MapLane<Value, Value> testMap1 = this.<Value, Value>mapLane();
+
+  }
+
+  static class TestMapPlane extends AbstractPlane {
+
+    @SwimRoute("/map/:name")
+    AgentRoute<TestMapLaneAgent> mapRoute;
+
+  }
+
 }
