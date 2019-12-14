@@ -14,6 +14,8 @@
 
 package swim.js;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.testng.annotations.Test;
 import swim.actor.ActorNodeDef;
 import swim.actor.ActorSpace;
@@ -25,8 +27,6 @@ import swim.server.ServerLoader;
 import swim.service.web.WebServiceDef;
 import swim.structure.Text;
 import swim.uri.UriPath;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public class JsAgentSpec {
 
@@ -43,11 +43,13 @@ public class JsAgentSpec {
     final CountDownLatch linkOnEvent = new CountDownLatch(1);
 
     class CommandLinkController implements OnEvent<String> {
+
       @Override
       public void onEvent(String value) {
         System.out.println("link onEvent value: " + value);
         linkOnEvent.countDown();
       }
+
     }
 
     try {

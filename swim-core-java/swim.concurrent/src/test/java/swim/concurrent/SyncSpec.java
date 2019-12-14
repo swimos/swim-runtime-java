@@ -23,6 +23,7 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 public class SyncSpec {
+
   @Test
   public void awaitBind() throws InterruptedException {
     final Object result = new Object();
@@ -93,4 +94,5 @@ public class SyncSpec {
       shutdown.await();
     }
   }
+
 }

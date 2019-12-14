@@ -41,11 +41,6 @@ public enum ClientAuth implements Debug {
    */
   NEED;
 
-  @Override
-  public void debug(Output<?> output) {
-    output = output.write("ClientAuth").write('.').write(name());
-  }
-
   private static Form<ClientAuth> form = new ClientAuthForm();
 
   /**
@@ -53,7 +48,7 @@ public enum ClientAuth implements Debug {
    * name}, one of <em>none</em>, <em>want</em>, or <em>need</em>.
    *
    * @throws IllegalArgumentException if {@code name} is not a valid {@code
-   *         ClientAuth} token.
+   *                                  ClientAuth} token.
    */
   public static ClientAuth from(String name) {
     if ("none".equalsIgnoreCase(name)) {
@@ -77,9 +72,15 @@ public enum ClientAuth implements Debug {
     }
     return form;
   }
+
+  @Override
+  public void debug(Output<?> output) {
+    output = output.write("ClientAuth").write('.').write(name());
+  }
 }
 
 final class ClientAuthForm extends Form<ClientAuth> {
+
   @Override
   public Class<?> type() {
     return ClientAuth.class;
@@ -94,10 +95,14 @@ final class ClientAuthForm extends Form<ClientAuth> {
   public Item mold(ClientAuth clientAuth) {
     if (clientAuth != null) {
       switch (clientAuth) {
-        case NONE: return Text.from("none");
-        case WANT: return Text.from("want");
-        case NEED: return Text.from("need");
-        default: return Item.absent();
+        case NONE:
+          return Text.from("none");
+        case WANT:
+          return Text.from("want");
+        case NEED:
+          return Text.from("need");
+        default:
+          return Item.absent();
       }
     } else {
       return Item.extant();
@@ -118,4 +123,5 @@ final class ClientAuthForm extends Form<ClientAuth> {
       return null;
     }
   }
+
 }

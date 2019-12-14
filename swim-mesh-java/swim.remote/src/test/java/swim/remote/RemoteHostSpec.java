@@ -35,7 +35,7 @@ import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
 
 public class RemoteHostSpec {
-  
+
   @Test
   public void testRemoteHostConnection() throws InterruptedException {
     final Theater stage = new Theater();
@@ -65,7 +65,7 @@ public class RemoteHostSpec {
         // prevent reconnect
       }
     };
-    
+
     final RemoteHost serverHost = new RemoteHost(hostUri) {
       @Override
       public void didConnect() {
@@ -342,4 +342,5 @@ public class RemoteHostSpec {
       stage.stop();
     }
   }
+
 }

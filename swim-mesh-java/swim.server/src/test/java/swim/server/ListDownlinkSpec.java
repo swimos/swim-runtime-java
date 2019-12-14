@@ -14,6 +14,7 @@
 
 package swim.server;
 
+import java.util.concurrent.CountDownLatch;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -44,8 +45,6 @@ import swim.observable.function.WillUpdateIndex;
 import swim.recon.Recon;
 import swim.service.web.WebServiceDef;
 import swim.structure.Value;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
@@ -53,18 +52,6 @@ public class ListDownlinkSpec {
 
   private Kernel kernel;
   private TestListPlane plane;
-
-  static class TestListLaneAgent extends AbstractAgent {
-    @SwimLane("list")
-    ListLane<String> testList = listLane()
-        .valueClass(String.class);
-  }
-
-  static class TestListPlane extends AbstractPlane {
-    @SwimRoute("/list/:name")
-    AgentRoute<TestListLaneAgent> listRoute;
-  }
-
 
   @BeforeMethod
   public void setTestPlane() {
@@ -90,6 +77,7 @@ public class ListDownlinkSpec {
     final CountDownLatch readOnlyLinkDidUpdate = new CountDownLatch(3);
 
     class ListLinkController implements WillUpdateIndex<String>, DidUpdateIndex<String>, WillReceive, DidReceive {
+
       @Override
       public String willUpdate(int index, String newValue) {
         System.out.println("link willUpdate index: " + index);
@@ -112,14 +100,17 @@ public class ListDownlinkSpec {
         System.out.println("ListLinkController- link didReceive body " + Recon.toString(body));
         linkDidReceive.countDown();
       }
+
     }
 
     class ReadOnlyListLinkController implements DidUpdateIndex<String> {
+
       @Override
       public void didUpdate(int index, String newValue, String oldValue) {
         System.out.println("ReadOnlyListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
         readOnlyLinkDidUpdate.countDown();
       }
+
     }
 
     final ListDownlink<String> listLink = getDownlink(new ListLinkController());
@@ -177,6 +168,7 @@ public class ListDownlinkSpec {
     final CountDownLatch readOnlyLinkDidUpdate = new CountDownLatch(6);
 
     class ListLinkController implements WillUpdateIndex<String>, DidUpdateIndex<String>, WillReceive, DidReceive {
+
       @Override
       public String willUpdate(int index, String newValue) {
         System.out.println("ListLinkController- link willUpdate index: " + index);
@@ -210,14 +202,17 @@ public class ListDownlinkSpec {
           linkDidReceiveUpper.countDown();
         }
       }
+
     }
 
     class ReadOnlyListLinkController implements DidUpdateIndex<String> {
+
       @Override
       public void didUpdate(int index, String newValue, String oldValue) {
         System.out.println("ReadOnlyListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
         readOnlyLinkDidUpdate.countDown();
       }
+
     }
 
     final ListDownlink<String> listLink = getDownlink(new ListLinkController());
@@ -259,6 +254,7 @@ public class ListDownlinkSpec {
     final CountDownLatch readOnlyLinkDidMove = new CountDownLatch(2);
 
     class ListLinkController implements DidUpdateIndex<String>, WillMoveIndex<String>, DidMoveIndex<String> {
+
       @Override
       public void didUpdate(int index, String newValue, String oldValue) {
         System.out.println("ListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
@@ -276,9 +272,11 @@ public class ListDownlinkSpec {
         System.out.println("ListLinkController- link didMove fromIndex: " + fromIndex + "; toIndex: " + toIndex + "; value: " + Format.debug(value));
         linkDidMove.countDown();
       }
+
     }
 
     class ReadOnlyListLinkController implements DidUpdateIndex<String>, DidMoveIndex<String> {
+
       @Override
       public void didUpdate(int index, String newValue, String oldValue) {
         System.out.println("ReadOnlyListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
@@ -290,6 +288,7 @@ public class ListDownlinkSpec {
         System.out.println("ReadOnlyListLinkController- link didMove fromIndex: " + fromIndex + "; toIndex: " + toIndex + "; value: " + Format.debug(value));
         readOnlyLinkDidMove.countDown();
       }
+
     }
 
     final ListDownlink<String> listLink = getDownlink(new ListLinkController());
@@ -332,6 +331,7 @@ public class ListDownlinkSpec {
     final CountDownLatch readOnlyLinkDidRemove = new CountDownLatch(1);
 
     class ListLinkController implements DidUpdateIndex<String>, WillRemoveIndex, DidRemoveIndex<String> {
+
       @Override
       public void didUpdate(int index, String newValue, String oldValue) {
         System.out.println("ListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
@@ -349,9 +349,11 @@ public class ListDownlinkSpec {
         System.out.println("ListLinkController- link didRemove index: " + index + "; oldValue: " + Format.debug(oldValue));
         linkDidRemove.countDown();
       }
+
     }
 
     class ReadOnlyListLinkController implements DidUpdateIndex<String>, DidRemoveIndex<String> {
+
       @Override
       public void didUpdate(int index, String newValue, String oldValue) {
         System.out.println("ReadOnlyListLinkController- link didUpdate index: " + index + "; newValue " + Format.debug(newValue) + "; oldValue: " + Format.debug(oldValue));
@@ -363,6 +365,7 @@ public class ListDownlinkSpec {
         System.out.println("ReadOnlyListLinkController- link didRemove index: " + index + "; oldValue: " + Format.debug(oldValue));
         readOnlyLinkDidRemove.countDown();
       }
+
     }
 
     final ListDownlink<String> listLink = getDownlink(new ListLinkController());
@@ -402,6 +405,7 @@ public class ListDownlinkSpec {
     final CountDownLatch readOnlyDidUpdate = new CountDownLatch(total);
 
     class ListLinkController implements DidUpdateIndex<String>, WillDrop, DidDrop {
+
       @Override
       public void willDrop(int lower) {
         System.out.println("ListLinkController- willDrop lower " + lower);
@@ -419,9 +423,11 @@ public class ListDownlinkSpec {
         System.out.println("ListLinkController- didUpdate at index " + index + " newValue " + newValue);
         didUpdate.countDown();
       }
+
     }
 
     class ReadOnlyListLinkController implements DidUpdateIndex<String>, DidDrop {
+
       @Override
       public void didDrop(int lower) {
         System.out.println("ListLinkController- didDrop lower " + lower);
@@ -433,6 +439,7 @@ public class ListDownlinkSpec {
         System.out.println("ListLinkController- didUpdate at index " + index + " newValue " + newValue);
         readOnlyDidUpdate.countDown();
       }
+
     }
 
     final ListDownlink<String> listLink = getDownlink(new ListLinkController());
@@ -477,6 +484,7 @@ public class ListDownlinkSpec {
     final CountDownLatch readOnlyDidTake = new CountDownLatch(1);
 
     class ListLinkController implements DidUpdateIndex<String>, WillTake, DidTake {
+
       @Override
       public void willTake(int upper) {
         System.out.println("ListLinkController- willTake upper " + upper);
@@ -494,9 +502,11 @@ public class ListDownlinkSpec {
         System.out.println("ListLinkController- didUpdate at index " + index + " newValue " + newValue);
         didUpdate.countDown();
       }
+
     }
 
     class ReadOnlyListLinkController implements DidUpdateIndex<String>, DidTake {
+
       @Override
       public void didTake(int upper) {
         System.out.println("ListLinkController- didTake upper " + upper);
@@ -508,6 +518,7 @@ public class ListDownlinkSpec {
         System.out.println("ListLinkController- didUpdate at index " + index + " newValue " + newValue);
         readOnlyDidUpdate.countDown();
       }
+
     }
 
     final ListDownlink<String> listLink = getDownlink(new ListLinkController());
@@ -549,6 +560,7 @@ public class ListDownlinkSpec {
     final CountDownLatch readOnlyDidClear = new CountDownLatch(1);
 
     class ListLinkController implements DidUpdateIndex<String>, WillClear, DidClear {
+
       @Override
       public void willClear() {
         System.out.println("ListLinkController- willClear");
@@ -570,6 +582,7 @@ public class ListDownlinkSpec {
     }
 
     class ReadOnlyListLinkController implements DidUpdateIndex<String>, DidClear {
+
       @Override
       public void didClear() {
         System.out.println("ListLinkController- didClear");
@@ -608,6 +621,21 @@ public class ListDownlinkSpec {
 
     readOnlyDidClear.await();
     assertEquals(readOnlyListLink.size(), 0);
+  }
+
+  static class TestListLaneAgent extends AbstractAgent {
+
+    @SwimLane("list")
+    ListLane<String> testList = listLane()
+        .valueClass(String.class);
+
+  }
+
+  static class TestListPlane extends AbstractPlane {
+
+    @SwimRoute("/list/:name")
+    AgentRoute<TestListLaneAgent> listRoute;
+
   }
 
 }
