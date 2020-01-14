@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.collections.HashTrieMap;
 import swim.util.Cursor;
 
 public abstract class AbstractMapInletMapOutlet<KI, KO, VI, VO, I, O> implements MapInletMapOutlet<KI, KO, VI, VO, I, O> {
+
   protected MapOutlet<KI, VI, ? extends I> input;
   protected HashTrieMap<KI, KeyEffect> outputEffects;
   protected HashTrieMap<KO, KeyEffect> inputEffects;
@@ -396,4 +397,5 @@ public abstract class AbstractMapInletMapOutlet<KI, KO, VI, VO, I, O> implements
   protected void didReconcile(int version) {
     // stub
   }
+
 }

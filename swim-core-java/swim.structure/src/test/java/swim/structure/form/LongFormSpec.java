@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.structure.Text;
 import static org.testng.Assert.assertEquals;
 
 public class LongFormSpec {
+
   @Test
   public void moldLongsToNums() {
     assertEquals(Form.forLong().mold(42L), Num.from(42));
@@ -56,4 +57,5 @@ public class LongFormSpec {
   public void castAttributedNumsToLongs() {
     assertEquals(Form.forLong().cast(Record.of(Attr.of("test"), 42)), Long.valueOf(42));
   }
+
 }

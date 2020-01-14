@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import swim.runtime.HttpBinding;
 import swim.runtime.HttpProxy;
 
 public class PartTableHttpUplink extends HttpProxy {
+
   protected final PartTable part;
 
   public PartTableHttpUplink(PartTable part, HttpBinding linkBinding) {
@@ -50,4 +51,5 @@ public class PartTableHttpUplink extends HttpProxy {
     super.didCloseUp();
     didClose();
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import org.graalvm.polyglot.proxy.ProxyArray;
 import swim.dynamic.HostArrayType;
 
 public class VmHostArray<T> extends VmHostProxy<T> implements ProxyArray {
+
   final VmBridge bridge;
   final HostArrayType<? super T> type;
   final T self;
@@ -53,4 +54,5 @@ public class VmHostArray<T> extends VmHostProxy<T> implements ProxyArray {
   public boolean remove(long index) {
     return this.type.removeElement(this.bridge, this.self, index);
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import swim.store.StoreDef;
 import swim.util.Murmur3;
 
 public class DbStoreDef implements StoreDef, Debug {
+
+  private static int hashSeed;
   protected final String storeName;
   protected final String path;
   protected final StoreSettings settings;
@@ -94,5 +96,4 @@ public class DbStoreDef implements StoreDef, Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
 }

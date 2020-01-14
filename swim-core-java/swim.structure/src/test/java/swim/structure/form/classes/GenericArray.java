@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,13 +18,17 @@ import java.util.Arrays;
 
 @SuppressWarnings("checkstyle:VisibilityModifier")
 public class GenericArray<T> {
+
   public T[] array;
+
   public GenericArray(T[] array) {
     this.array = array;
   }
+
   public GenericArray() {
     // Form.cast constructor
   }
+
   @Override
   public boolean equals(Object other) {
     if (other instanceof GenericArray<?>) {
@@ -33,12 +37,15 @@ public class GenericArray<T> {
     }
     return false;
   }
+
   @Override
   public int hashCode() {
     return Arrays.hashCode(this.array);
   }
+
   @Override
   public String toString() {
     return "GenericArray(" + this.array + ")";
   }
+
 }

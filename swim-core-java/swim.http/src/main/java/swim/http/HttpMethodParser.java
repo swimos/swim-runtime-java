@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.codec.Input;
 import swim.codec.Parser;
 
 final class HttpMethodParser extends Parser<HttpMethod> {
+
   final HttpParser http;
   final StringBuilder name;
   final int step;
@@ -31,11 +32,6 @@ final class HttpMethodParser extends Parser<HttpMethod> {
 
   HttpMethodParser(HttpParser http) {
     this(http, null, 1);
-  }
-
-  @Override
-  public Parser<HttpMethod> feed(Input input) {
-    return parse(input, this.http, this.name, this.step);
   }
 
   static Parser<HttpMethod> parse(Input input, HttpParser http, StringBuilder name, int step) {
@@ -78,4 +74,10 @@ final class HttpMethodParser extends Parser<HttpMethod> {
   static Parser<HttpMethod> parse(Input input, HttpParser http) {
     return parse(input, http, null, 1);
   }
+
+  @Override
+  public Parser<HttpMethod> feed(Input input) {
+    return parse(input, this.http, this.name, this.step);
+  }
+
 }

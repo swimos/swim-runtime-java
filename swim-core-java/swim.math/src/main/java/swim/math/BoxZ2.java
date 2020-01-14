@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,9 @@ import swim.structure.Value;
 import swim.util.Murmur3;
 
 public class BoxZ2 extends Z2Shape implements Debug {
+
+  private static int hashSeed;
+  private static Z2Form<BoxZ2> form;
   public final long xMin;
   public final long yMin;
   public final long xMax;
@@ -32,6 +35,18 @@ public class BoxZ2 extends Z2Shape implements Debug {
     this.yMin = yMin <= yMax ? yMin : yMax;
     this.xMax = xMin <= xMax ? xMax : xMin;
     this.yMax = yMin <= yMax ? yMax : yMin;
+  }
+
+  public static BoxZ2 of(long xMin, long yMin, long xMax, long yMax) {
+    return new BoxZ2(xMin, yMin, xMax, yMax);
+  }
+
+  @Kind
+  public static Z2Form<BoxZ2> form() {
+    if (form == null) {
+      form = new BoxZ2Form();
+    }
+    return form;
   }
 
   @Override
@@ -100,7 +115,7 @@ public class BoxZ2 extends Z2Shape implements Debug {
   @Override
   public BoxR2 transform(Z2ToR2Function f) {
     return new BoxR2(f.transformX(this.xMin, this.yMin), f.transformY(this.xMin, this.yMin),
-                     f.transformX(this.xMax, this.yMax), f.transformY(this.xMax, this.yMax));
+        f.transformX(this.xMax, this.yMax), f.transformY(this.xMax, this.yMax));
   }
 
   @Override
@@ -146,19 +161,4 @@ public class BoxZ2 extends Z2Shape implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  private static Z2Form<BoxZ2> form;
-
-  public static BoxZ2 of(long xMin, long yMin, long xMax, long yMax) {
-    return new BoxZ2(xMin, yMin, xMax, yMax);
-  }
-
-  @Kind
-  public static Z2Form<BoxZ2> form() {
-    if (form == null) {
-      form = new BoxZ2Form();
-    }
-    return form;
-  }
 }

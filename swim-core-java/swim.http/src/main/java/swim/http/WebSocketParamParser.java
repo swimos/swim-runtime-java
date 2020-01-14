@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.codec.Input;
 import swim.codec.Parser;
 
 final class WebSocketParamParser extends Parser<WebSocketParam> {
+
   final HttpParser http;
   final StringBuilder key;
   final StringBuilder value;
@@ -33,11 +34,6 @@ final class WebSocketParamParser extends Parser<WebSocketParam> {
 
   WebSocketParamParser(HttpParser http) {
     this(http, null, null, 1);
-  }
-
-  @Override
-  public Parser<WebSocketParam> feed(Input input) {
-    return parse(input, this.http, this.key, this.value, this.step);
   }
 
   static Parser<WebSocketParam> parse(Input input, HttpParser http, StringBuilder key,
@@ -192,4 +188,10 @@ final class WebSocketParamParser extends Parser<WebSocketParam> {
   static Parser<WebSocketParam> parse(Input input, HttpParser http) {
     return parse(input, http, null, null, 1);
   }
+
+  @Override
+  public Parser<WebSocketParam> feed(Input input) {
+    return parse(input, this.http, this.key, this.value, this.step);
+  }
+
 }

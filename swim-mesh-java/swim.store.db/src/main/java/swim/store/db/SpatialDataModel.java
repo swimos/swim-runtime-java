@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import swim.structure.Form;
 import swim.structure.Value;
 
 public class SpatialDataModel<S> implements SpatialDataBinding<S>, QTreeDelegate {
+
   protected final Value name;
   protected final QTreeMap<S> tree;
   protected SpatialDataContext<S> dataContext;
@@ -293,4 +294,5 @@ public class SpatialDataModel<S> implements SpatialDataBinding<S>, QTreeDelegate
       dataContext.didRemove(key, x, y, oldValue);
     }
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.http.HttpHeader;
 import static swim.http.HttpAssertions.assertWrites;
 
 public class MaxForwardsSpec {
+
   public void assertParses(String string, HttpHeader header) {
     HttpAssertions.assertParses(Http.standardParser().headerParser(), string, header);
   }
@@ -38,4 +39,5 @@ public class MaxForwardsSpec {
     assertWrites(MaxForwards.from(1), "Max-Forwards: 1");
     assertWrites(MaxForwards.from(15), "Max-Forwards: 15");
   }
+
 }

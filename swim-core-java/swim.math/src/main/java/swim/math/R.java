@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,8 +19,18 @@ import swim.codec.Format;
 import swim.codec.Output;
 
 public class R implements AffineSpace<Double, Double, Double>, VectorSpace<Double, Double>, RealField<Double>, Debug {
+
+  private static R field;
+
   protected R() {
     // stub
+  }
+
+  public static R field() {
+    if (field == null) {
+      field = new R();
+    }
+    return field;
   }
 
   @Override
@@ -228,12 +238,4 @@ public class R implements AffineSpace<Double, Double, Double>, VectorSpace<Doubl
     return Format.debug(this);
   }
 
-  private static R field;
-
-  public static R field() {
-    if (field == null) {
-      field = new R();
-    }
-    return field;
-  }
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.streamlet.combinator;
 import swim.streamlet.function.WatchValueFunction;
 
 public class WatchValueCombinator<I> extends WatchValueOperator<I> {
+
   protected final WatchValueFunction<? super I> func;
 
   public WatchValueCombinator(WatchValueFunction<? super I> func) {
@@ -27,4 +28,5 @@ public class WatchValueCombinator<I> extends WatchValueOperator<I> {
   public void evaluate(I value) {
     this.func.apply(value);
   }
+
 }

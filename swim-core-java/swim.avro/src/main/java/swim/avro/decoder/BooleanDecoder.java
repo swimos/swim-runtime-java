@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,15 +20,11 @@ import swim.codec.DecoderException;
 import swim.codec.InputBuffer;
 
 final class BooleanDecoder<T> extends Decoder<T> {
+
   final AvroBooleanType<T> type;
 
   BooleanDecoder(AvroBooleanType<T> type) {
     this.type = type;
-  }
-
-  @Override
-  public Decoder<T> feed(InputBuffer input) {
-    return decode(input, this.type);
   }
 
   static <T> Decoder<T> decode(InputBuffer input, AvroBooleanType<T> type) {
@@ -48,4 +44,10 @@ final class BooleanDecoder<T> extends Decoder<T> {
     }
     return new BooleanDecoder<T>(type);
   }
+
+  @Override
+  public Decoder<T> feed(InputBuffer input) {
+    return decode(input, this.type);
+  }
+
 }

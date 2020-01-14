@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import swim.codec.Encoder;
 import swim.codec.OutputBuffer;
 
 public abstract class WsFrame<T> {
+
   WsFrame() {
     // stub
   }
@@ -33,4 +34,5 @@ public abstract class WsFrame<T> {
   public abstract Encoder<?, ?> contentEncoder(WsEncoder ws);
 
   public abstract Encoder<?, ?> encodeContent(OutputBuffer<?> output, WsEncoder ws);
+
 }

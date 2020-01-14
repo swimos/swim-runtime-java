@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
 
 final class ChannelEncoder extends Encoder<ReadableByteChannel, ReadableByteChannel> {
+
   final ReadableByteChannel input;
 
   ChannelEncoder(ReadableByteChannel input) {
@@ -63,4 +64,5 @@ final class ChannelEncoder extends Encoder<ReadableByteChannel, ReadableByteChan
       throw error;
     }
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.structure.Data;
 import swim.structure.Value;
 
 final class FixedStructure extends AvroFixedType<Value> {
+
   final AvroName fullName;
   final FingerTrieSeq<AvroName> aliases;
   final int size;
@@ -67,4 +68,5 @@ final class FixedStructure extends AvroFixedType<Value> {
   public Decoder<Value> decodeFixed(InputBuffer input) {
     return (Decoder<Value>) (Decoder<?>) Binary.parseOutput(Data.output(this.size), input);
   }
+
 }

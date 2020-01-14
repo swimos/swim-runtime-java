@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import swim.structure.Slot;
 import swim.util.Cursor;
 
 final class STreeNodeDepthCursor extends STreeNodeCursor {
+
   final int depth;
 
   STreeNodeDepthCursor(STreeNode page, long index, int childIndex, int depth) {
@@ -33,4 +34,5 @@ final class STreeNodeDepthCursor extends STreeNodeCursor {
   Cursor<Slot> childCursor(STreePageRef childRef) {
     return childRef.depthCursor(this.depth - 1);
   }
+
 }

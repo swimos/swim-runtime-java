@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.util;
 import java.util.Map;
 
 final class CursorValues<V> implements Cursor<V> {
+
   final Cursor<? extends Map.Entry<?, ? extends V>> inner;
 
   CursorValues(Cursor<? extends Map.Entry<?, ? extends V>> inner) {
@@ -87,4 +88,5 @@ final class CursorValues<V> implements Cursor<V> {
   public void load() throws InterruptedException {
     this.inner.load();
   }
+
 }

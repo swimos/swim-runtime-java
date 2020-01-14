@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 import static swim.http.HttpAssertions.assertWrites;
 
 public class MediaRangeSpec {
+
   public void assertParses(String string, MediaRange mediaRange) {
     HttpAssertions.assertParses(Http.standardParser().mediaRangeParser(), string, mediaRange);
   }
@@ -50,28 +51,29 @@ public class MediaRangeSpec {
   @Test
   public void parseMediaRangesWithParams() {
     assertParses("text/*;charset=UTF-8",
-                 MediaRange.from("text", "*").param("charset", "UTF-8"));
+        MediaRange.from("text", "*").param("charset", "UTF-8"));
     assertParses("text/* ; charset = UTF-8",
-                 MediaRange.from("text", "*").param("charset", "UTF-8"));
+        MediaRange.from("text", "*").param("charset", "UTF-8"));
   }
 
   @Test
   public void writeMediaRangesWithParams() {
     assertWrites(MediaRange.from("text", "*").param("charset", "UTF-8"),
-                 "text/*; charset=UTF-8");
+        "text/*; charset=UTF-8");
   }
 
   @Test
   public void parseMediaRangesWithWeightsAndParams() {
     assertParses("text/*;q=0.5;charset=UTF-8",
-                 MediaRange.from("text", "*", 0.5f).param("charset", "UTF-8"));
+        MediaRange.from("text", "*", 0.5f).param("charset", "UTF-8"));
     assertParses("text/* ; q=0.5 ; charset = UTF-8",
-                 MediaRange.from("text", "*", 0.5f).param("charset", "UTF-8"));
+        MediaRange.from("text", "*", 0.5f).param("charset", "UTF-8"));
   }
 
   @Test
   public void writeMediaRangesWithWeightsAndParams() {
     assertWrites(MediaRange.from("text", "*", 0.5f).param("charset", "UTF-8"),
-                 "text/*; q=0.5; charset=UTF-8");
+        "text/*; q=0.5; charset=UTF-8");
   }
+
 }

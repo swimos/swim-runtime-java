@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@ import swim.dynamic.JavaHostObjectType;
 import swim.dynamic.java.lang.HostIterable;
 
 public final class HostCollection {
-  private HostCollection() {
-    // static
-  }
 
   public static final HostObjectType<Collection<Object>> TYPE;
 
@@ -34,9 +31,15 @@ public final class HostCollection {
     type.inheritType(HostIterable.TYPE);
     type.addMember(new HostCollectionIsEmpty());
   }
+
+  private HostCollection() {
+    // static
+  }
+
 }
 
 final class HostCollectionIsEmpty implements HostMethod<Collection<Object>> {
+
   @Override
   public String key() {
     return "isEmpty";
@@ -46,4 +49,5 @@ final class HostCollectionIsEmpty implements HostMethod<Collection<Object>> {
   public Object invoke(Bridge bridge, Collection<Object> collection, Object... arguments) {
     return collection.isEmpty();
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package swim.codec;
 
 final class ByteArrayInput extends InputBuffer {
+
   byte[] array;
   int index;
   int limit;
@@ -249,6 +250,7 @@ final class ByteArrayInput extends InputBuffer {
   @Override
   public InputBuffer clone() {
     return new ByteArrayInput(this.array, this.index, this.limit, this.id,
-                              this.offset, this.settings, this.isPart);
+        this.offset, this.settings, this.isPart);
   }
+
 }

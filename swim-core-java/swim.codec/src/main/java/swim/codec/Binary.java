@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import java.nio.channels.ReadableByteChannel;
  * Output#bind() bind} a {@code ByteBuffer} containing all written bytes.</p>
  */
 public final class Binary {
+
   private Binary() {
     // nop
   }
@@ -262,4 +263,5 @@ public final class Binary {
       }
     }
   }
+
 }

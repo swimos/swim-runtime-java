@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -82,6 +82,7 @@ import swim.structure.selector.KeysSelector;
 import swim.structure.selector.ValuesSelector;
 
 public final class Dataflow {
+
   private Dataflow() {
     // nop
   }
@@ -391,4 +392,5 @@ public final class Dataflow {
     invokeOutlet.argsInlet().bindInput(argsOutlet);
     return invokeOutlet;
   }
+
 }

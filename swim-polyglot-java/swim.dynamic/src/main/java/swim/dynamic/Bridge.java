@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.Collection;
  * Interface between a guest language execution environment and a host runtime.
  */
 public abstract class Bridge {
+
   public abstract HostRuntime hostRuntime();
 
   public abstract String guestLanguage();
@@ -51,4 +52,5 @@ public abstract class Bridge {
   public abstract boolean guestCanInvokeMember(Object guestObject, String member);
 
   public abstract Object guestInvokeMember(Object guestObject, String member, Object... arguments);
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class RecordMapMutableSpec {
+
   @Test
   public void testMutablePut() {
     final Record xs = Record.of().attr("k", "v").slot("a", "b");
@@ -630,4 +631,5 @@ public class RecordMapMutableSpec {
     assertEquals(xs, Record.empty());
     assertEquals(ys, Record.empty());
   }
+
 }

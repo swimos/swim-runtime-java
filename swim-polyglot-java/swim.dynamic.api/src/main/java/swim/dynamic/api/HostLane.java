@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@ import swim.dynamic.JavaHostObjectType;
 import swim.dynamic.java.lang.HostObject;
 
 public final class HostLane {
-  private HostLane() {
-    // static
-  }
 
   public static final HostObjectType<Lane> TYPE;
 
@@ -37,9 +34,15 @@ public final class HostLane {
     type.addMember(new HostLaneLaneUri());
     type.addMember(new HostLaneClose());
   }
+
+  private HostLane() {
+    // static
+  }
+
 }
 
 final class HostLaneHostUri implements HostMethod<Lane> {
+
   @Override
   public String key() {
     return "hostUri";
@@ -49,9 +52,11 @@ final class HostLaneHostUri implements HostMethod<Lane> {
   public Object invoke(Bridge bridge, Lane lane, Object... arguments) {
     return lane.hostUri();
   }
+
 }
 
 final class HostLaneNodeUri implements HostMethod<Lane> {
+
   @Override
   public String key() {
     return "nodeUri";
@@ -61,9 +66,11 @@ final class HostLaneNodeUri implements HostMethod<Lane> {
   public Object invoke(Bridge bridge, Lane lane, Object... arguments) {
     return lane.nodeUri();
   }
+
 }
 
 final class HostLaneLaneUri implements HostMethod<Lane> {
+
   @Override
   public String key() {
     return "laneUri";
@@ -73,9 +80,11 @@ final class HostLaneLaneUri implements HostMethod<Lane> {
   public Object invoke(Bridge bridge, Lane lane, Object... arguments) {
     return lane.laneUri();
   }
+
 }
 
 final class HostLaneClose implements HostMethod<Lane> {
+
   @Override
   public String key() {
     return "close";
@@ -86,4 +95,5 @@ final class HostLaneClose implements HostMethod<Lane> {
     lane.close();
     return null;
   }
+
 }

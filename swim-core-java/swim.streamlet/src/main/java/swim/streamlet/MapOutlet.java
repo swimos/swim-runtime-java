@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import swim.util.CombinerFunction;
  * Output connector from a {@link Streamlet} for a key-value map state.
  */
 public interface MapOutlet<K, V, O> extends Outlet<O> {
+
   /**
    * Returns {@code true} if the current state of this {@code MapOutlet}
    * contains the given {@code key}; otherwise returns {@code false}.
@@ -105,4 +106,5 @@ public interface MapOutlet<K, V, O> extends Outlet<O> {
     combinator.bindInput(this);
     return this;
   }
+
 }

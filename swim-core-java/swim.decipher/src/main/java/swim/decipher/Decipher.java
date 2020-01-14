@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,10 @@ import swim.structure.Value;
  * Factory for constructing format-detecting parsers and decoders.
  */
 public final class Decipher {
+
+  private static DecipherDecoder<Item, Value> structureDecoder;
+  private static DecipherParser<Item, Value> structureParser;
+
   private Decipher() {
     // static
   }
@@ -38,9 +42,6 @@ public final class Decipher {
   static boolean isWhitespace(int c) {
     return isSpace(c) || isNewline(c);
   }
-
-  private static DecipherDecoder<Item, Value> structureDecoder;
-  private static DecipherParser<Item, Value> structureParser;
 
   public static DecipherDecoder<Item, Value> structureDecoder() {
     if (structureDecoder == null) {
@@ -67,4 +68,5 @@ public final class Decipher {
   public static Decoder<Value> decoder() {
     return structureDecoder().anyDecoder();
   }
+
 }

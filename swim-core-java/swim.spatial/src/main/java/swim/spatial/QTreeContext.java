@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.spatial;
 import java.util.Comparator;
 
 public abstract class QTreeContext<K, S, V> implements Comparator<QTreeEntry<K, S, V>> {
+
   @Override
   public int compare(QTreeEntry<K, S, V> x, QTreeEntry<K, S, V> y) {
     return compareKey(x.key, y.key);
@@ -38,4 +39,5 @@ public abstract class QTreeContext<K, S, V> implements Comparator<QTreeEntry<K, 
   protected boolean pageShouldMerge(QTreePage<K, S, V> page) {
     return page.arity() < pageSplitSize() >>> 1;
   }
+
 }

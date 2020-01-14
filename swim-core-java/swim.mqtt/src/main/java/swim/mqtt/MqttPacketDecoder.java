@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,17 +18,13 @@ import swim.codec.Decoder;
 import swim.codec.InputBuffer;
 
 final class MqttPacketDecoder<T> extends Decoder<MqttPacket<T>> {
+
   final MqttDecoder mqtt;
   final Decoder<T> content;
 
   MqttPacketDecoder(MqttDecoder mqtt, Decoder<T> content) {
     this.mqtt = mqtt;
     this.content = content;
-  }
-
-  @Override
-  public Decoder<MqttPacket<T>> feed(InputBuffer input) {
-    return decode(input, this.mqtt, this.content);
   }
 
   static <T> Decoder<MqttPacket<T>> decode(InputBuffer input, MqttDecoder mqtt, Decoder<T> content) {
@@ -38,4 +34,10 @@ final class MqttPacketDecoder<T> extends Decoder<MqttPacket<T>> {
     }
     return new MqttPacketDecoder<T>(mqtt, content);
   }
+
+  @Override
+  public Decoder<MqttPacket<T>> feed(InputBuffer input) {
+    return decode(input, this.mqtt, this.content);
+  }
+
 }

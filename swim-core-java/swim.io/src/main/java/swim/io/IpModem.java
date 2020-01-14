@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import swim.codec.Encoder;
 /**
  * Network socket binding that provides asynchronous I/O decoders and encoders
  * for a non-blocking NIO network channel.
- *
+ * <p>
  * An {@code IpModem} interfaces with the underlying asynchronous networking
  * system via an {@link IpModemContext}.  The modem context invokes I/O
  * callbacks on the {@code IpModem} when the underlying network socket is
@@ -28,6 +28,7 @@ import swim.codec.Encoder;
  * FlowControl}.
  */
 public interface IpModem<I, O> {
+
   /**
    * Returns the socket modem context to which this {@code IpModem} is bound;
    * returns {@code null} if this {@code IpModem} is unbound.
@@ -146,4 +147,5 @@ public interface IpModem<I, O> {
    * automatically be closed.
    */
   void didFail(Throwable error);
+
 }

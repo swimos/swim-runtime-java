@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import swim.structure.Slot;
 import swim.util.Cursor;
 
 final class QTreeNodeDeltaCursor extends QTreeNodeCursor {
+
   final long sinceVersion;
 
   QTreeNodeDeltaCursor(QTreeNode page, long x, long y, long index, int slotIndex,
@@ -34,4 +35,5 @@ final class QTreeNodeDeltaCursor extends QTreeNodeCursor {
   Cursor<Slot> childCursor(QTreePageRef childRef) {
     return childRef.deltaCursor(this.x, this.y, this.sinceVersion);
   }
+
 }

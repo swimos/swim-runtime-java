@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,9 +22,11 @@ package swim.io;
  * the network listener.
  */
 public interface IpServiceContext extends IpServiceRef, FlowContext {
+
   /**
    * Returns the configuration parameters that govern the underlying network
    * listener.
    */
   IpSettings ipSettings();
+
 }

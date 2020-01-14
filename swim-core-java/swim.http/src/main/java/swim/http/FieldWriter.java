@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.codec.Writer;
 import swim.codec.WriterException;
 
 final class FieldWriter extends Writer<Object, Object> {
+
   final String field;
   final int index;
 
@@ -29,11 +30,6 @@ final class FieldWriter extends Writer<Object, Object> {
 
   FieldWriter(String field) {
     this(field, 0);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.field, this.index);
   }
 
   static Writer<Object, Object> write(Output<?> output, String field, int index) {
@@ -60,4 +56,10 @@ final class FieldWriter extends Writer<Object, Object> {
   static Writer<Object, Object> write(Output<?> output, String field) {
     return write(output, field, 0);
   }
+
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.field, this.index);
+  }
+
 }

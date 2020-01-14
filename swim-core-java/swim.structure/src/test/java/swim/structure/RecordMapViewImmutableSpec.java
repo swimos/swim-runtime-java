@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 public class RecordMapViewImmutableSpec {
+
   @Test(expectedExceptions = UnsupportedOperationException.class)
   public void testImmutableViewPut() {
     final Record xs = Record.of().attr("k", "v").slot("a", "b").slot("c", "d");
@@ -275,4 +276,5 @@ public class RecordMapViewImmutableSpec {
     assertEquals(xss, Record.of("b", "c"));
     assertEquals(yss, Record.empty());
   }
+
 }

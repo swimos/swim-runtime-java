@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.collections.HashTrieMap;
 import swim.uri.UriPath;
 
 public class JsStaticModuleResolver implements JsModuleResolver {
+
   HashTrieMap<UriPath, Source> moduleSources;
 
   public JsStaticModuleResolver() {
@@ -61,4 +62,5 @@ public class JsStaticModuleResolver implements JsModuleResolver {
   public void defineModuleSource(String moduleId, String source) {
     defineModuleSource(UriPath.parse(moduleId), source);
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import swim.ws.WsEncoder;
 import swim.ws.WsFrame;
 
 public class WebSocketModem<I, O> implements IpModem<Object, Object>, WebSocketContext<I, O> {
+
   protected final WebSocket<I, O> socket;
   protected final WsSettings wsSettings;
   protected final WsDecoder decoder;
@@ -237,4 +238,5 @@ public class WebSocketModem<I, O> implements IpModem<Object, Object>, WebSocketC
   public void close() {
     this.context.close();
   }
+
 }

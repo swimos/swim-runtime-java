@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import swim.structure.Record;
 import swim.structure.Value;
 
 public class WarpLanePulse extends LanePulse {
+
+  private static Form<WarpLanePulse> form;
   protected final long laneCount;
   protected final WarpDownlinkPulse downlinkPulse;
   protected final WarpUplinkPulse uplinkPulse;
@@ -29,6 +31,14 @@ public class WarpLanePulse extends LanePulse {
     this.laneCount = laneCount;
     this.downlinkPulse = downlinkPulse;
     this.uplinkPulse = uplinkPulse;
+  }
+
+  @Kind
+  public static Form<WarpLanePulse> form() {
+    if (form == null) {
+      form = new WarpLanePulseForm();
+    }
+    return form;
   }
 
   @Override
@@ -54,18 +64,10 @@ public class WarpLanePulse extends LanePulse {
     return form().mold(this).toValue();
   }
 
-  private static Form<WarpLanePulse> form;
-
-  @Kind
-  public static Form<WarpLanePulse> form() {
-    if (form == null) {
-      form = new WarpLanePulseForm();
-    }
-    return form;
-  }
 }
 
 final class WarpLanePulseForm extends Form<WarpLanePulse> {
+
   @Override
   public Class<?> type() {
     return WarpLanePulse.class;
@@ -98,4 +100,5 @@ final class WarpLanePulseForm extends Form<WarpLanePulse> {
     final WarpUplinkPulse uplinkPulse = value.get("uplink").coerce(WarpUplinkPulse.form());
     return new WarpLanePulse(laneCount, downlinkPulse, uplinkPulse);
   }
+
 }

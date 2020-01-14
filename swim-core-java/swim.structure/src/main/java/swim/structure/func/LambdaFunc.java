@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import swim.structure.operator.InvokeOperator;
 import swim.util.Murmur3;
 
 public class LambdaFunc extends Func {
+
+  private static int hashSeed;
   final Value bindings;
   final Value template;
 
@@ -122,5 +124,4 @@ public class LambdaFunc extends Func {
     output.debug(this.bindings).write('.').write("lambda").write('(').debug(this.template).write(')');
   }
 
-  private static int hashSeed;
 }

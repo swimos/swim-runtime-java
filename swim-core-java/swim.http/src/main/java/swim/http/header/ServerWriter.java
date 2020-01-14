@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.http.HttpWriter;
 import swim.http.Product;
 
 final class ServerWriter extends Writer<Object, Object> {
+
   final HttpWriter http;
   final Iterator<Product> products;
   final Writer<?, ?> part;
@@ -32,11 +33,6 @@ final class ServerWriter extends Writer<Object, Object> {
     this.products = products;
     this.part = part;
     this.step = step;
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.http, this.products, this.part, this.step);
   }
 
   static Writer<Object, Object> write(Output<?> output, HttpWriter http, Iterator<Product> products,
@@ -81,4 +77,10 @@ final class ServerWriter extends Writer<Object, Object> {
   static Writer<Object, Object> write(Output<?> output, HttpWriter http, Iterator<Product> products) {
     return write(output, http, products, null, 1);
   }
+
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.http, this.products, this.part, this.step);
+  }
+
 }

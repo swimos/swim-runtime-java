@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.codec.Parser;
 import swim.codec.Utf8;
 
 final class UriQueryParser extends Parser<UriQuery> {
+
   final UriParser uri;
   final UriQueryBuilder builder;
   final Output<String> keyOutput;
@@ -45,12 +46,6 @@ final class UriQueryParser extends Parser<UriQuery> {
 
   UriQueryParser(UriParser uri) {
     this(uri, null, null, null, 0, 1);
-  }
-
-  @Override
-  public Parser<UriQuery> feed(Input input) {
-    return parse(input, this.uri, this.builder, this.keyOutput,
-                 this.valueOutput, this.c1, this.step);
   }
 
   static Parser<UriQuery> parse(Input input, UriParser uri, UriQueryBuilder builder,
@@ -202,4 +197,11 @@ final class UriQueryParser extends Parser<UriQuery> {
   static Parser<UriQuery> parse(Input input, UriParser uri) {
     return parse(input, uri, null, null, null, 0, 1);
   }
+
+  @Override
+  public Parser<UriQuery> feed(Input input) {
+    return parse(input, this.uri, this.builder, this.keyOutput,
+        this.valueOutput, this.c1, this.step);
+  }
+
 }

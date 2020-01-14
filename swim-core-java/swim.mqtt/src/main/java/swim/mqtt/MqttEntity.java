@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,11 +15,6 @@
 package swim.mqtt;
 
 public abstract class MqttEntity<T> extends MqttPart {
-  public abstract boolean isDefined();
-
-  public abstract T get();
-
-  public abstract int mqttSize();
 
   private static MqttEntity<Object> empty;
 
@@ -30,4 +25,11 @@ public abstract class MqttEntity<T> extends MqttPart {
     }
     return (MqttEntity<T>) empty;
   }
+
+  public abstract boolean isDefined();
+
+  public abstract T get();
+
+  public abstract int mqttSize();
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import swim.dynamic.HostType;
 import swim.dynamic.HostValue;
 
 public class VmBridge extends Bridge {
+
   final HostRuntime hostRuntime;
   String guestLanguage;
 
@@ -249,4 +250,5 @@ public class VmBridge extends Bridge {
       throw new UnsupportedOperationException();
     }
   }
+
 }

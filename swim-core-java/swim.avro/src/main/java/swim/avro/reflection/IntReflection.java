@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,10 @@ package swim.avro.reflection;
 import swim.avro.schema.AvroIntType;
 
 final class IntReflection extends AvroIntType<Integer> {
+
   @Override
   public Integer cast(long value) {
     return Integer.valueOf((int) value);
   }
+
 }

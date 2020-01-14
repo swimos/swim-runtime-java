@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -72,6 +72,7 @@ import swim.web.WebRequest;
 import swim.web.WebResponse;
 
 public interface KernelContext extends Kernel, IpInterface, Log {
+
   KernelBinding kernelWrapper();
 
   KernelBinding kernelBinding();
@@ -268,4 +269,5 @@ public interface KernelContext extends Kernel, IpInterface, Log {
   void openMetaDownlink(LinkBinding downlink, NodeBinding metaDownlink);
 
   void reportDown(Metric metric);
+
 }

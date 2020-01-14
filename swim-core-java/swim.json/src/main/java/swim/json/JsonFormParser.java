@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.structure.Item;
 import swim.structure.Value;
 
 final class JsonFormParser<T> extends Parser<T> {
+
   final JsonParser<Item, Value> json;
   final Form<T> form;
   final Parser<Value> parser;
@@ -33,11 +34,6 @@ final class JsonFormParser<T> extends Parser<T> {
 
   JsonFormParser(JsonParser<Item, Value> json, Form<T> form) {
     this(json, form, null);
-  }
-
-  @Override
-  public Parser<T> feed(Input input) {
-    return parse(input, this.json, this.form, this.parser);
   }
 
   static <T> Parser<T> parse(Input input, JsonParser<Item, Value> json,
@@ -59,4 +55,10 @@ final class JsonFormParser<T> extends Parser<T> {
   static <T> Parser<T> parse(Input input, JsonParser<Item, Value> json, Form<T> form) {
     return parse(input, json, form, null);
   }
+
+  @Override
+  public Parser<T> feed(Input input) {
+    return parse(input, this.json, this.form, this.parser);
+  }
+
 }

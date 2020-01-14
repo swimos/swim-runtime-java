@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import swim.uri.Uri;
 import swim.util.Log;
 
 public abstract class AbstractDownlinkBinding implements LinkBinding, Log {
+
   protected final Uri meshUri;
   protected final Uri hostUri;
   protected final Uri nodeUri;
@@ -283,4 +284,5 @@ public abstract class AbstractDownlinkBinding implements LinkBinding, Log {
   public void fail(Object message) {
     linkContext().failUp(message);
   }
+
 }

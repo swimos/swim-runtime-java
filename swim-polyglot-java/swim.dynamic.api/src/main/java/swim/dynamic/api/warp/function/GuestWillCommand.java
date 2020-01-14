@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.dynamic.BridgeGuest;
 import swim.structure.Value;
 
 public class GuestWillCommand extends BridgeGuest implements WillCommand {
+
   public GuestWillCommand(Bridge bridge, Object guest) {
     super(bridge, guest);
   }
@@ -28,4 +29,5 @@ public class GuestWillCommand extends BridgeGuest implements WillCommand {
   public void willCommand(Value body) {
     this.bridge.guestExecuteVoid(this.guest, body);
   }
+
 }

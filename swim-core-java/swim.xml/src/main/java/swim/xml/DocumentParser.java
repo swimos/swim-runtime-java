@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.codec.Parser;
 import swim.util.Builder;
 
 final class DocumentParser<I, V> extends Parser<V> {
+
   final XmlParser<I, V> xml;
   final Builder<I, V> builder;
   final Parser<String> targetParser;
@@ -39,12 +40,6 @@ final class DocumentParser<I, V> extends Parser<V> {
 
   DocumentParser(XmlParser<I, V> xml) {
     this(xml, null, null, null, null, 1);
-  }
-
-  @Override
-  public Parser<V> feed(Input input) {
-    return parse(input, this.xml, this.builder, this.targetParser, this.miscParser,
-                 this.tagParser, this.step);
   }
 
   static <I, V> Parser<V> parse(Input input, XmlParser<I, V> xml, Builder<I, V> builder,
@@ -179,4 +174,11 @@ final class DocumentParser<I, V> extends Parser<V> {
   static <I, V> Parser<V> parse(Input input, XmlParser<I, V> xml) {
     return parse(input, xml, null, null, null, null, 1);
   }
+
+  @Override
+  public Parser<V> feed(Input input) {
+    return parse(input, this.xml, this.builder, this.targetParser, this.miscParser,
+        this.tagParser, this.step);
+  }
+
 }

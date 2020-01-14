@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.structure.Record;
 import swim.structure.Value;
 
 public class RecordScope extends RecordModel {
+
   protected StreamletScope<? extends Value> scope;
 
   public RecordScope(StreamletScope<? extends Value> scope, Record state) {
@@ -29,11 +30,6 @@ public class RecordScope extends RecordModel {
   public RecordScope(StreamletScope<? extends Value> scope) {
     super();
     this.scope = scope;
-  }
-
-  @Override
-  public final StreamletScope<? extends Value> streamletScope() {
-    return this.scope;
   }
 
   public static RecordScope from(Record record) {
@@ -54,4 +50,10 @@ public class RecordScope extends RecordModel {
   public static RecordScope of(Object... objects) {
     return from(Record.of(objects));
   }
+
+  @Override
+  public final StreamletScope<? extends Value> streamletScope() {
+    return this.scope;
+  }
+
 }

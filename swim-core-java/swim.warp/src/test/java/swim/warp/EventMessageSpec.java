@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,33 +21,35 @@ import static swim.warp.Assertions.assertParses;
 import static swim.warp.Assertions.assertWrites;
 
 public class EventMessageSpec {
+
   @Test
   public void parseEventWithNamedHeaders() {
     assertParses("@event(node: node_uri, lane: lane_uri)",
-                 new EventMessage("node_uri", "lane_uri"));
+        new EventMessage("node_uri", "lane_uri"));
   }
 
   @Test
   public void parseEventWithPositionalHeaders() {
     assertParses("@event(node_uri, lane_uri)",
-                 new EventMessage("node_uri", "lane_uri"));
+        new EventMessage("node_uri", "lane_uri"));
   }
 
   @Test
   public void parseEventWithBody() {
     assertParses("@event(node_uri, lane_uri)@test",
-                 new EventMessage("node_uri", "lane_uri", Record.of(Attr.of("test"))));
+        new EventMessage("node_uri", "lane_uri", Record.of(Attr.of("test"))));
   }
 
   @Test
   public void writeEvent() {
     assertWrites(new EventMessage("node/uri", "lane_uri"),
-                 "@event(node:\"node/uri\",lane:lane_uri)");
+        "@event(node:\"node/uri\",lane:lane_uri)");
   }
 
   @Test
   public void writeEventWithBody() {
     assertWrites(new EventMessage("node/uri", "lane_uri", Record.of(Attr.of("test"))),
-                 "@event(node:\"node/uri\",lane:lane_uri)@test");
+        "@event(node:\"node/uri\",lane:lane_uri)@test");
   }
+
 }

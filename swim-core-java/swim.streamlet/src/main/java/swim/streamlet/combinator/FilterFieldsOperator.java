@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.streamlet.KeyEffect;
 import swim.util.Cursor;
 
 public abstract class FilterFieldsOperator<K, V, I> extends AbstractMapInletMapOutlet<K, K, V, V, I, Map<K, V>> {
+
   @Override
   public boolean containsKey(K key) {
     if (this.input != null) {
@@ -89,4 +90,5 @@ public abstract class FilterFieldsOperator<K, V, I> extends AbstractMapInletMapO
   }
 
   public abstract boolean evaluate(K key, V value);
+
 }

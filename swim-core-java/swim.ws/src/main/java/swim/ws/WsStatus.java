@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,12 +24,30 @@ import swim.codec.OutputBuffer;
 import swim.util.Murmur3;
 
 public final class WsStatus implements Debug {
+
+  private static int hashSeed;
   final int code;
   final String reason;
 
   WsStatus(int code, String reason) {
     this.code = code;
     this.reason = reason;
+  }
+
+  public static WsStatus from(int code, String reason) {
+    return new WsStatus(code, reason);
+  }
+
+  public static WsStatus from(int code) {
+    return new WsStatus(code, "");
+  }
+
+  public static Decoder<WsStatus> decoder() {
+    return new WsStatusDecoder();
+  }
+
+  public static Decoder<WsStatus> decode(InputBuffer input) {
+    return WsStatusDecoder.decode(input);
   }
 
   public int code() {
@@ -81,21 +99,4 @@ public final class WsStatus implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  public static WsStatus from(int code, String reason) {
-    return new WsStatus(code, reason);
-  }
-
-  public static WsStatus from(int code) {
-    return new WsStatus(code, "");
-  }
-
-  public static Decoder<WsStatus> decoder() {
-    return new WsStatusDecoder();
-  }
-
-  public static Decoder<WsStatus> decode(InputBuffer input) {
-    return WsStatusDecoder.decode(input);
-  }
 }

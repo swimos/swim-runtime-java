@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import swim.codec.Writer;
  * Factory for constructing JSON writers.
  */
 public abstract class JsonWriter<I, V> {
+
   public abstract Iterator<I> items(I item);
 
   public abstract I item(V value);
@@ -106,4 +107,5 @@ public abstract class JsonWriter<I, V> {
   public Writer<?, ?> writeUndefined(Output<?> output) {
     return Unicode.writeString("undefined", output);
   }
+
 }

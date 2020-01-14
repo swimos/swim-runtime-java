@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.fail;
 
 public class ItemOrderSpec {
+
   public static void assertOrderBefore(Item x, Item y) {
     final int order = x.compareTo(y);
     if (order >= 0) {
@@ -235,4 +236,5 @@ public class ItemOrderSpec {
     assertOrderAfter(Value.absent(), Num.from(0));
     assertOrderAfter(Value.absent(), Value.extant());
   }
+
 }

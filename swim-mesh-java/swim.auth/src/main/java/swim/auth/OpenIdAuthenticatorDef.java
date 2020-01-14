@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,9 @@ import swim.util.Builder;
 import swim.util.Murmur3;
 
 public class OpenIdAuthenticatorDef implements AuthenticatorDef, Debug {
+
+  private static int hashSeed;
+  private static Form<OpenIdAuthenticatorDef> form;
   final String authenticatorName;
   final FingerTrieSeq<String> issuers;
   final FingerTrieSeq<String> audiences;
@@ -41,6 +44,14 @@ public class OpenIdAuthenticatorDef implements AuthenticatorDef, Debug {
     this.issuers = issuers;
     this.audiences = audiences;
     this.publicKeyDefs = publicKeyDefs;
+  }
+
+  @Kind
+  public static Form<OpenIdAuthenticatorDef> form() {
+    if (form == null) {
+      form = new OpenIdAuthenticatorForm();
+    }
+    return form;
   }
 
   @Override
@@ -95,20 +106,10 @@ public class OpenIdAuthenticatorDef implements AuthenticatorDef, Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  private static Form<OpenIdAuthenticatorDef> form;
-
-  @Kind
-  public static Form<OpenIdAuthenticatorDef> form() {
-    if (form == null) {
-      form = new OpenIdAuthenticatorForm();
-    }
-    return form;
-  }
 }
 
 final class OpenIdAuthenticatorForm extends Form<OpenIdAuthenticatorDef> {
+
   @Override
   public String tag() {
     return "openId";
@@ -173,8 +174,9 @@ final class OpenIdAuthenticatorForm extends Form<OpenIdAuthenticatorDef> {
         }
       }
       return new OpenIdAuthenticatorDef(authenticatorName, issuers.bind(),
-                                        audiences.bind(), publicKeyDefs.bind());
+          audiences.bind(), publicKeyDefs.bind());
     }
     return null;
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import org.graalvm.polyglot.proxy.ProxyExecutable;
 import swim.dynamic.HostMethod;
 
 public class VmHostMethod<T> implements ProxyExecutable {
+
   final VmBridge bridge;
   final HostMethod<? super T> method;
   final T self;
@@ -40,4 +41,5 @@ public class VmHostMethod<T> implements ProxyExecutable {
     final Object guestResult = this.bridge.hostToGuest(hostResult);
     return guestResult;
   }
+
 }

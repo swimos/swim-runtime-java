@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
 package swim.math;
 
 public interface Z3ToR3Function {
+
   double transformX(long x, long y, long z);
 
   double transformY(long x, long y, long z);
 
   double transformZ(long x, long y, long z);
+
 }

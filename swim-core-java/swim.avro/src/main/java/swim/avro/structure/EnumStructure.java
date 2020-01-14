@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.structure.Text;
 import swim.structure.Value;
 
 final class EnumStructure extends AvroEnumType<Value> {
+
   final AvroName fullName;
   final String doc;
   final FingerTrieSeq<AvroName> aliases;
@@ -91,4 +92,5 @@ final class EnumStructure extends AvroEnumType<Value> {
   public Value cast(int ordinal) {
     return this.symbols.get(ordinal);
   }
+
 }

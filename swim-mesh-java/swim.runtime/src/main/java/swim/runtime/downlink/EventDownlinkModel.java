@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import swim.uri.Uri;
 import swim.warp.EventMessage;
 
 public class EventDownlinkModel extends SupplyDownlinkModem<EventDownlinkView<?>> {
+
   public EventDownlinkModel(Uri meshUri, Uri hostUri, Uri nodeUri, Uri laneUri,
                             float prio, float rate, Value body) {
     super(meshUri, hostUri, nodeUri, laneUri, prio, rate, body);
@@ -40,9 +41,11 @@ public class EventDownlinkModel extends SupplyDownlinkModem<EventDownlinkView<?>
   public void command(Value body) {
     pushUp(body);
   }
+
 }
 
 final class EventDownlinkRelayOnEvent extends DownlinkRelay<EventDownlinkModel, EventDownlinkView<?>> {
+
   final EventMessage message;
   final Cont<EventMessage> cont;
   Form<Object> valueForm;
@@ -100,4 +103,5 @@ final class EventDownlinkRelayOnEvent extends DownlinkRelay<EventDownlinkModel, 
       }
     }
   }
+
 }

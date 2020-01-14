@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.http.UpgradeProtocol;
 import swim.util.Builder;
 
 final class UpgradeParser extends Parser<Upgrade> {
+
   final HttpParser http;
   final Parser<UpgradeProtocol> protocol;
   final Builder<UpgradeProtocol, FingerTrieSeq<UpgradeProtocol>> protocols;
@@ -39,11 +40,6 @@ final class UpgradeParser extends Parser<Upgrade> {
 
   UpgradeParser(HttpParser http) {
     this(http, null, null, 1);
-  }
-
-  @Override
-  public Parser<Upgrade> feed(Input input) {
-    return parse(input, this.http, this.protocol, this.protocols, this.step);
   }
 
   static Parser<Upgrade> parse(Input input, HttpParser http, Parser<UpgradeProtocol> protocol,
@@ -124,4 +120,10 @@ final class UpgradeParser extends Parser<Upgrade> {
   static Parser<Upgrade> parse(Input input, HttpParser http) {
     return parse(input, http, null, null, 1);
   }
+
+  @Override
+  public Parser<Upgrade> feed(Input input) {
+    return parse(input, this.http, this.protocol, this.protocols, this.step);
+  }
+
 }

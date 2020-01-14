@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 public class AvroNameSpec {
+
   @Test
   public void parseUnqualifiedNames() {
     assertEquals(AvroName.parse("test"), AvroName.from("test"));
@@ -27,4 +28,5 @@ public class AvroNameSpec {
   public void parseQualifiedNames() {
     assertEquals(AvroName.parse("com.example.test"), AvroName.from(AvroNamespace.from("com", "example"), "test"));
   }
+
 }

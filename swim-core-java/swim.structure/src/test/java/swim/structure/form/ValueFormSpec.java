@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.structure.Value;
 import static org.testng.Assert.assertEquals;
 
 public class ValueFormSpec {
+
   @Test
   public void moldValuesToValues() {
     assertEquals(Form.forValue().mold(Num.from(42)), Num.from(42));
@@ -47,4 +48,5 @@ public class ValueFormSpec {
     assertEquals(Form.forValue().cast(Attr.of("a", 1)), Num.from(1));
     assertEquals(Form.forValue().cast(Slot.of("a", 1)), Num.from(1));
   }
+
 }

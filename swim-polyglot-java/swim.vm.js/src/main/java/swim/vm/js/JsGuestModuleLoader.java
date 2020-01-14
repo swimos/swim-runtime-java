@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import org.graalvm.polyglot.Source;
 import swim.uri.UriPath;
 
 public class JsGuestModuleLoader implements JsModuleResolver, JsModuleLoader {
+
   final JsModuleResolver moduleResolver;
 
   public JsGuestModuleLoader(JsModuleResolver moduleResolver) {
@@ -59,4 +60,5 @@ public class JsGuestModuleLoader implements JsModuleResolver, JsModuleLoader {
   public void evalModule(JsModule module) {
     module.evalModule();
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,12 +22,22 @@ import swim.codec.OutputBuffer;
 import swim.util.Murmur3;
 
 public final class MqttPubAck extends MqttPacket<Object> implements Debug {
+
+  private static int hashSeed;
   final int packetFlags;
   final int packetId;
 
   MqttPubAck(int packetFlags, int packetId) {
     this.packetFlags = packetFlags;
     this.packetId = packetId;
+  }
+
+  public static MqttPubAck from(int packetFlags, int packetId) {
+    return new MqttPubAck(packetFlags, packetId);
+  }
+
+  public static MqttPubAck from(int packetId) {
+    return new MqttPubAck(0, packetId);
   }
 
   @Override
@@ -100,13 +110,4 @@ public final class MqttPubAck extends MqttPacket<Object> implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  public static MqttPubAck from(int packetFlags, int packetId) {
-    return new MqttPubAck(packetFlags, packetId);
-  }
-
-  public static MqttPubAck from(int packetId) {
-    return new MqttPubAck(0, packetId);
-  }
 }

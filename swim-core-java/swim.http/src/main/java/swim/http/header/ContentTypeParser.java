@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.http.HttpParser;
 import swim.http.MediaType;
 
 final class ContentTypeParser extends Parser<ContentType> {
+
   final HttpParser http;
   final Parser<MediaType> mediaType;
 
@@ -30,11 +31,6 @@ final class ContentTypeParser extends Parser<ContentType> {
 
   ContentTypeParser(HttpParser http) {
     this(http, null);
-  }
-
-  @Override
-  public Parser<ContentType> feed(Input input) {
-    return parse(input, this.http, this.mediaType);
   }
 
   static Parser<ContentType> parse(Input input, HttpParser http, Parser<MediaType> mediaType) {
@@ -56,4 +52,10 @@ final class ContentTypeParser extends Parser<ContentType> {
   static Parser<ContentType> parse(Input input, HttpParser http) {
     return parse(input, http, null);
   }
+
+  @Override
+  public Parser<ContentType> feed(Input input) {
+    return parse(input, this.http, this.mediaType);
+  }
+
 }

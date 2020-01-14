@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@ package swim.db;
 import swim.structure.Value;
 
 public interface QTreeDelegate extends TreeDelegate {
+
   void qtreeDidUpdate(QTree newTree, QTree oldTree, Value key, long x, long y, Value newValue, Value oldValue);
 
   void qtreeDidMove(QTree newTree, QTree oldTree, Value key, long newX, long newY, Value newValue, long oldX, long oldY, Value oldValue);
 
   void qtreeDidRemove(QTree newTree, QTree oldTree, Value key, long x, long y, Value oldValue);
+
 }

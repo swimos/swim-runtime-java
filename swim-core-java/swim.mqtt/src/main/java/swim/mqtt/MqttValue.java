@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,10 +22,30 @@ import swim.codec.OutputBuffer;
 import swim.util.Murmur3;
 
 public final class MqttValue<T> extends MqttEntity<T> implements Debug {
+
+  private static int hashSeed;
+  private static MqttValue<Object> empty;
   final T value;
 
   MqttValue(T value) {
     this.value = value;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> MqttValue<T> empty() {
+    if (empty == null) {
+      empty = new MqttValue<Object>(null);
+    }
+    return (MqttValue<T>) empty;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> MqttValue<T> from(T value) {
+    if (value == null) {
+      return empty();
+    } else {
+      return new MqttValue<T>(value);
+    }
   }
 
   @Override
@@ -87,24 +107,4 @@ public final class MqttValue<T> extends MqttEntity<T> implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  private static MqttValue<Object> empty;
-
-  @SuppressWarnings("unchecked")
-  public static <T> MqttValue<T> empty() {
-    if (empty == null) {
-      empty = new MqttValue<Object>(null);
-    }
-    return (MqttValue<T>) empty;
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T> MqttValue<T> from(T value) {
-    if (value == null) {
-      return empty();
-    } else {
-      return new MqttValue<T>(value);
-    }
-  }
 }

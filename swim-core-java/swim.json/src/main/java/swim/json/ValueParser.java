@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,15 +19,11 @@ import swim.codec.Input;
 import swim.codec.Parser;
 
 final class ValueParser<I, V> extends Parser<V> {
+
   final JsonParser<I, V> json;
 
   ValueParser(JsonParser<I, V> json) {
     this.json = json;
-  }
-
-  @Override
-  public Parser<V> feed(Input input) {
-    return parse(input, this.json);
   }
 
   static <I, V> Parser<V> parse(Input input, JsonParser<I, V> json) {
@@ -61,4 +57,10 @@ final class ValueParser<I, V> extends Parser<V> {
     }
     return new ValueParser<I, V>(json);
   }
+
+  @Override
+  public Parser<V> feed(Input input) {
+    return parse(input, this.json);
+  }
+
 }

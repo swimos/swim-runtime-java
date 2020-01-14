@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,19 @@
 package swim.codec;
 
 final class NullParser<O> extends Parser<O> {
+
+  static <O> Parser<O> parse(Input input) {
+    while (input.isCont()) {
+      input = input.step();
+    }
+    if (input.isDone()) {
+      return done();
+    } else if (input.isError()) {
+      return error(input.trap());
+    }
+    return new NullParser<O>();
+  }
+
   @Override
   public Parser<O> feed(Input input) {
     while (input.isCont()) {
@@ -28,15 +41,4 @@ final class NullParser<O> extends Parser<O> {
     return this;
   }
 
-  static <O> Parser<O> parse(Input input) {
-    while (input.isCont()) {
-      input = input.step();
-    }
-    if (input.isDone()) {
-      return done();
-    } else if (input.isError()) {
-      return error(input.trap());
-    }
-    return new NullParser<O>();
-  }
 }

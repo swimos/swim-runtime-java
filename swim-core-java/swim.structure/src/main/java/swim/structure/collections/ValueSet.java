@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.structure.Form;
 import swim.structure.Value;
 
 public class ValueSet<T> extends ValueCollection<T> implements Set<T> {
+
   public ValueSet(Set<? extends Value> inner, Form<T> valueForm) {
     super(inner, valueForm);
   }
@@ -68,4 +69,5 @@ public class ValueSet<T> extends ValueCollection<T> implements Set<T> {
     }
     return code;
   }
+
 }

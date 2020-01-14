@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,11 +32,18 @@ import swim.io.IpModemContext;
 import swim.io.IpSocket;
 
 public class HttpServerModem implements IpModem<HttpRequest<?>, HttpResponse<?>>, HttpServerContext {
+
+  @SuppressWarnings("unchecked")
+  static final AtomicReferenceFieldUpdater<HttpServerModem, HttpServerResponder<?>> REQUESTING =
+      AtomicReferenceFieldUpdater.newUpdater(HttpServerModem.class, (Class<HttpServerResponder<?>>) (Class<?>) HttpServerResponder.class, "requesting");
+  @SuppressWarnings("unchecked")
+  static final AtomicReferenceFieldUpdater<HttpServerModem, FingerTrieSeq<HttpServerResponder<?>>> RESPONDERS =
+      AtomicReferenceFieldUpdater.newUpdater(HttpServerModem.class, (Class<FingerTrieSeq<HttpServerResponder<?>>>) (Class<?>) FingerTrieSeq.class, "responders");
   protected final HttpServer server;
   protected final HttpSettings httpSettings;
+  protected IpModemContext<HttpRequest<?>, HttpResponse<?>> context;
   volatile HttpServerResponder<?> requesting;
   volatile FingerTrieSeq<HttpServerResponder<?>> responders;
-  protected IpModemContext<HttpRequest<?>, HttpResponse<?>> context;
 
   public HttpServerModem(HttpServer server, HttpSettings httpSettings) {
     this.server = server;
@@ -326,11 +333,4 @@ public class HttpServerModem implements IpModem<HttpRequest<?>, HttpResponse<?>>
     } while (true);
   }
 
-  @SuppressWarnings("unchecked")
-  static final AtomicReferenceFieldUpdater<HttpServerModem, HttpServerResponder<?>> REQUESTING =
-      AtomicReferenceFieldUpdater.newUpdater(HttpServerModem.class, (Class<HttpServerResponder<?>>) (Class<?>) HttpServerResponder.class, "requesting");
-
-  @SuppressWarnings("unchecked")
-  static final AtomicReferenceFieldUpdater<HttpServerModem, FingerTrieSeq<HttpServerResponder<?>>> RESPONDERS =
-      AtomicReferenceFieldUpdater.newUpdater(HttpServerModem.class, (Class<FingerTrieSeq<HttpServerResponder<?>>>) (Class<?>) FingerTrieSeq.class, "responders");
 }

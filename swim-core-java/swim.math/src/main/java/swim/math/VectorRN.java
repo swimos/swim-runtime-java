@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,10 +23,25 @@ import swim.structure.Value;
 import swim.util.Murmur3;
 
 public class VectorRN implements Debug {
+
+  private static int hashSeed;
+  private static TensorForm<VectorRN> form;
   final double[] array;
 
   public VectorRN(double... array) {
     this.array = array;
+  }
+
+  public static VectorRN of(double... array) {
+    return new VectorRN(array);
+  }
+
+  @Kind
+  public static TensorForm<VectorRN> form() {
+    if (form == null) {
+      form = new VectorRNForm();
+    }
+    return form;
   }
 
   public final int dimension() {
@@ -155,19 +170,4 @@ public class VectorRN implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  private static TensorForm<VectorRN> form;
-
-  public static VectorRN of(double... array) {
-    return new VectorRN(array);
-  }
-
-  @Kind
-  public static TensorForm<VectorRN> form() {
-    if (form == null) {
-      form = new VectorRNForm();
-    }
-    return form;
-  }
 }

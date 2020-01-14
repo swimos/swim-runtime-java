@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,9 @@ import swim.structure.Operator;
 import swim.util.Murmur3;
 
 public final class BitwiseAndOperator extends BinaryOperator {
+
+  private static int hashSeed;
+
   public BitwiseAndOperator(Item operand1, Item operand2) {
     super(operand1, operand2);
   }
@@ -98,5 +101,4 @@ public final class BitwiseAndOperator extends BinaryOperator {
     output.debug(this.operand1).write('.').write("bitwiseAnd").write('(').debug(this.operand2).write(')');
   }
 
-  private static int hashSeed;
 }

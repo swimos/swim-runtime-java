@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,17 @@ package swim.uri;
 import swim.collections.HashTrieMap;
 
 abstract class UriSchemePattern extends UriPattern {
+
+  static UriSchemePattern compile(Uri pattern, UriScheme scheme, UriAuthority authority,
+                                  UriPath path, UriQuery query, UriFragment fragment) {
+    if (scheme.isDefined()) {
+      return new UriSchemeLiteral(scheme, UriAuthorityPattern.compile(pattern, authority,
+          path, query, fragment));
+    } else {
+      return UriAuthorityPattern.compile(pattern, authority, path, query, fragment);
+    }
+  }
+
   abstract HashTrieMap<String, String> unapply(UriScheme scheme, UriAuthority authority,
                                                UriPath path, UriQuery query, UriFragment fragment,
                                                HashTrieMap<String, String> args);
@@ -34,13 +45,4 @@ abstract class UriSchemePattern extends UriPattern {
     return matches(uri.scheme(), uri.authority(), uri.path(), uri.query(), uri.fragment());
   }
 
-  static UriSchemePattern compile(Uri pattern, UriScheme scheme, UriAuthority authority,
-                                  UriPath path, UriQuery query, UriFragment fragment) {
-    if (scheme.isDefined()) {
-      return new UriSchemeLiteral(scheme, UriAuthorityPattern.compile(pattern, authority,
-                                                                      path, query, fragment));
-    } else {
-      return UriAuthorityPattern.compile(pattern, authority, path, query, fragment);
-    }
-  }
 }

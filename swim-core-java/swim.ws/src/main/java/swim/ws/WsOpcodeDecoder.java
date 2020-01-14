@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,17 +19,13 @@ import swim.codec.DecoderException;
 import swim.codec.InputBuffer;
 
 final class WsOpcodeDecoder<O> extends Decoder<WsFrame<O>> {
+
   final WsDecoder ws;
   final Decoder<O> content;
 
   WsOpcodeDecoder(WsDecoder ws, Decoder<O> content) {
     this.ws = ws;
     this.content = content;
-  }
-
-  @Override
-  public Decoder<WsFrame<O>> feed(InputBuffer input) {
-    return decode(input, this.ws, this.content);
   }
 
   static <O> Decoder<WsFrame<O>> decode(InputBuffer input, WsDecoder ws, Decoder<O> content) {
@@ -43,4 +39,10 @@ final class WsOpcodeDecoder<O> extends Decoder<WsFrame<O>> {
     }
     return new WsOpcodeDecoder<O>(ws, content);
   }
+
+  @Override
+  public Decoder<WsFrame<O>> feed(InputBuffer input) {
+    return decode(input, this.ws, this.content);
+  }
+
 }

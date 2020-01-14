@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import swim.structure.Record;
 import swim.structure.Value;
 
 public class WarpDownlinkPulse extends DownlinkPulse implements WarpPulse {
+
+  private static Form<WarpDownlinkPulse> form;
   protected final long linkCount;
   protected final int eventRate;
   protected final long eventCount;
@@ -34,6 +36,14 @@ public class WarpDownlinkPulse extends DownlinkPulse implements WarpPulse {
     this.eventCount = eventCount;
     this.commandRate = commandRate;
     this.commandCount = commandCount;
+  }
+
+  @Kind
+  public static Form<WarpDownlinkPulse> form() {
+    if (form == null) {
+      form = new WarpDownlinkPulseForm();
+    }
+    return form;
   }
 
   @Override
@@ -72,18 +82,10 @@ public class WarpDownlinkPulse extends DownlinkPulse implements WarpPulse {
     return form().mold(this).toValue();
   }
 
-  private static Form<WarpDownlinkPulse> form;
-
-  @Kind
-  public static Form<WarpDownlinkPulse> form() {
-    if (form == null) {
-      form = new WarpDownlinkPulseForm();
-    }
-    return form;
-  }
 }
 
 final class WarpDownlinkPulseForm extends Form<WarpDownlinkPulse> {
+
   @Override
   public Class<?> type() {
     return WarpDownlinkPulse.class;
@@ -124,4 +126,5 @@ final class WarpDownlinkPulseForm extends Form<WarpDownlinkPulse> {
     final long commandCount = value.get("commandCount").longValue(0L);
     return new WarpDownlinkPulse(linkCount, eventRate, eventCount, commandRate, commandCount);
   }
+
 }

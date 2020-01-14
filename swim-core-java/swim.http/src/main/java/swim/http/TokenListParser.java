@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.collections.FingerTrieSeq;
 import swim.util.Builder;
 
 final class TokenListParser extends Parser<FingerTrieSeq<String>> {
+
   final StringBuilder token;
   final Builder<String, FingerTrieSeq<String>> tokens;
   final int step;
@@ -29,11 +30,6 @@ final class TokenListParser extends Parser<FingerTrieSeq<String>> {
     this.token = token;
     this.tokens = tokens;
     this.step = step;
-  }
-
-  @Override
-  public Parser<FingerTrieSeq<String>> feed(Input input) {
-    return parse(input, this.token, this.tokens, this.step);
   }
 
   static Parser<FingerTrieSeq<String>> parse(Input input, StringBuilder token,
@@ -140,4 +136,10 @@ final class TokenListParser extends Parser<FingerTrieSeq<String>> {
   static Parser<FingerTrieSeq<String>> parse(Input input) {
     return parse(input, null, null, 1);
   }
+
+  @Override
+  public Parser<FingerTrieSeq<String>> feed(Input input) {
+    return parse(input, this.token, this.tokens, this.step);
+  }
+
 }

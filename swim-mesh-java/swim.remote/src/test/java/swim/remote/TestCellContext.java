@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import swim.store.StoreBinding;
 import swim.uri.Uri;
 
 public class TestCellContext implements CellContext {
+
   private final Policy policy;
   private final Schedule schedule;
   private final Stage stage;
@@ -131,4 +132,5 @@ public class TestCellContext implements CellContext {
   @Override
   public void fail(Object message) {
   }
+
 }

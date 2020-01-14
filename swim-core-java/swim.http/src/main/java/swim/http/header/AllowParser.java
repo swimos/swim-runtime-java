@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.http.HttpParser;
 import swim.util.Builder;
 
 final class AllowParser extends Parser<Allow> {
+
   final HttpParser http;
   final Parser<HttpMethod> method;
   final Builder<HttpMethod, FingerTrieSeq<HttpMethod>> methods;
@@ -39,11 +40,6 @@ final class AllowParser extends Parser<Allow> {
 
   AllowParser(HttpParser http) {
     this(http, null, null, 1);
-  }
-
-  @Override
-  public Parser<Allow> feed(Input input) {
-    return parse(input, this.http, this.method, this.methods, this.step);
   }
 
   static Parser<Allow> parse(Input input, HttpParser http, Parser<HttpMethod> method,
@@ -124,4 +120,10 @@ final class AllowParser extends Parser<Allow> {
   static Parser<Allow> parse(Input input, HttpParser http) {
     return parse(input, http, null, null, 1);
   }
+
+  @Override
+  public Parser<Allow> feed(Input input) {
+    return parse(input, this.http, this.method, this.methods, this.step);
+  }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.util.Map;
 import swim.util.EntryBuilder;
 
 public final class UriQueryBuilder implements EntryBuilder<String, String, UriQuery> {
+
   UriQuery first;
   UriQuery last;
   int size;
@@ -169,4 +170,5 @@ public final class UriQueryBuilder implements EntryBuilder<String, String, UriQu
     }
     return xi;
   }
+
 }

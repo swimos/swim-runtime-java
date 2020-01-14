@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.codec.Writer;
 import swim.codec.WriterException;
 
 final class HttpStatusWriter extends Writer<Object, Object> {
+
   final HttpWriter http;
   final int code;
   final String phrase;
@@ -36,11 +37,6 @@ final class HttpStatusWriter extends Writer<Object, Object> {
 
   HttpStatusWriter(HttpWriter http, int code, String phrase) {
     this(http, code, phrase, null, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.http, this.code, this.phrase, this.part, this.step);
   }
 
   static Writer<Object, Object> write(Output<?> output, HttpWriter http, int code, String phrase,
@@ -87,4 +83,10 @@ final class HttpStatusWriter extends Writer<Object, Object> {
   static Writer<Object, Object> write(Output<?> output, HttpWriter http, int code, String phrase) {
     return write(output, http, code, phrase, null, 1);
   }
+
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.http, this.code, this.phrase, this.part, this.step);
+  }
+
 }

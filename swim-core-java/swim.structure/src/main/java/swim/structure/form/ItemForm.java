@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import swim.structure.Item;
  * Item} argument itself.
  */
 public final class ItemForm extends Form<Item> {
+
   final Item unit;
 
   public ItemForm(Item unit) {
@@ -57,4 +58,5 @@ public final class ItemForm extends Form<Item> {
   public Item cast(Item item) {
     return item;
   }
+
 }

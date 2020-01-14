@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import swim.structure.Slot;
 import static swim.recon.ReconWriterSpec.assertWrites;
 
 public class ReconSelectorWriterSpec {
+
   @Test
   public void writeIdentitySelector() {
     assertWrites(Selector.identity(), "");
@@ -38,6 +39,7 @@ public class ReconSelectorWriterSpec {
     assertWrites(Selector.identity().get(Record.of(1, 2)), "${1,2}");
     assertWrites(Selector.identity().get(Record.of(Attr.of("test"))), "${@test}");
   }
+
   @Test
   public void writeGetAttrSelector() {
     assertWrites(Selector.identity().getAttr("test"), "$@test");
@@ -272,4 +274,5 @@ public class ReconSelectorWriterSpec {
   public void writeRecordsWithSelectors() {
     assertWrites(Record.of(Slot.of("a", Selector.identity().get("foo")), Slot.of("b", Selector.identity().get("bar"))), "{a:$foo,b:$bar}");
   }
+
 }

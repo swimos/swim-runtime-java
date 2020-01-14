@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,12 @@ import swim.io.FlowModifier;
 import swim.io.IpSocket;
 
 public class HttpServerResponder<T> implements HttpResponderContext {
+
+  static final int RESPONDING = 1 << 0;
+  static final int RESPONDED = 1 << 1;
+  @SuppressWarnings("unchecked")
+  static final AtomicIntegerFieldUpdater<HttpServerResponder<?>> STATUS =
+      AtomicIntegerFieldUpdater.newUpdater((Class<HttpServerResponder<?>>) (Class<?>) HttpServerResponder.class, "status");
   protected final HttpServerModem modem;
   protected final HttpResponder<T> responder;
   volatile HttpResponse<?> response;
@@ -210,10 +216,4 @@ public class HttpServerResponder<T> implements HttpResponderContext {
     this.responder.didFail(error);
   }
 
-  static final int RESPONDING = 1 << 0;
-  static final int RESPONDED = 1 << 1;
-
-  @SuppressWarnings("unchecked")
-  static final AtomicIntegerFieldUpdater<HttpServerResponder<?>> STATUS =
-      AtomicIntegerFieldUpdater.newUpdater((Class<HttpServerResponder<?>>) (Class<?>) HttpServerResponder.class, "status");
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,6 +39,22 @@ import swim.structure.selector.ValuesSelector;
  * a foundation on top of which expression languages can be built.
  */
 public abstract class Selector extends Expression {
+
+  public static Selector identity() {
+    return IdentitySelector.identity();
+  }
+
+  /**
+   * Lifts {@code item} into a {@link LiteralSelector} if it is not already a
+   * {@code Selector}.
+   */
+  public static Selector literal(Item item) {
+    if (item instanceof Selector) {
+      return (Selector) item;
+    }
+    return new LiteralSelector(item, Selector.identity());
+  }
+
   @Override
   public boolean isConstant() {
     return false;
@@ -246,20 +262,6 @@ public abstract class Selector extends Expression {
 
   protected abstract int compareTo(Selector that);
 
-  public static Selector identity() {
-    return IdentitySelector.identity();
-  }
-
-  /**
-   * Lifts {@code item} into a {@link LiteralSelector} if it is not already a
-   * {@code Selector}.
-   */
-  public static Selector literal(Item item) {
-    if (item instanceof Selector) {
-      return (Selector) item;
-    }
-    return new LiteralSelector(item, Selector.identity());
-  }
 }
 
 /**
@@ -267,6 +269,7 @@ public abstract class Selector extends Expression {
  * mutable {@link Record}.
  */
 final class SelecteeBuilder implements Selectee<Object> {
+
   final Record selected;
 
   SelecteeBuilder(Record selected) {
@@ -287,4 +290,5 @@ final class SelecteeBuilder implements Selectee<Object> {
     }
     return null;
   }
+
 }

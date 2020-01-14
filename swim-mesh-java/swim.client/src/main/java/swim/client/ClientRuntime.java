@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ import swim.store.StoreBinding;
 import swim.uri.Uri;
 
 public class ClientRuntime extends AbstractSwimRef implements Client, EdgeContext {
+
   final Stage stage;
   final HttpEndpoint endpoint;
   final EdgeBinding edge;
@@ -381,4 +382,5 @@ public class ClientRuntime extends AbstractSwimRef implements Client, EdgeContex
   public void willClose() {
     // nop
   }
+
 }

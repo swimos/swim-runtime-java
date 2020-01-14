@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.dynamic.BridgeGuest;
 import swim.observable.function.WillUpdateIndex;
 
 public class GuestWillUpdateIndex<V> extends BridgeGuest implements WillUpdateIndex<V> {
+
   public GuestWillUpdateIndex(Bridge bridge, Object guest) {
     super(bridge, guest);
   }
@@ -28,4 +29,5 @@ public class GuestWillUpdateIndex<V> extends BridgeGuest implements WillUpdateIn
   public V willUpdate(int index, V newValue) {
     return (V) this.bridge.guestExecute(this.guest, index, newValue);
   }
+
 }

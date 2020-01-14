@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import swim.observable.function.WillTake;
 import swim.observable.function.WillUpdateIndex;
 
 public interface ObservableList<V> extends Observable<Object>, List<V> {
+
   void drop(int lower);
 
   void take(int upper);
@@ -64,4 +65,5 @@ public interface ObservableList<V> extends Observable<Object>, List<V> {
   ObservableList<V> willClear(WillClear willClear);
 
   ObservableList<V> didClear(DidClear didClear);
+
 }

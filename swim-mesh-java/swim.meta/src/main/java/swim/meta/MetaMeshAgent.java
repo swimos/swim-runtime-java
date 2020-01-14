@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.runtime.NodeContext;
 import swim.runtime.agent.AgentNode;
 
 public final class MetaMeshAgent extends AgentNode {
+
   protected final MeshBinding mesh;
 
   public MetaMeshAgent(MeshBinding mesh) {
@@ -30,4 +31,5 @@ public final class MetaMeshAgent extends AgentNode {
     super.setNodeContext(nodeContext);
     this.mesh.openMetaMesh(this.mesh, this);
   }
+
 }

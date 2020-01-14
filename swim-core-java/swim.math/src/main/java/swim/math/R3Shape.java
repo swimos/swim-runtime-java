@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,17 @@ package swim.math;
 import swim.structure.Kind;
 
 public abstract class R3Shape implements Shape {
+
+  private static R3Form<R3Shape> shapeForm;
+
+  @Kind
+  public static R3Form<R3Shape> shapeForm() {
+    if (shapeForm == null) {
+      shapeForm = new R3ShapeForm();
+    }
+    return shapeForm;
+  }
+
   public abstract double xMin();
 
   public abstract double yMin();
@@ -53,13 +64,4 @@ public abstract class R3Shape implements Shape {
 
   public abstract Z3Shape transform(R3ToZ3Function f);
 
-  private static R3Form<R3Shape> shapeForm;
-
-  @Kind
-  public static R3Form<R3Shape> shapeForm() {
-    if (shapeForm == null) {
-      shapeForm = new R3ShapeForm();
-    }
-    return shapeForm;
-  }
 }

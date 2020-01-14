@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package swim.collections;
 
 public abstract class BTreeContext<K, V> {
+
   @SuppressWarnings("unchecked")
   protected int compareKey(Object x, Object y) {
     return ((Comparable<Object>) x).compareTo(y);
@@ -31,4 +32,5 @@ public abstract class BTreeContext<K, V> {
   protected boolean pageShouldMerge(BTreePage<K, V, ?> page) {
     return page.arity() < pageSplitSize() >>> 1;
   }
+
 }

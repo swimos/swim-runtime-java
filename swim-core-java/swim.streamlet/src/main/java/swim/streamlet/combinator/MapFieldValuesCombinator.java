@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.streamlet.combinator;
 import swim.streamlet.function.MapFieldValuesFunction;
 
 public class MapFieldValuesCombinator<K, VI, VO, I> extends MapFieldValuesOperator<K, VI, VO, I> {
+
   protected final MapFieldValuesFunction<? super K, ? super VI, ? extends VO> func;
 
   public MapFieldValuesCombinator(MapFieldValuesFunction<? super K, ? super VI, ? extends VO> func) {
@@ -27,4 +28,5 @@ public class MapFieldValuesCombinator<K, VI, VO, I> extends MapFieldValuesOperat
   public VO evaluate(K key, VI value) {
     return this.func.apply(key, value);
   }
+
 }

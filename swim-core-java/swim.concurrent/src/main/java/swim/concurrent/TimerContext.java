@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ package swim.concurrent;
  * @see Timer
  */
 public interface TimerContext extends TimerRef {
+
   /**
    * Returns the {@code Schedule} to which the timer is bound.
    */
@@ -52,4 +53,5 @@ public interface TimerContext extends TimerRef {
    */
   @Override
   boolean cancel();
+
 }

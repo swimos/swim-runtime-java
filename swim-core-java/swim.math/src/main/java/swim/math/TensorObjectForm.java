@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.math;
 import swim.structure.Item;
 
 final class TensorObjectForm extends TensorForm<Tensor> {
+
   final TensorDims dims;
   final Precision prec;
 
@@ -125,4 +126,5 @@ final class TensorObjectForm extends TensorForm<Tensor> {
   public void castTensor(Item item, TensorDims wd, double[] ws, int wi) {
     Tensor.cast(tag(), item.toValue(), wd, ws, wi);
   }
+
 }

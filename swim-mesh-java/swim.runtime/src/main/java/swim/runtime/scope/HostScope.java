@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import swim.uri.Uri;
 import swim.warp.CommandMessage;
 
 public class HostScope extends Scope implements HostRef {
+
   protected final Uri meshUri;
   protected final Uri hostUri;
 
@@ -153,4 +154,5 @@ public class HostScope extends Scope implements HostRef {
   public void command(String nodeUri, String laneUri, Value body) {
     command(Uri.parse(nodeUri), Uri.parse(laneUri), body, null);
   }
+
 }

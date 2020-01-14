@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import swim.structure.Value;
 import swim.util.Cursor;
 
 public class QTreeMapView<S> implements SpatialMap<Value, S, Value> {
+
   protected final QTree tree;
   protected final Z2Form<S> shapeForm;
 
@@ -175,4 +176,5 @@ public class QTreeMapView<S> implements SpatialMap<Value, S, Value> {
   public Cursor<Value> valueIterator() {
     return new QTreeValueCursor(this.tree.cursor());
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,12 +21,22 @@ import swim.codec.Output;
 import swim.util.Murmur3;
 
 public class JavaPlaneDef implements PlaneDef, Debug {
+
+  private static int hashSeed;
   final String planeName;
   final String className;
 
   public JavaPlaneDef(String planeName, String className) {
     this.planeName = planeName;
     this.className = className;
+  }
+
+  public static JavaPlaneDef from(String planeName, String className) {
+    return new JavaPlaneDef(planeName, className);
+  }
+
+  public static JavaPlaneDef fromClassName(String className) {
+    return new JavaPlaneDef(className, className);
   }
 
   @Override
@@ -82,13 +92,4 @@ public class JavaPlaneDef implements PlaneDef, Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  public static JavaPlaneDef from(String planeName, String className) {
-    return new JavaPlaneDef(planeName, className);
-  }
-
-  public static JavaPlaneDef fromClassName(String className) {
-    return new JavaPlaneDef(className, className);
-  }
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import swim.vm.VmHostProxy;
 import swim.vm.VmProxyArray;
 
 public class JsHostObject<T> extends VmHostProxy<T> implements ProxyObject {
+
   final JsBridge bridge;
   final HostObjectType<? super T> type;
   final T self;
@@ -108,4 +109,5 @@ public class JsHostObject<T> extends VmHostProxy<T> implements ProxyObject {
     memberKeys[i] = "__proto__";
     return new VmProxyArray(memberKeys);
   }
+
 }

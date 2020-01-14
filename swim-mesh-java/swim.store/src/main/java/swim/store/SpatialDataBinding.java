@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import swim.api.data.SpatialData;
 import swim.structure.Value;
 
 public interface SpatialDataBinding<S> extends SpatialData<Value, S, Value>, DataBinding {
+
   @Override
   SpatialDataContext<S> dataContext();
 
@@ -28,4 +29,5 @@ public interface SpatialDataBinding<S> extends SpatialData<Value, S, Value>, Dat
 
   @Override
   SpatialDataBinding<S> isTransient(boolean isTransient);
+
 }

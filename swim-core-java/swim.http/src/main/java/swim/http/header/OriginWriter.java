@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import swim.codec.WriterException;
 import swim.uri.Uri;
 
 final class OriginWriter extends Writer<Object, Object> {
+
   final Iterator<Uri> origins;
   final Uri origin;
   final Writer<?, ?> part;
@@ -37,11 +38,6 @@ final class OriginWriter extends Writer<Object, Object> {
 
   OriginWriter(Iterator<Uri> origins) {
     this(origins, null, null, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.origins, this.origin, this.part, this.step);
   }
 
   static Writer<Object, Object> write(Output<?> output, Iterator<Uri> origins, Uri origin,
@@ -137,4 +133,10 @@ final class OriginWriter extends Writer<Object, Object> {
   public static Writer<Object, Object> write(Output<?> output, Iterator<Uri> origins) {
     return write(output, origins, null, null, 1);
   }
+
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.origins, this.origin, this.part, this.step);
+  }
+
 }

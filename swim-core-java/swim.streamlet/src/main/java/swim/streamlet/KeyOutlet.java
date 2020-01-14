@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package swim.streamlet;
 
 public class KeyOutlet<K, V> extends AbstractOutlet<V> {
+
   protected final MapOutlet<? super K, ? extends V, ?> input;
   protected final K key;
 
@@ -35,4 +36,5 @@ public class KeyOutlet<K, V> extends AbstractOutlet<V> {
   public V get() {
     return this.input.get(this.key);
   }
+
 }

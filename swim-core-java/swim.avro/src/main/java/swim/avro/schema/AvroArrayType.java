@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@ package swim.avro.schema;
 import swim.util.Builder;
 
 public abstract class AvroArrayType<I, T> extends AvroComplexType<T> {
+
   public abstract AvroType<I> itemType();
 
   public abstract Builder<I, T> arrayBuilder();
+
 }

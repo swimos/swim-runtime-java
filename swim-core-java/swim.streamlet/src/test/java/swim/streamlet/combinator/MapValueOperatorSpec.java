@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.streamlet.ValueOutput;
 import static org.testng.Assert.assertEquals;
 
 public class MapValueOperatorSpec {
+
   @Test
   public void evaluateMapValueOperatorAfterSet() {
     final ValueInput<Integer> input = new ValueInput<>(0);
@@ -58,4 +59,5 @@ public class MapValueOperatorSpec {
     output.reconcileOutput(1); // reconcile backward
     assertEquals((int) output.get(), 64);
   }
+
 }

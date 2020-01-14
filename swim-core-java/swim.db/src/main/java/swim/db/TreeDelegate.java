@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package swim.db;
 
 public interface TreeDelegate {
+
   void treeDidLoadPage(Page page);
 
   void treeDidChange(Tree newTree, Tree oldTree);
@@ -22,4 +23,5 @@ public interface TreeDelegate {
   void treeDidCommit(Tree newTree, Tree oldTree);
 
   void treeDidClear(Tree newTree, Tree oldTree);
+
 }

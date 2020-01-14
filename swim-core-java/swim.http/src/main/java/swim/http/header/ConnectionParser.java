@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.collections.FingerTrieSeq;
 import swim.http.HttpParser;
 
 final class ConnectionParser extends Parser<Connection> {
+
   final HttpParser http;
   final Parser<FingerTrieSeq<String>> options;
 
@@ -31,11 +32,6 @@ final class ConnectionParser extends Parser<Connection> {
 
   ConnectionParser(HttpParser http) {
     this(http, null);
-  }
-
-  @Override
-  public Parser<Connection> feed(Input input) {
-    return parse(input, this.http, this.options);
   }
 
   static Parser<Connection> parse(Input input, HttpParser http,
@@ -63,4 +59,10 @@ final class ConnectionParser extends Parser<Connection> {
   static Parser<Connection> parse(Input input, HttpParser http) {
     return parse(input, http, null);
   }
+
+  @Override
+  public Parser<Connection> feed(Input input) {
+    return parse(input, this.http, this.options);
+  }
+
 }

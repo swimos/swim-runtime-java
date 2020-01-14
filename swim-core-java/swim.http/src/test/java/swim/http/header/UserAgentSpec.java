@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.http.Product;
 import static swim.http.HttpAssertions.assertWrites;
 
 public class UserAgentSpec {
+
   public void assertParses(String string, HttpHeader header) {
     HttpAssertions.assertParses(Http.standardParser().headerParser(), string, header);
   }
@@ -31,8 +32,8 @@ public class UserAgentSpec {
     assertParses("User-Agent: swim", UserAgent.from(Product.from("swim")));
     assertParses("User-Agent: swim/1.0", UserAgent.from(Product.from("swim", "1.0")));
     assertParses("User-Agent: swim/1.0 (beta) (debug) recon (xml/json)",
-                 UserAgent.from(Product.from("swim", "1.0").comment("beta").comment("debug"),
-                                Product.from("recon").comment("xml/json")));
+        UserAgent.from(Product.from("swim", "1.0").comment("beta").comment("debug"),
+            Product.from("recon").comment("xml/json")));
   }
 
   @Test
@@ -40,7 +41,8 @@ public class UserAgentSpec {
     assertWrites(UserAgent.from(Product.from("swim")), "User-Agent: swim");
     assertWrites(UserAgent.from(Product.from("swim", "1.0")), "User-Agent: swim/1.0");
     assertWrites(UserAgent.from(Product.from("swim", "1.0").comment("beta").comment("debug"),
-                                Product.from("recon").comment("xml/json")),
-                 "User-Agent: swim/1.0 (beta) (debug) recon (xml/json)");
+        Product.from("recon").comment("xml/json")),
+        "User-Agent: swim/1.0 (beta) (debug) recon (xml/json)");
   }
+
 }

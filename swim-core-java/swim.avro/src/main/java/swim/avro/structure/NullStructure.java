@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,8 +18,10 @@ import swim.avro.schema.AvroNullType;
 import swim.structure.Value;
 
 final class NullStructure extends AvroNullType<Value> {
+
   @Override
   public Value cast() {
     return Value.extant();
   }
+
 }

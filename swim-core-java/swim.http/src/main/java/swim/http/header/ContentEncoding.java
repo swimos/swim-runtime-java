@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,10 +25,24 @@ import swim.http.HttpWriter;
 import swim.util.Murmur3;
 
 public final class ContentEncoding extends HttpHeader {
+
+  private static int hashSeed;
   final FingerTrieSeq<String> codings;
 
   ContentEncoding(FingerTrieSeq<String> codings) {
     this.codings = codings;
+  }
+
+  public static ContentEncoding from(FingerTrieSeq<String> codings) {
+    return new ContentEncoding(codings);
+  }
+
+  public static ContentEncoding from(String... codings) {
+    return new ContentEncoding(FingerTrieSeq.of(codings));
+  }
+
+  public static Parser<ContentEncoding> parseHttpValue(Input input, HttpParser http) {
+    return ContentEncodingParser.parse(input, http);
   }
 
   @Override
@@ -97,17 +111,4 @@ public final class ContentEncoding extends HttpHeader {
     output = output.write(')');
   }
 
-  private static int hashSeed;
-
-  public static ContentEncoding from(FingerTrieSeq<String> codings) {
-    return new ContentEncoding(codings);
-  }
-
-  public static ContentEncoding from(String... codings) {
-    return new ContentEncoding(FingerTrieSeq.of(codings));
-  }
-
-  public static Parser<ContentEncoding> parseHttpValue(Input input, HttpParser http) {
-    return ContentEncodingParser.parse(input, http);
-  }
 }

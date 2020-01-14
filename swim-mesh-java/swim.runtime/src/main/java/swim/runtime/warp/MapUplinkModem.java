@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,10 @@ import swim.runtime.WarpBinding;
 import swim.structure.Value;
 
 public abstract class MapUplinkModem extends WarpUplinkModem {
+
+  @SuppressWarnings("unchecked")
+  static final AtomicReferenceFieldUpdater<MapUplinkModem, HashTrieSet<Value>> KEY_QUEUE =
+      AtomicReferenceFieldUpdater.newUpdater(MapUplinkModem.class, (Class<HashTrieSet<Value>>) (Class<?>) HashTrieSet.class, "keyQueue");
   final ConcurrentLinkedQueue<Value> downQueue;
   volatile Iterator<Value> syncQueue;
   volatile HashTrieSet<Value> keyQueue;
@@ -107,7 +111,4 @@ public abstract class MapUplinkModem extends WarpUplinkModem {
     }
   }
 
-  @SuppressWarnings("unchecked")
-  static final AtomicReferenceFieldUpdater<MapUplinkModem, HashTrieSet<Value>> KEY_QUEUE =
-      AtomicReferenceFieldUpdater.newUpdater(MapUplinkModem.class, (Class<HashTrieSet<Value>>) (Class<?>) HashTrieSet.class, "keyQueue");
 }

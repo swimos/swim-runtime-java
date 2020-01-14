@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package swim.codec;
 
 final class StringWriter extends Writer<Object, Object> {
+
   final Object value;
   final String input;
   final int index;
@@ -31,22 +32,6 @@ final class StringWriter extends Writer<Object, Object> {
 
   StringWriter() {
     this(null, "", 0);
-  }
-
-  @Override
-  public Writer<Object, Object> feed(Object input) {
-    if (input instanceof Integer) {
-      return new Base10IntegerWriter(input, ((Integer) input).longValue());
-    } else if (input instanceof Long) {
-      return new Base10IntegerWriter(input, ((Long) input).longValue());
-    } else {
-      return new StringWriter(input, input);
-    }
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, value, input, index);
   }
 
   static Writer<Object, Object> write(Output<?> output, Object value, String input, int index) {
@@ -75,4 +60,21 @@ final class StringWriter extends Writer<Object, Object> {
       return write(output, value, input != null ? input.toString() : "null", 0);
     }
   }
+
+  @Override
+  public Writer<Object, Object> feed(Object input) {
+    if (input instanceof Integer) {
+      return new Base10IntegerWriter(input, ((Integer) input).longValue());
+    } else if (input instanceof Long) {
+      return new Base10IntegerWriter(input, ((Long) input).longValue());
+    } else {
+      return new StringWriter(input, input);
+    }
+  }
+
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, value, input, index);
+  }
+
 }

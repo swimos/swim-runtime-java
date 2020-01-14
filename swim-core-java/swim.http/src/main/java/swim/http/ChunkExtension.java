@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,12 +21,26 @@ import swim.codec.Writer;
 import swim.util.Murmur3;
 
 public final class ChunkExtension extends HttpPart implements Debug {
+
+  private static int hashSeed;
   final String name;
   final String value;
 
   ChunkExtension(String name, String value) {
     this.name = name;
     this.value = value;
+  }
+
+  public static ChunkExtension from(String name, String value) {
+    return new ChunkExtension(name, value);
+  }
+
+  public static ChunkExtension from(String name) {
+    return new ChunkExtension(name, "");
+  }
+
+  public static ChunkExtension parseHttp(String string) {
+    return Http.standardParser().parseChunkExtensionString(string);
   }
 
   public String name() {
@@ -78,17 +92,4 @@ public final class ChunkExtension extends HttpPart implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  public static ChunkExtension from(String name, String value) {
-    return new ChunkExtension(name, value);
-  }
-
-  public static ChunkExtension from(String name) {
-    return new ChunkExtension(name, "");
-  }
-
-  public static ChunkExtension parseHttp(String string) {
-    return Http.standardParser().parseChunkExtensionString(string);
-  }
 }

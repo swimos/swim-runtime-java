@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.structure.Text;
 import static org.testng.Assert.assertEquals;
 
 public class ShortFormSpec {
+
   @Test
   public void moldShortsToNums() {
     assertEquals(Form.forShort().mold((short) 42), Num.from((short) 42));
@@ -56,4 +57,5 @@ public class ShortFormSpec {
   public void castAttributedNumsToShorts() {
     assertEquals(Form.forShort().cast(Record.of(Attr.of("test"), (short) 42)), Short.valueOf((short) 42));
   }
+
 }

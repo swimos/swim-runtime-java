@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,9 @@ import swim.structure.Operator;
 import swim.util.Murmur3;
 
 public final class NotOperator extends UnaryOperator {
+
+  private static int hashSeed;
+
   public NotOperator(Item operand) {
     super(operand);
   }
@@ -91,5 +94,4 @@ public final class NotOperator extends UnaryOperator {
     output.debug(this.operand).write('.').write("not").write('(').write(')');
   }
 
-  private static int hashSeed;
 }

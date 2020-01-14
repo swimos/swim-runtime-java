@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,9 +18,6 @@ import swim.dynamic.HostPackage;
 import swim.dynamic.JavaHostPackage;
 
 public final class JavaLang {
-  private JavaLang() {
-    // static
-  }
 
   public static final HostPackage PACKAGE;
 
@@ -32,4 +29,9 @@ public final class JavaLang {
     hostPkg.addHostType(HostComparable.TYPE);
     hostPkg.addHostType(HostIterable.TYPE);
   }
+
+  private JavaLang() {
+    // static
+  }
+
 }

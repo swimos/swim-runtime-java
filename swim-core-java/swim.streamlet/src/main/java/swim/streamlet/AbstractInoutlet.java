@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import java.util.Iterator;
 import swim.util.Cursor;
 
 public abstract class AbstractInoutlet<I, O> implements Inoutlet<I, O> {
+
   protected Outlet<? extends I> input;
   protected Inlet<? super O>[] outputs;
   protected int version;
@@ -204,4 +205,5 @@ public abstract class AbstractInoutlet<I, O> implements Inoutlet<I, O> {
   protected void didReconcile(int version) {
     // stub
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,12 +24,8 @@ import swim.dynamic.api.plane.SwimApiPlane;
 import swim.dynamic.api.warp.SwimApiWarp;
 
 public final class SwimApi {
-  private SwimApi() {
-    // static
-  }
 
   public static final HostPackage PACKAGE;
-
   public static final HostLibrary LIBRARY;
 
   static {
@@ -46,4 +42,9 @@ public final class SwimApi {
     hostLib.addHostPackage(SwimApiPlane.PACKAGE);
     hostLib.addHostPackage(SwimApiWarp.PACKAGE);
   }
+
+  private SwimApi() {
+    // static
+  }
+
 }

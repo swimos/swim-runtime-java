@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.dynamic.HostStaticMethod;
 import swim.vm.VmProxyArray;
 
 public class JsHostStaticMethod implements ProxyExecutable, ProxyObject {
+
   final JsBridge bridge;
   final HostStaticMethod staticMethod;
 
@@ -73,4 +74,5 @@ public class JsHostStaticMethod implements ProxyExecutable, ProxyObject {
   public Object getMemberKeys() {
     return new VmProxyArray(new String[] {"__proto__"});
   }
+
 }

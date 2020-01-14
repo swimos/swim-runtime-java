@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 final class OrderedMapView<K, V> implements OrderedMap<K, V> {
+
   final OrderedMap<K, V> map;
   final K fromKey;
   final K toKey;
@@ -414,4 +415,5 @@ final class OrderedMapView<K, V> implements OrderedMap<K, V> {
     sb.append('}');
     return sb.toString();
   }
+
 }

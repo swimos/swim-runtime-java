@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.codec.Writer;
 import swim.codec.WriterException;
 
 final class LanguageRangeWriter extends Writer<Object, Object> {
+
   final HttpWriter http;
   final String tag;
   final String subtag;
@@ -38,11 +39,6 @@ final class LanguageRangeWriter extends Writer<Object, Object> {
 
   LanguageRangeWriter(HttpWriter http, String tag, String subtag, float weight) {
     this(http, tag, subtag, weight, null, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.http, this.tag, this.subtag, this.weight, this.part, this.step);
   }
 
   static Writer<Object, Object> write(Output<?> output, HttpWriter http, String tag,
@@ -111,4 +107,10 @@ final class LanguageRangeWriter extends Writer<Object, Object> {
                                       String subtag, float weight) {
     return write(output, http, tag, subtag, weight, null, 1);
   }
+
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.http, this.tag, this.subtag, this.weight, this.part, this.step);
+  }
+
 }

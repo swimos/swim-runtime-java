@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,14 +20,15 @@ import swim.math.Z2Form;
 import swim.math.Z2ToR2Operator;
 
 public final class GeoProjection {
-  private GeoProjection() {
-    // stub
-  }
 
   private static WGS84 wgs84;
   private static WGS84Inverse wgs84Inverse;
   private static SphericalMercator sphericalMercator;
   private static SphericalMercatorInverse sphericalMercatorInverse;
+
+  private GeoProjection() {
+    // stub
+  }
 
   public static R2ToZ2Operator wgs84() {
     if (wgs84 == null) {
@@ -70,4 +71,5 @@ public final class GeoProjection {
     }
     return sphericalMercator;
   }
+
 }

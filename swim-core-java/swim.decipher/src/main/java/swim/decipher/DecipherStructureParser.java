@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import swim.structure.Value;
 import swim.xml.Xml;
 
 public class DecipherStructureParser extends DecipherParser<Item, Value> {
+
   @Override
   public Parser<Value> parseXml(Input input) {
     return Xml.structureParser().parseDocument(input);
@@ -37,4 +38,5 @@ public class DecipherStructureParser extends DecipherParser<Item, Value> {
   public Parser<Value> parseRecon(Input input) {
     return Recon.structureParser().parseBlock(input);
   }
+
 }

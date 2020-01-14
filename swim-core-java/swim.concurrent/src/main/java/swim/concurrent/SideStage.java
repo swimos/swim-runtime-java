@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package swim.concurrent;
  * and stopped.
  */
 public class SideStage implements Stage {
+
   protected final Stage stage;
 
   public SideStage(Stage stage) {
@@ -49,4 +50,5 @@ public class SideStage implements Stage {
   public TimerRef setTimer(long millis, TimerFunction timer) {
     return this.stage.setTimer(millis, timer);
   }
+
 }

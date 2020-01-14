@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import swim.util.Cursor;
 import swim.util.OrderedMap;
 
 public interface MapLane<K, V> extends WarpLane, ObservableOrderedMap<K, V>, MapInlet<K, V, Map<K, V>>, MapOutlet<K, V, MapLane<K, V>> {
+
   Form<K> keyForm();
 
   <K2> MapLane<K2, V> keyForm(Form<K2> keyForm);
@@ -126,4 +127,5 @@ public interface MapLane<K, V> extends WarpLane, ObservableOrderedMap<K, V>, Map
 
   @Override
   Cursor<K> keyIterator();
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.structure.Text;
 import static org.testng.Assert.assertEquals;
 
 public class IntegerFormSpec {
+
   @Test
   public void moldIntegersToNums() {
     assertEquals(Form.forInteger().mold(42), Num.from(42));
@@ -56,4 +57,5 @@ public class IntegerFormSpec {
   public void castAttributedNumsToIntegers() {
     assertEquals(Form.forInteger().cast(Record.of(Attr.of("test"), 42)), Integer.valueOf(42));
   }
+
 }

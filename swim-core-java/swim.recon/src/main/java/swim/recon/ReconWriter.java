@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import swim.codec.Writer;
  * Factory for constructing Recon writers.
  */
 public abstract class ReconWriter<I, V> {
+
   public abstract boolean isField(I item);
 
   public abstract boolean isAttr(I item);
@@ -532,4 +533,5 @@ public abstract class ReconWriter<I, V> {
   public Writer<?, ?> writeAbsent(Output<?> output) {
     return Writer.done();
   }
+
 }

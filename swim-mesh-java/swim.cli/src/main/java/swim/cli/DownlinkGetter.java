@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.cli;
 import swim.api.warp.WarpDownlink;
 
 public class DownlinkGetter extends DownlinkLogger {
+
   public DownlinkGetter(WarpDownlink downlink, String format) {
     super(downlink, format);
   }
@@ -25,4 +26,5 @@ public class DownlinkGetter extends DownlinkLogger {
   public void didSync() {
     System.exit(0);
   }
+
 }

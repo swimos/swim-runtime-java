@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package swim.dynamic;
  * A dynamic array type descriptor for a host type.
  */
 public interface HostArrayType<T> extends HostType<T> {
+
   long elementCount(Bridge bridge, T self);
 
   Object getElement(Bridge bridge, T self, long index);
@@ -25,4 +26,5 @@ public interface HostArrayType<T> extends HostType<T> {
   void setElement(Bridge bridge, T self, long index, Object value);
 
   boolean removeElement(Bridge bridge, T self, long index);
+
 }

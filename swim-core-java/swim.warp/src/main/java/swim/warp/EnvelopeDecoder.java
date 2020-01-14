@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.recon.Recon;
 import swim.structure.Value;
 
 final class EnvelopeDecoder extends Decoder<Envelope> {
+
   final Decoder<Value> output;
 
   EnvelopeDecoder(Decoder<Value> output) {
@@ -30,11 +31,6 @@ final class EnvelopeDecoder extends Decoder<Envelope> {
 
   EnvelopeDecoder() {
     this(null);
-  }
-
-  @Override
-  public Decoder<Envelope> feed(InputBuffer input) {
-    return decode(input, this.output);
   }
 
   static Decoder<Envelope> decode(InputBuffer input, Decoder<Value> output) {
@@ -62,4 +58,10 @@ final class EnvelopeDecoder extends Decoder<Envelope> {
     }
     return new EnvelopeDecoder(output);
   }
+
+  @Override
+  public Decoder<Envelope> feed(InputBuffer input) {
+    return decode(input, this.output);
+  }
+
 }

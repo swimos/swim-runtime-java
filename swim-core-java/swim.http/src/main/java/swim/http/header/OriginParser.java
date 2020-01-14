@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import swim.uri.UriScheme;
 import swim.util.Builder;
 
 final class OriginParser extends Parser<Origin> {
+
   final Parser<UriScheme> scheme;
   final Parser<UriHost> host;
   final Parser<UriPort> port;
@@ -33,7 +34,7 @@ final class OriginParser extends Parser<Origin> {
   final int step;
 
   OriginParser(Parser<UriScheme> scheme, Parser<UriHost> host, Parser<UriPort> port,
-                    Builder<Uri, FingerTrieSeq<Uri>> origins, int step) {
+               Builder<Uri, FingerTrieSeq<Uri>> origins, int step) {
     this.scheme = scheme;
     this.host = host;
     this.port = port;
@@ -43,11 +44,6 @@ final class OriginParser extends Parser<Origin> {
 
   OriginParser() {
     this(null, null, null, null, 1);
-  }
-
-  @Override
-  public Parser<Origin> feed(Input input) {
-    return parse(input, this.scheme, this.host, this.port, this.origins, this.step);
   }
 
   static Parser<Origin> parse(Input input, Parser<UriScheme> scheme, Parser<UriHost> host,
@@ -152,4 +148,10 @@ final class OriginParser extends Parser<Origin> {
   static Parser<Origin> parse(Input input) {
     return parse(input, null, null, null, null, 1);
   }
+
+  @Override
+  public Parser<Origin> feed(Input input) {
+    return parse(input, this.scheme, this.host, this.port, this.origins, this.step);
+  }
+
 }

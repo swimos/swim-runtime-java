@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.structure.Value;
 import static org.testng.Assert.assertEquals;
 
 public class LambdaFuncSpec {
+
   @Test
   public void evaluateIdentityLambda() {
     final Record scope = Record.of(Slot.of("f", Text.from("x").lambda(
@@ -65,4 +66,5 @@ public class LambdaFuncSpec {
     assertEquals(Selector.identity().get("f").invoke(Value.extant()).evaluate(scope),
         Num.from(2));
   }
+
 }

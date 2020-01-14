@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,17 @@ import swim.codec.OutputBuffer;
 import swim.collections.FingerTrieSeq;
 
 public abstract class HttpEntity<T> {
+
+  private static HttpEntity<Object> empty;
+
+  @SuppressWarnings("unchecked")
+  public static <T> HttpEntity<T> empty() {
+    if (empty == null) {
+      empty = new HttpEmpty();
+    }
+    return (HttpEntity<T>) empty;
+  }
+
   public abstract boolean isDefined();
 
   public abstract T get();
@@ -44,13 +55,4 @@ public abstract class HttpEntity<T> {
     return encodeHttp(message, output, Http.standardWriter());
   }
 
-  private static HttpEntity<Object> empty;
-
-  @SuppressWarnings("unchecked")
-  public static <T> HttpEntity<T> empty() {
-    if (empty == null) {
-      empty = new HttpEmpty();
-    }
-    return (HttpEntity<T>) empty;
-  }
 }

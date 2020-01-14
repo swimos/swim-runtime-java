@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,15 +20,17 @@ import swim.structure.Record;
 import static org.testng.Assert.assertEquals;
 
 public class PointR2Spec {
+
   @Test
   public void testMold() {
     assertEquals(PointR2.form().mold(new PointR2(2.0, 0.5)),
-                 Record.of(Attr.of("point", Record.of(2.0, 0.5))));
+        Record.of(Attr.of("point", Record.of(2.0, 0.5))));
   }
 
   @Test
   public void testCast() {
     assertEquals(PointR2.form().cast(Record.of(Attr.of("point", Record.of(2.0, 0.5)))),
-                 new PointR2(2.0, 0.5));
+        new PointR2(2.0, 0.5));
   }
+
 }

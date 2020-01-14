@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package swim.concurrent;
  * rather than on the clock thread.
  */
 public class StageClock extends Clock {
+
   /**
    * {@code Stage} on which to execute timer functions.
    */
@@ -68,4 +69,5 @@ public class StageClock extends Clock {
   protected void runTimer(TimerFunction timer, Runnable runnable) {
     this.stage.execute(runnable);
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import swim.structure.Value;
 import swim.uri.Uri;
 
 public class TestHostContext extends TestCellContext implements HostContext {
+
   protected final Uri hostUri;
 
   public TestHostContext(Uri hostUri, Policy policy, Schedule schedule, Stage stage, StoreBinding store) {
@@ -231,4 +232,5 @@ public class TestHostContext extends TestCellContext implements HostContext {
   @Override
   public void willClose() {
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,8 +19,16 @@ import swim.codec.Output;
 import swim.util.Murmur3;
 
 public final class Absent extends Value {
+
+  private static final Absent VALUE = new Absent();
+  private static int hashSeed;
+
   private Absent() {
     // stub
+  }
+
+  public static Absent absent() {
+    return VALUE;
   }
 
   /**
@@ -187,11 +195,4 @@ public final class Absent extends Value {
     output = output.write("Value").write('.').write("absent").write('(').write(')');
   }
 
-  private static int hashSeed;
-
-  private static final Absent VALUE = new Absent();
-
-  public static Absent absent() {
-    return VALUE;
-  }
 }

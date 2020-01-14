@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 import static swim.http.HttpAssertions.assertWrites;
 
 public class LanguageRangeSpec {
+
   public void assertParses(String string, LanguageRange language) {
     HttpAssertions.assertParses(Http.standardParser().languageRangeParser(), string, language);
   }
@@ -46,4 +47,5 @@ public class LanguageRangeSpec {
   public void writeLanguageRangesWithWeights() {
     assertWrites(LanguageRange.from("en", "US", 0.5f), "en-US; q=0.5");
   }
+
 }

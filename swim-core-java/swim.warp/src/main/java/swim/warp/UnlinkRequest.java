@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,10 @@ import swim.structure.Value;
 import swim.uri.Uri;
 
 public final class UnlinkRequest extends LaneAddressed {
+
+  @Kind
+  public static final Form<UnlinkRequest> FORM = new UnlinkRequestForm();
+
   public UnlinkRequest(Uri nodeUri, Uri laneUri, Value body) {
     super(nodeUri, laneUri, body);
   }
@@ -61,11 +65,10 @@ public final class UnlinkRequest extends LaneAddressed {
     return new UnlinkRequest(this.nodeUri, this.laneUri, body);
   }
 
-  @Kind
-  public static final Form<UnlinkRequest> FORM = new UnlinkRequestForm();
 }
 
 final class UnlinkRequestForm extends LaneAddressedForm<UnlinkRequest> {
+
   @Override
   public String tag() {
     return "unlink";
@@ -80,4 +83,5 @@ final class UnlinkRequestForm extends LaneAddressedForm<UnlinkRequest> {
   public UnlinkRequest from(Uri nodeUri, Uri laneUri, Value body) {
     return new UnlinkRequest(nodeUri, laneUri, body);
   }
+
 }

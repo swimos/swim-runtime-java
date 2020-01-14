@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@ import swim.concurrent.Conts;
 import swim.concurrent.Stage;
 
 public abstract class LaneRelay<Model extends LaneModel<View, ?>, View extends LaneView> implements Runnable {
+
   protected final Model model;
   protected final Object views; // View | View[]
-  protected int viewIndex;
   protected final int viewCount;
-  protected int phase;
   protected final int phaseCount;
+  protected int viewIndex;
+  protected int phase;
   protected boolean preemptive;
   protected Stage stage;
 
@@ -199,4 +200,5 @@ public abstract class LaneRelay<Model extends LaneModel<View, ?>, View extends L
       this.model.accumulateExecTime(dt);
     }
   }
+
 }

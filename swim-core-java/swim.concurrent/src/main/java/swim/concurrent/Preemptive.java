@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package swim.concurrent;
  * Function interface that callers can optionally invoke concurrently.
  */
 public interface Preemptive {
+
   /**
    * Returns {@code true} if callers can safely invoke this function object
    * concurrently.  Returns {@code false} if this function object is not
@@ -26,4 +27,5 @@ public interface Preemptive {
   default boolean isPreemptive() {
     return false;
   }
+
 }

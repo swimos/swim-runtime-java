@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,12 +20,8 @@ import swim.dynamic.JavaHostLibrary;
 import swim.dynamic.JavaHostPackage;
 
 public final class SwimObservable {
-  private SwimObservable() {
-    // static
-  }
 
   public static final HostPackage PACKAGE;
-
   public static final HostLibrary LIBRARY;
 
   static {
@@ -41,4 +37,9 @@ public final class SwimObservable {
     LIBRARY = hostLib;
     hostLib.addHostPackage(SwimObservable.PACKAGE);
   }
+
+  private SwimObservable() {
+    // static
+  }
+
 }

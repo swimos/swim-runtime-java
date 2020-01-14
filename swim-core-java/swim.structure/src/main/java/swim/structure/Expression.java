@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ import swim.structure.operator.TimesOperator;
  * objects.
  */
 public abstract class Expression extends Value {
+
   @Override
   public Item conditional(Item thenTerm, Item elseTerm) {
     return new ConditionalOperator(this, thenTerm, elseTerm);
@@ -247,4 +248,5 @@ public abstract class Expression extends Value {
   public Operator inverse() {
     return new DivideOperator(Num.from(1.0), this);
   }
+
 }

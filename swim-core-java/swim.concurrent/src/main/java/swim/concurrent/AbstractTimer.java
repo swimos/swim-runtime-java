@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package swim.concurrent;
  * Skeletal implementation of a stateful {@link Timer}.
  */
 public abstract class AbstractTimer implements Timer {
+
   /**
    * Context used to manage this {@code Timer}; {@code null} if this {@code
    * Timer} is not bound to a {@link Schedule}.
@@ -78,7 +79,7 @@ public abstract class AbstractTimer implements Timer {
    * time.  Delegates to the assigned {@link #timerContext}.
    *
    * @throws TimerException if {@link #timerContext} is {@code null}, or if
-   *         {@code millis} is negative.
+   *                        {@code millis} is negative.
    */
   public void reschedule(long millis) {
     final TimerContext timerContext = this.timerContext;
@@ -100,4 +101,5 @@ public abstract class AbstractTimer implements Timer {
     }
     return timerContext.cancel();
   }
+
 }

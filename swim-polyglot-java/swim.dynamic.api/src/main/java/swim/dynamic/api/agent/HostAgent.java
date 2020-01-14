@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@ import swim.dynamic.JavaHostObjectType;
 import swim.dynamic.java.lang.HostObject;
 
 public final class HostAgent {
-  private HostAgent() {
-    // static
-  }
 
   public static final HostObjectType<Agent> TYPE;
 
@@ -34,9 +31,15 @@ public final class HostAgent {
     type.inheritType(HostObject.TYPE);
     type.addMember(new HostAgentAgentContext());
   }
+
+  private HostAgent() {
+    // static
+  }
+
 }
 
 final class HostAgentAgentContext implements HostMethod<Agent> {
+
   @Override
   public String key() {
     return "agentContext";
@@ -46,4 +49,5 @@ final class HostAgentAgentContext implements HostMethod<Agent> {
   public Object invoke(Bridge bridge, Agent agent, Object... arguments) {
     return agent.agentContext();
   }
+
 }

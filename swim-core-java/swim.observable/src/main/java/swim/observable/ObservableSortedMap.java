@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.observable.function.WillDrop;
 import swim.observable.function.WillTake;
 
 public interface ObservableSortedMap<K, V> extends ObservableMap<K, V>, SortedMap<K, V> {
+
   void drop(int lower);
 
   void take(int upper);
@@ -38,4 +39,5 @@ public interface ObservableSortedMap<K, V> extends ObservableMap<K, V>, SortedMa
   ObservableSortedMap<K, V> willTake(WillTake willTake);
 
   ObservableSortedMap<K, V> didTake(DidTake didTake);
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,25 @@ import swim.structure.Form;
 import swim.structure.Value;
 
 public class DownlinkStreamlet extends AbstractRecordStreamlet<Value, Value> {
+
+  @Inout
+  public final Inoutlet<Value, Value> hostUri = inoutlet();
+  @Inout
+  public final Inoutlet<Value, Value> nodeUri = inoutlet();
+  @Inout
+  public final Inoutlet<Value, Value> laneUri = inoutlet();
+  @Inout
+  public final Inoutlet<Value, Value> prio = inoutlet();
+  @Inout
+  public final Inoutlet<Value, Value> rate = inoutlet();
+  @Inout
+  public final Inoutlet<Value, Value> body = inoutlet();
+  @Inout
+  public final Inoutlet<Value, Value> type = inoutlet();
   protected final SwimRef swim;
+  @SuppressWarnings("checkstyle:VisibilityModifier")
+  @Out
+  public Outlet<Value> state;
   protected Downlink downlink;
   protected DownlinkRecord downlinkRecord;
   protected String inputHostUri;
@@ -47,30 +65,9 @@ public class DownlinkStreamlet extends AbstractRecordStreamlet<Value, Value> {
     this(swim, null);
   }
 
-  @Inout
-  public final Inoutlet<Value, Value> hostUri = inoutlet();
-
-  @Inout
-  public final Inoutlet<Value, Value> nodeUri = inoutlet();
-
-  @Inout
-  public final Inoutlet<Value, Value> laneUri = inoutlet();
-
-  @Inout
-  public final Inoutlet<Value, Value> prio = inoutlet();
-
-  @Inout
-  public final Inoutlet<Value, Value> rate = inoutlet();
-
-  @Inout
-  public final Inoutlet<Value, Value> body = inoutlet();
-
-  @Inout
-  public final Inoutlet<Value, Value> type = inoutlet();
-
-  @SuppressWarnings("checkstyle:VisibilityModifier")
-  @Out
-  public Outlet<Value> state;
+  public static Transmuter transmuter(SwimRef swim) {
+    return new DownlinkTransmuter(swim);
+  }
 
   @SuppressWarnings("unchecked")
   @Override
@@ -165,7 +162,4 @@ public class DownlinkStreamlet extends AbstractRecordStreamlet<Value, Value> {
     }
   }
 
-  public static Transmuter transmuter(SwimRef swim) {
-    return new DownlinkTransmuter(swim);
-  }
 }

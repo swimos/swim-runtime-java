@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.codec.Input;
 import swim.codec.Parser;
 
 final class SecWebSocketAcceptParser extends Parser<SecWebSocketAccept> {
+
   final Parser<byte[]> digest;
 
   SecWebSocketAcceptParser(Parser<byte[]> digest) {
@@ -28,11 +29,6 @@ final class SecWebSocketAcceptParser extends Parser<SecWebSocketAccept> {
 
   SecWebSocketAcceptParser() {
     this(null);
-  }
-
-  @Override
-  public Parser<SecWebSocketAccept> feed(Input input) {
-    return parse(input, this.digest);
   }
 
   static Parser<SecWebSocketAccept> parse(Input input, Parser<byte[]> digest) {
@@ -59,4 +55,10 @@ final class SecWebSocketAcceptParser extends Parser<SecWebSocketAccept> {
   static Parser<SecWebSocketAccept> parse(Input input) {
     return parse(input, null);
   }
+
+  @Override
+  public Parser<SecWebSocketAccept> feed(Input input) {
+    return parse(input, this.digest);
+  }
+
 }

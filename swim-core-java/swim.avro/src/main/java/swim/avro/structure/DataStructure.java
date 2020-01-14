@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,9 +22,11 @@ import swim.structure.Data;
 import swim.structure.Value;
 
 final class DataStructure extends AvroDataType<Value> {
+
   @SuppressWarnings("unchecked")
   @Override
   public Decoder<Value> decodeData(InputBuffer input) {
     return (Decoder<Value>) (Decoder<?>) Binary.parseOutput(Data.output(), input);
   }
+
 }

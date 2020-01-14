@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.codec.Parser;
 import swim.codec.Utf8;
 
 final class UriPathParser extends Parser<UriPath> {
+
   final UriParser uri;
   final UriPathBuilder builder;
   final Output<String> output;
@@ -44,11 +45,6 @@ final class UriPathParser extends Parser<UriPath> {
     this(uri, null, null, 0, 1);
   }
 
-  @Override
-  public Parser<UriPath> feed(Input input) {
-    return parse(input, this.uri, this.builder, this.output, this.c1, this.step);
-  }
-
   static Parser<UriPath> parse(Input input, UriParser uri, UriPathBuilder builder,
                                Output<String> output, int c1, int step) {
     int c = 0;
@@ -66,7 +62,7 @@ final class UriPathParser extends Parser<UriPath> {
             break;
           }
         }
-        if (input.isCont() && c == '/') {
+        if (input.isCont() && (c == '/' || c == '\\')) {
           input = input.step();
           if (builder == null) {
             builder = uri.pathBuilder();
@@ -142,4 +138,10 @@ final class UriPathParser extends Parser<UriPath> {
   static Parser<UriPath> parse(Input input, UriParser uri) {
     return parse(input, uri, null, null, 0, 1);
   }
+
+  @Override
+  public Parser<UriPath> feed(Input input) {
+    return parse(input, this.uri, this.builder, this.output, this.c1, this.step);
+  }
+
 }

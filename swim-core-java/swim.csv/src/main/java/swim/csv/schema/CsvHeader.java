@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.csv.schema;
 import swim.util.Builder;
 
 public abstract class CsvHeader<T, R, C> {
+
   public abstract int colCount();
 
   public abstract CsvCol<? extends C> getCol(int index);
@@ -34,4 +35,5 @@ public abstract class CsvHeader<T, R, C> {
   public abstract Builder<C, R> rowBuilder();
 
   public abstract Builder<R, T> tableBuilder();
+
 }

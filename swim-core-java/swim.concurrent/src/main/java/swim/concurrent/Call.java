@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ package swim.concurrent;
  * @see Stage
  */
 public interface Call<T> extends Cont<T> {
+
   /**
    * Returns the {@code Cont}inuation that this {@code Call} completes.
    */
@@ -67,4 +68,5 @@ public interface Call<T> extends Cont<T> {
    * this {@code Call}'s {@code Cont}inuation will eventually be invoked.
    */
   boolean tryTrap(Throwable error);
+
 }

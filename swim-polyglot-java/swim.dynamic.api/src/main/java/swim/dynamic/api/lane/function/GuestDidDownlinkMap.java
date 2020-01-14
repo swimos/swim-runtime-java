@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.dynamic.Bridge;
 import swim.dynamic.BridgeGuest;
 
 public class GuestDidDownlinkMap<L> extends BridgeGuest implements DidDownlinkMap<L> {
+
   public GuestDidDownlinkMap(Bridge bridge, Object guest) {
     super(bridge, guest);
   }
@@ -28,4 +29,5 @@ public class GuestDidDownlinkMap<L> extends BridgeGuest implements DidDownlinkMa
   public void didDownlink(L key, MapDownlink<?, ?> downlink) {
     this.bridge.guestExecuteVoid(this.guest, key, downlink);
   }
+
 }

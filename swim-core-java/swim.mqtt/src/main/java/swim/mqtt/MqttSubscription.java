@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,12 +22,27 @@ import swim.codec.OutputBuffer;
 import swim.util.Murmur3;
 
 public final class MqttSubscription extends MqttPart implements Debug {
+
+  static final int QOS_MASK = 0x03;
+  private static int hashSeed;
   final String topicName;
   final int flags;
 
   MqttSubscription(String topicName, int flags) {
     this.topicName = topicName;
     this.flags = flags;
+  }
+
+  public static MqttSubscription from(String topicName, int flags) {
+    return new MqttSubscription(topicName, flags);
+  }
+
+  public static MqttSubscription from(String topicName, MqttQoS qos) {
+    return new MqttSubscription(topicName, qos.code);
+  }
+
+  public static MqttSubscription from(String topicName) {
+    return new MqttSubscription(topicName, 0);
   }
 
   public String topicName() {
@@ -98,19 +113,4 @@ public final class MqttSubscription extends MqttPart implements Debug {
     return Format.debug(this);
   }
 
-  static final int QOS_MASK = 0x03;
-
-  private static int hashSeed;
-
-  public static MqttSubscription from(String topicName, int flags) {
-    return new MqttSubscription(topicName, flags);
-  }
-
-  public static MqttSubscription from(String topicName, MqttQoS qos) {
-    return new MqttSubscription(topicName, qos.code);
-  }
-
-  public static MqttSubscription from(String topicName) {
-    return new MqttSubscription(topicName, 0);
-  }
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import swim.structure.Text;
 import static org.testng.Assert.assertEquals;
 
 public class BooleanFormSpec {
+
   @Test
   public void moldBooleans() {
     assertEquals(Form.forBoolean().mold(Boolean.TRUE), Bool.from(true));
@@ -46,4 +47,5 @@ public class BooleanFormSpec {
     assertEquals(Form.forBoolean().cast(Record.of(Attr.of("test"), Bool.from(true))), Boolean.TRUE);
     assertEquals(Form.forBoolean().cast(Record.of(Attr.of("test"), Bool.from(false))), Boolean.FALSE);
   }
+
 }

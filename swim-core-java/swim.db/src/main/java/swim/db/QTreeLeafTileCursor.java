@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.db;
 import swim.structure.Slot;
 
 final class QTreeLeafTileCursor extends QTreeLeafCursor {
+
   QTreeLeafTileCursor(QTreeLeaf page, long x, long y, int index) {
     super(page, x, y, index);
   }
@@ -29,4 +30,5 @@ final class QTreeLeafTileCursor extends QTreeLeafCursor {
   protected Slot getSlot(Slot slot) {
     return slot;
   }
+
 }

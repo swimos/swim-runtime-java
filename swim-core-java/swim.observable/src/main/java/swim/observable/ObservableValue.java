@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import swim.observable.function.DidSet;
 import swim.observable.function.WillSet;
 
 public interface ObservableValue<V> extends Observable<Object> {
+
   V get();
 
   V set(V newValue);
@@ -31,4 +32,5 @@ public interface ObservableValue<V> extends Observable<Object> {
   ObservableValue<V> willSet(WillSet<V> willSet);
 
   ObservableValue<V> didSet(DidSet<V> didSet);
+
 }

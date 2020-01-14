@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import swim.structure.Text;
 import swim.structure.Value;
 
 final class FieldStructure extends AvroFieldType<Record, Value> {
+
   final Text name;
   final String doc;
   final AvroType<? extends Value> valueType;
@@ -57,7 +58,7 @@ final class FieldStructure extends AvroFieldType<Record, Value> {
   @Override
   public AvroFieldType<Record, Value> doc(String doc) {
     return new FieldStructure(this.name, doc, this.valueType, this.defaultValue,
-                              this.order, this.aliases);
+        this.order, this.aliases);
   }
 
   @Override
@@ -88,11 +89,12 @@ final class FieldStructure extends AvroFieldType<Record, Value> {
   @Override
   public AvroFieldType<Record, Value> alias(String alias) {
     return new FieldStructure(this.name, this.doc, this.valueType, this.defaultValue,
-                              this.order, this.aliases.appended(alias));
+        this.order, this.aliases.appended(alias));
   }
 
   @Override
   public Record updated(Record record, Value value) {
     return record.slot(this.name, value);
   }
+
 }

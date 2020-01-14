@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import swim.ws.WsPing;
 import swim.ws.WsPong;
 
 public abstract class AbstractWarpSocket implements WarpSocket, IpContext, FlowContext {
+
   protected WarpSocketContext context;
 
   @Override
@@ -238,4 +239,5 @@ public abstract class AbstractWarpSocket implements WarpSocket, IpContext, FlowC
   public void close() {
     this.context.close();
   }
+
 }

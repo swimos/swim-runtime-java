@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -72,6 +72,10 @@ import swim.web.WebRequest;
 import swim.web.WebResponse;
 
 public abstract class KernelProxy implements KernelBinding, KernelContext {
+
+  protected static final int STARTED = 0x01;
+  protected static final AtomicIntegerFieldUpdater<KernelProxy> STATUS =
+      AtomicIntegerFieldUpdater.newUpdater(KernelProxy.class, "status");
   protected KernelBinding kernelBinding;
   protected KernelContext kernelContext;
   protected volatile int status;
@@ -800,8 +804,4 @@ public abstract class KernelProxy implements KernelBinding, KernelContext {
     // hook
   }
 
-  protected static final int STARTED = 0x01;
-
-  protected static final AtomicIntegerFieldUpdater<KernelProxy> STATUS =
-      AtomicIntegerFieldUpdater.newUpdater(KernelProxy.class, "status");
 }

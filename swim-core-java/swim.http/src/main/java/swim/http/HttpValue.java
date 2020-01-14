@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,12 +23,22 @@ import swim.collections.FingerTrieSeq;
 import swim.util.Murmur3;
 
 public final class HttpValue<T> extends HttpEntity<T> implements Debug {
+
+  private static int hashSeed;
   final T value;
   final MediaType mediaType;
 
   HttpValue(T value, MediaType mediaType) {
     this.value = value;
     this.mediaType = mediaType;
+  }
+
+  public static <T> HttpValue<T> from(T value, MediaType mediaType) {
+    return new HttpValue<T>(value, mediaType);
+  }
+
+  public static <T> HttpValue<T> from(T value) {
+    return new HttpValue<T>(value, null);
   }
 
   @Override
@@ -107,13 +117,4 @@ public final class HttpValue<T> extends HttpEntity<T> implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  public static <T> HttpValue<T> from(T value, MediaType mediaType) {
-    return new HttpValue<T>(value, mediaType);
-  }
-
-  public static <T> HttpValue<T> from(T value) {
-    return new HttpValue<T>(value, null);
-  }
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import swim.runtime.Metric;
 import swim.runtime.UplinkAddress;
 
 public final class WarpUplinkProfile extends Metric {
+
   final UplinkAddress cellAddress;
   final int eventDelta;
   final int eventRate;
@@ -28,7 +29,7 @@ public final class WarpUplinkProfile extends Metric {
 
   public WarpUplinkProfile(UplinkAddress cellAddress,
                            int eventDelta, int eventRate, long eventCount,
-                           int commandDelta,  int commandRate, long commandCount) {
+                           int commandDelta, int commandRate, long commandCount) {
     this.cellAddress = cellAddress;
     this.eventDelta = eventDelta;
     this.eventRate = eventRate;
@@ -66,4 +67,5 @@ public final class WarpUplinkProfile extends Metric {
   public long commandCount() {
     return this.commandCount;
   }
+
 }

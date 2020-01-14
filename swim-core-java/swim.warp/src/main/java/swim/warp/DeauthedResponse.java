@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,10 @@ import swim.structure.Kind;
 import swim.structure.Value;
 
 public final class DeauthedResponse extends HostAddressed {
+
+  @Kind
+  public static final Form<DeauthedResponse> FORM = new DeauthedResponseForm();
+
   public DeauthedResponse(Value body) {
     super(body);
   }
@@ -42,11 +46,10 @@ public final class DeauthedResponse extends HostAddressed {
     return new DeauthedResponse(body);
   }
 
-  @Kind
-  public static final Form<DeauthedResponse> FORM = new DeauthedResponseForm();
 }
 
 final class DeauthedResponseForm extends HostAddressedForm<DeauthedResponse> {
+
   @Override
   public String tag() {
     return "deauthed";
@@ -61,4 +64,5 @@ final class DeauthedResponseForm extends HostAddressedForm<DeauthedResponse> {
   public DeauthedResponse from(Value body) {
     return new DeauthedResponse(body);
   }
+
 }

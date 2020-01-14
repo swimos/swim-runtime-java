@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.structure.Value;
 import swim.uri.Uri;
 
 abstract class LinkAddressedForm<E extends LinkAddressed> extends Form<E> {
+
   abstract E from(Uri nodeUri, Uri laneUri, float prio, float rate, Value body);
 
   @Override
@@ -84,4 +85,5 @@ abstract class LinkAddressedForm<E extends LinkAddressed> extends Form<E> {
     }
     return null;
   }
+
 }

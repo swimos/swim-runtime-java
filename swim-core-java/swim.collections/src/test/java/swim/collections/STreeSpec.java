@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public class STreeSpec {
+
   @Test
   public void testAddAndGet() {
     final STree<Integer> tree = new STree<Integer>();
@@ -120,4 +121,5 @@ public class STreeSpec {
       System.out.println("take prefixes of " + n + " items");
     }
   }
+
 }

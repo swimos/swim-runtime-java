@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,6 +30,10 @@ import swim.structure.Value;
 import swim.warp.CommandMessage;
 
 public class ValueLaneModel extends WarpLaneModel<ValueLaneView<?>, ValueLaneUplink> {
+
+  static final int RESIDENT = 1 << 0;
+  static final int TRANSIENT = 1 << 1;
+  static final int SIGNED = 1 << 2;
   protected int flags;
   protected ValueData<Value> data;
 
@@ -153,12 +157,10 @@ public class ValueLaneModel extends WarpLaneModel<ValueLaneView<?>, ValueLaneUpl
     super.willLoad();
   }
 
-  static final int RESIDENT = 1 << 0;
-  static final int TRANSIENT = 1 << 1;
-  static final int SIGNED = 1 << 2;
 }
 
 final class ValueLaneRelaySet extends LaneRelay<ValueLaneModel, ValueLaneView<?>> {
+
   final Link link;
   final CommandMessage message;
   final Cont<CommandMessage> cont;
@@ -273,4 +275,5 @@ final class ValueLaneRelaySet extends LaneRelay<ValueLaneModel, ValueLaneView<?>
       }
     }
   }
+
 }

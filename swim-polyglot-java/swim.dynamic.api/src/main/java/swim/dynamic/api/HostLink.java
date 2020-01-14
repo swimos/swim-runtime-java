@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@ import swim.dynamic.JavaHostObjectType;
 import swim.dynamic.java.lang.HostObject;
 
 public final class HostLink {
-  private HostLink() {
-    // static
-  }
 
   public static final HostObjectType<Link> TYPE;
 
@@ -36,9 +33,15 @@ public final class HostLink {
     type.addMember(new HostLinkNodeUri());
     type.addMember(new HostLinkLaneUri());
   }
+
+  private HostLink() {
+    // static
+  }
+
 }
 
 final class HostLinkHostUri implements HostMethod<Link> {
+
   @Override
   public String key() {
     return "hostUri";
@@ -48,9 +51,11 @@ final class HostLinkHostUri implements HostMethod<Link> {
   public Object invoke(Bridge bridge, Link link, Object... arguments) {
     return link.hostUri();
   }
+
 }
 
 final class HostLinkNodeUri implements HostMethod<Link> {
+
   @Override
   public String key() {
     return "nodeUri";
@@ -60,9 +65,11 @@ final class HostLinkNodeUri implements HostMethod<Link> {
   public Object invoke(Bridge bridge, Link link, Object... arguments) {
     return link.nodeUri();
   }
+
 }
 
 final class HostLinkLaneUri implements HostMethod<Link> {
+
   @Override
   public String key() {
     return "laneUri";
@@ -72,4 +79,5 @@ final class HostLinkLaneUri implements HostMethod<Link> {
   public Object invoke(Bridge bridge, Link link, Object... arguments) {
     return link.laneUri();
   }
+
 }

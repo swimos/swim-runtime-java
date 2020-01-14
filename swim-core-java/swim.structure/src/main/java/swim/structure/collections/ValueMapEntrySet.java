@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.structure.Form;
 import swim.structure.Value;
 
 public class ValueMapEntrySet<K, V> extends AbstractSet<Map.Entry<K, V>> {
+
   protected Map<Value, Value> inner;
   protected Form<K> keyForm;
   protected Form<V> valueForm;
@@ -41,4 +42,5 @@ public class ValueMapEntrySet<K, V> extends AbstractSet<Map.Entry<K, V>> {
   public Iterator<Map.Entry<K, V>> iterator() {
     return new ValueEntryIterator<K, V>(this.inner.entrySet().iterator(), this.keyForm, this.valueForm);
   }
+
 }

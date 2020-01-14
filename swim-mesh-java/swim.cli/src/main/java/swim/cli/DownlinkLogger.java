@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.recon.Recon;
 import swim.structure.Value;
 
 public class DownlinkLogger implements OnEvent<Value>, DidSync, DidUnlink, DidClose {
+
   final WarpDownlink downlink;
   final String format;
 
@@ -67,4 +68,5 @@ public class DownlinkLogger implements OnEvent<Value>, DidSync, DidUnlink, DidCl
   public void didClose() {
     System.exit(0);
   }
+
 }

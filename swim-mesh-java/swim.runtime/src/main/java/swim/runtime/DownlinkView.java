@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,9 +32,11 @@ import swim.concurrent.Conts;
 import swim.concurrent.Stage;
 
 public abstract class DownlinkView implements Downlink {
+
+  static final AtomicReferenceFieldUpdater<DownlinkView, Object> OBSERVERS =
+      AtomicReferenceFieldUpdater.newUpdater(DownlinkView.class, Object.class, "observers");
   protected final CellContext cellContext;
   protected final Stage stage;
-
   protected volatile Object observers; // Observer | Observer[]
 
   public DownlinkView(CellContext cellContext, Stage stage, Object observers) {
@@ -514,6 +516,4 @@ public abstract class DownlinkView implements Downlink {
     }
   }
 
-  static final AtomicReferenceFieldUpdater<DownlinkView, Object> OBSERVERS =
-      AtomicReferenceFieldUpdater.newUpdater(DownlinkView.class, Object.class, "observers");
 }

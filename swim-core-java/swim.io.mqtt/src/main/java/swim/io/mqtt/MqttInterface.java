@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.io.IpSocketModem;
 import swim.io.IpSocketRef;
 
 public interface MqttInterface extends IpInterface {
+
   MqttSettings mqttSettings();
 
   default IpServiceRef bindMqtt(InetSocketAddress localAddress, MqttService service, MqttSettings mqttSettings) {
@@ -92,4 +93,5 @@ public interface MqttInterface extends IpInterface {
   default <I, O> IpSocketRef connectMqtts(String address, int port, MqttSocket<I, O> socket) {
     return connectMqtts(new InetSocketAddress(address, port), socket, mqttSettings());
   }
+
 }

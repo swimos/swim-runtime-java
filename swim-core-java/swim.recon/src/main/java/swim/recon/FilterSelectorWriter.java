@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.codec.Writer;
 import swim.codec.WriterException;
 
 final class FilterSelectorWriter<I, V> extends Writer<Object, Object> {
+
   final ReconWriter<I, V> recon;
   final V predicate;
   final V then;
@@ -31,11 +32,6 @@ final class FilterSelectorWriter<I, V> extends Writer<Object, Object> {
     this.then = then;
     this.part = part;
     this.step = step;
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.recon, this.predicate, this.then, this.part, this.step);
   }
 
   static <I, V> int sizeOf(ReconWriter<I, V> recon, V predicate, V then) {
@@ -97,4 +93,10 @@ final class FilterSelectorWriter<I, V> extends Writer<Object, Object> {
   static <I, V> Writer<Object, Object> writeThen(Output<?> output, ReconWriter<I, V> recon, V predicate, V then) {
     return write(output, recon, predicate, then, null, 2);
   }
+
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.recon, this.predicate, this.then, this.part, this.step);
+  }
+
 }

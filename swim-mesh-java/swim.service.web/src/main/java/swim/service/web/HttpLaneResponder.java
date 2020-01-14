@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import swim.structure.Value;
 import swim.uri.Uri;
 
 public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
+
   final Uri meshUri;
   final Uri hostUri;
   final Uri nodeUri;
@@ -333,4 +334,5 @@ public class HttpLaneResponder implements HttpBinding, HttpResponder<Object> {
   public void failDown(Object message) {
     // nop
   }
+
 }

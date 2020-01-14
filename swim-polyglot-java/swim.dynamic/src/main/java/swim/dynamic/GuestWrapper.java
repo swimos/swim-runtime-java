@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,8 +18,10 @@ package swim.dynamic;
  * A host object that wraps a guest value.
  */
 public interface GuestWrapper {
+
   /**
    * Returns the guest value that this host object wraps.
    */
   Object unwrap();
+
 }

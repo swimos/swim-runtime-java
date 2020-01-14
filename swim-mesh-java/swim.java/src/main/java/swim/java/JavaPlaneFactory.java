@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import swim.kernel.KernelContext;
 import swim.uri.UriPattern;
 
 public class JavaPlaneFactory<P extends Plane> implements PlaneFactory<P> {
+
   protected final KernelContext kernel;
   protected final JavaPlaneDef planeDef;
   protected final Class<? extends P> planeClass;
@@ -231,4 +232,5 @@ public class JavaPlaneFactory<P extends Plane> implements PlaneFactory<P> {
       throw new PlaneException(cause);
     }
   }
+
 }

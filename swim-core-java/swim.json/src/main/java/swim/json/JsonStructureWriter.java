@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import swim.structure.Text;
 import swim.structure.Value;
 
 public class JsonStructureWriter extends JsonWriter<Item, Value> {
+
   @Override
   public Iterator<Item> items(Item item) {
     return item.iterator();
@@ -84,8 +85,8 @@ public class JsonStructureWriter extends JsonWriter<Item, Value> {
           return writeField(that.key(), that.value(), output);
         } else {
           return writeField(Text.from("$" + index),
-                            Record.of(Slot.of("$key", that.key()), Slot.of("$value", that.value())),
-                            output);
+              Record.of(Slot.of("$key", that.key()), Slot.of("$value", that.value())),
+              output);
         }
       }
     } else if (item instanceof Value) {
@@ -146,4 +147,5 @@ public class JsonStructureWriter extends JsonWriter<Item, Value> {
     }
     return Writer.error(new WriterException("No JSON serialization for " + value));
   }
+
 }

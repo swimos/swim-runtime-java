@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.structure.Value;
 import static org.testng.Assert.fail;
 
 public class QTreeSpec {
+
   @Test
   public void benchmarkInserts() {
     final long duration = 5 * 1000L;
@@ -151,4 +152,5 @@ public class QTreeSpec {
     final long searchRate = (1000L * n) / dt;
     System.out.println("Searched " + n + " areas in " + dt + " milliseconds (" + searchRate + " searches/second)");
   }
+
 }

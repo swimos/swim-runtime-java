@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import swim.uri.UriAuthority;
 import swim.warp.CommandMessage;
 
 public abstract class AbstractSwimRef implements SwimRef, CellContext {
+
   @Override
   public HostRef hostRef(Uri hostUri) {
     return new HostScope(this, stage(), meshUri(), hostUri);
@@ -72,7 +73,7 @@ public abstract class AbstractSwimRef implements SwimRef, CellContext {
     } else {
       hostUri = Uri.empty();
       nodeUri = Uri.from(nodeUri.scheme(), UriAuthority.undefined(),
-                         nodeUri.path(), nodeUri.query(), nodeUri.fragment());
+          nodeUri.path(), nodeUri.query(), nodeUri.fragment());
     }
     return new NodeScope(this, stage(), meshUri(), hostUri, nodeUri);
   }
@@ -104,7 +105,7 @@ public abstract class AbstractSwimRef implements SwimRef, CellContext {
     } else {
       hostUri = Uri.empty();
       nodeUri = Uri.from(nodeUri.scheme(), UriAuthority.undefined(),
-                         nodeUri.path(), nodeUri.query(), nodeUri.fragment());
+          nodeUri.path(), nodeUri.query(), nodeUri.fragment());
     }
     return new LaneScope(this, stage(), meshUri(), hostUri, nodeUri, laneUri);
   }
@@ -252,4 +253,5 @@ public abstract class AbstractSwimRef implements SwimRef, CellContext {
 
   @Override
   public abstract void close();
+
 }

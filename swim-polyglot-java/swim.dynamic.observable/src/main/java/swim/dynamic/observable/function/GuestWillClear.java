@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.dynamic.BridgeGuest;
 import swim.observable.function.WillClear;
 
 public class GuestWillClear extends BridgeGuest implements WillClear {
+
   public GuestWillClear(Bridge bridge, Object guest) {
     super(bridge, guest);
   }
@@ -27,4 +28,5 @@ public class GuestWillClear extends BridgeGuest implements WillClear {
   public void willClear() {
     this.bridge.guestExecuteVoid(this.guest);
   }
+
 }

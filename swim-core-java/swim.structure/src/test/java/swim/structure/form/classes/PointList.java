@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,13 +19,17 @@ import swim.util.Murmur3;
 
 @SuppressWarnings("checkstyle:VisibilityModifier")
 public class PointList {
+
   public List<Point2D> list;
+
   public PointList(List<Point2D> list) {
     this.list = list;
   }
+
   public PointList() {
     // Form.cast constructor
   }
+
   @Override
   public boolean equals(Object other) {
     if (other instanceof PointList) {
@@ -34,12 +38,15 @@ public class PointList {
     }
     return false;
   }
+
   @Override
   public int hashCode() {
     return Murmur3.hash(this.list);
   }
+
   @Override
   public String toString() {
     return "PointList(" + this.list + ")";
   }
+
 }

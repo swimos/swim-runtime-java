@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,6 +55,7 @@ import swim.uri.Uri;
 import swim.util.Log;
 
 public class ActorMesh extends ActorTier implements MeshBinding, MeshContext {
+
   final MeshBinding meshBinding;
   MeshContext meshContext;
   MeshDef meshDef;
@@ -488,4 +489,5 @@ public class ActorMesh extends ActorTier implements MeshBinding, MeshContext {
   public void didFail(Throwable error) {
     this.meshBinding.didFail(error);
   }
+
 }

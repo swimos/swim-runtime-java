@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.Collection;
  * result of type {@code O}.
  */
 public interface Builder<I, O> {
+
   /**
    * Adds a single input value to this builder, returning {@code true} if the
    * state of the builder changed.
@@ -37,4 +38,5 @@ public interface Builder<I, O> {
    * Returns the output result of this builder.
    */
   O bind();
+
 }

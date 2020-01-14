@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,10 +20,15 @@ import swim.collections.FingerTrieSeq;
 import swim.structure.Value;
 
 final class UnionStructure extends AvroUnionType<Value> {
+
   final FingerTrieSeq<AvroType<? extends Value>> variants;
 
   UnionStructure(FingerTrieSeq<AvroType<? extends Value>> variants) {
     this.variants = variants;
+  }
+
+  static UnionStructure empty() {
+    return new UnionStructure(FingerTrieSeq.empty());
   }
 
   @Override
@@ -41,7 +46,4 @@ final class UnionStructure extends AvroUnionType<Value> {
     return new UnionStructure(this.variants.appended(variant));
   }
 
-  static UnionStructure empty() {
-    return new UnionStructure(FingerTrieSeq.empty());
-  }
 }

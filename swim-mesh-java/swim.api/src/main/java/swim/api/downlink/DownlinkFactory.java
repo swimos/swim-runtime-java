@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.api.ws.WsDownlink;
 import swim.structure.Value;
 
 public interface DownlinkFactory {
+
   EventDownlink<Value> downlink();
 
   ListDownlink<Value> downlinkList();
@@ -30,4 +31,5 @@ public interface DownlinkFactory {
   <V> HttpDownlink<V> downlinkHttp();
 
   <I, O> WsDownlink<I, O> downlinkWs();
+
 }

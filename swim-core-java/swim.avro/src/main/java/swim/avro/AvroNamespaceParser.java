@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.codec.Parser;
 import swim.codec.Utf8;
 
 final class AvroNamespaceParser extends Parser<AvroNamespace> {
+
   final AvroNamespaceBuilder builder;
   final Output<String> output;
   final int step;
@@ -33,11 +34,6 @@ final class AvroNamespaceParser extends Parser<AvroNamespace> {
 
   AvroNamespaceParser() {
     this(null, null, 1);
-  }
-
-  @Override
-  public Parser<AvroNamespace> feed(Input input) {
-    return parse(input, this.builder, this.output, this.step);
   }
 
   static Parser<AvroNamespace> parse(Input input, AvroNamespaceBuilder builder,
@@ -97,4 +93,10 @@ final class AvroNamespaceParser extends Parser<AvroNamespace> {
   static Parser<AvroNamespace> parse(Input input) {
     return parse(input, null, null, 1);
   }
+
+  @Override
+  public Parser<AvroNamespace> feed(Input input) {
+    return parse(input, this.builder, this.output, this.step);
+  }
+
 }

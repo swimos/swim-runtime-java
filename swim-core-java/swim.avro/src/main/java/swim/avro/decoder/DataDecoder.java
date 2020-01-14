@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.codec.DecoderException;
 import swim.codec.InputBuffer;
 
 final class DataDecoder<T> extends Decoder<T> {
+
   final AvroDataType<T> type;
   final long size;
   final int shift;
@@ -36,11 +37,6 @@ final class DataDecoder<T> extends Decoder<T> {
 
   DataDecoder(AvroDataType<T> type) {
     this(type, 0L, 0, null, 1);
-  }
-
-  @Override
-  public Decoder<T> feed(InputBuffer input) {
-    return decode(input, this.type, this.size, this.shift, this.decoder, this.step);
   }
 
   static <T> Decoder<T> decode(InputBuffer input, AvroDataType<T> type, long size,
@@ -103,4 +99,10 @@ final class DataDecoder<T> extends Decoder<T> {
   static <T> Decoder<T> decode(InputBuffer input, AvroDataType<T> type) {
     return decode(input, type, 0L, 0, null, 1);
   }
+
+  @Override
+  public Decoder<T> feed(InputBuffer input) {
+    return decode(input, this.type, this.size, this.shift, this.decoder, this.step);
+  }
+
 }

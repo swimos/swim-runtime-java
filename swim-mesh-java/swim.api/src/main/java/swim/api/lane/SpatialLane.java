@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import swim.spatial.SpatialMap;
 import swim.structure.Form;
 
 public interface SpatialLane<K, S, V> extends WarpLane, ObservableSpatialMap<K, S, V> {
+
   Form<K> keyForm();
 
   <K2> SpatialLane<K2, S, V> keyForm(Form<K2> keyForm);
@@ -111,4 +112,5 @@ public interface SpatialLane<K, S, V> extends WarpLane, ObservableSpatialMap<K, 
   SpatialLane<K, S, V> didLeave(DidLeave didLeave);
 
   SpatialMap<K, S, V> snapshot();
+
 }

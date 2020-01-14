@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,12 +20,22 @@ import swim.util.CombinerFunction;
 import swim.util.OrderedMapCursor;
 
 class BTreeLeaf<K, V, U> extends BTreePage<K, V, U> {
+
+  private static BTreeLeaf<Object, Object, Object> empty;
   final Map.Entry<K, V>[] slots;
   final U fold;
 
   BTreeLeaf(Map.Entry<K, V>[] slots, U fold) {
     this.slots = slots;
     this.fold = fold;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <K, V, U> BTreeLeaf<K, V, U> empty() {
+    if (empty == null) {
+      empty = new BTreeLeaf<Object, Object, Object>((Map.Entry<Object, Object>[]) new Map.Entry<?, ?>[0], null);
+    }
+    return (BTreeLeaf<K, V, U>) empty;
   }
 
   @Override
@@ -342,13 +352,4 @@ class BTreeLeaf<K, V, U> extends BTreePage<K, V, U> {
     return new BTreeNode<K, V, U>(pages, knots, fold, size);
   }
 
-  private static BTreeLeaf<Object, Object, Object> empty;
-
-  @SuppressWarnings("unchecked")
-  public static <K, V, U> BTreeLeaf<K, V, U> empty() {
-    if (empty == null) {
-      empty = new BTreeLeaf<Object, Object, Object>((Map.Entry<Object, Object>[]) new Map.Entry<?, ?>[0], null);
-    }
-    return (BTreeLeaf<K, V, U>) empty;
-  }
 }

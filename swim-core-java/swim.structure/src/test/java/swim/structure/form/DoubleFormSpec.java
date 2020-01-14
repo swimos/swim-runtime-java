@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.structure.Text;
 import static org.testng.Assert.assertEquals;
 
 public class DoubleFormSpec {
+
   @Test
   public void moldDoublesToNums() {
     assertEquals(Form.forDouble().mold(2.5), Num.from(2.5));
@@ -54,4 +55,5 @@ public class DoubleFormSpec {
   public void castAttributedNumsToDoubles() {
     assertEquals(Form.forDouble().cast(Record.of(Attr.of("test"), 42)), 42.);
   }
+
 }

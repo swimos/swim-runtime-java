@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import swim.codec.Encoder;
  * {@code IpSocket}, and to close the socket.
  */
 public interface IpModemContext<I, O> extends IpContext, FlowContext {
+
   /**
    * Returns the configuration parameters that govern the underlying network
    * socket.
@@ -69,4 +70,5 @@ public interface IpModemContext<I, O> extends IpContext, FlowContext {
    * Closes the underlying network socket.
    */
   void close();
+
 }

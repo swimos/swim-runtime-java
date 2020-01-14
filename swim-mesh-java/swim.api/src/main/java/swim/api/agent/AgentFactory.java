@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.uri.Uri;
  * {@code A}.
  */
 public interface AgentFactory<A extends Agent> {
+
   /**
    * Creates an instance of {@code A} with internal context {@code context}.
    */
@@ -30,4 +31,5 @@ public interface AgentFactory<A extends Agent> {
   Value id(Uri nodeUri);
 
   Value props(Uri nodeUri);
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.structure.Value;
 import swim.util.Cursor;
 
 public abstract class PageRef {
+
   public abstract PageContext pageContext();
 
   public StoreSettings settings() {
@@ -93,6 +94,7 @@ public abstract class PageRef {
   }
 
   static final class LoadPage implements Cont<Page> {
+
     final PageLoader pageLoader;
     final Cont<Page> cont;
 
@@ -124,9 +126,11 @@ public abstract class PageRef {
         this.pageLoader.close();
       }
     }
+
   }
 
   static final class LoadTree implements Cont<Page> {
+
     final PageLoader pageLoader;
     final Cont<Page> cont;
 
@@ -153,5 +157,7 @@ public abstract class PageRef {
     public void trap(Throwable cause) {
       this.cont.trap(cause);
     }
+
   }
+
 }

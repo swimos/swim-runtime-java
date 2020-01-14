@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.streamlet.combinator;
 import swim.util.CombinerFunction;
 
 public class ReduceFieldsCombinator<K, V, I, O> extends ReduceFieldsOperator<K, V, I, O> {
+
   protected final O identity;
   protected final CombinerFunction<? super V, O> accumulator;
   protected final CombinerFunction<O, O> combiner;
@@ -47,4 +48,5 @@ public class ReduceFieldsCombinator<K, V, I, O> extends ReduceFieldsOperator<K, 
   public O combine(O result, O value) {
     return this.combiner.combine(result, value);
   }
+
 }

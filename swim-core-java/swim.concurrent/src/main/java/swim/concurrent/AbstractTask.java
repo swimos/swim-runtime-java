@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package swim.concurrent;
  * Skeletal implementation of a stateful {@link Task}.
  */
 public abstract class AbstractTask implements Task {
+
   /**
    * Context used to manage this {@code Task}; {@code null} if this {@code
    * Task} is not bound to an execution {@link Stage}.
@@ -107,4 +108,5 @@ public abstract class AbstractTask implements Task {
     }
     return taskContext.cancel();
   }
+
 }

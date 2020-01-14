@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.collections.FingerTrieSeq;
 import swim.util.Builder;
 
 final class HttpChunkTrailerParser extends Parser<HttpChunkTrailer> {
+
   final HttpParser http;
   final Parser<? extends HttpHeader> header;
   final Builder<HttpHeader, FingerTrieSeq<HttpHeader>> headers;
@@ -36,11 +37,6 @@ final class HttpChunkTrailerParser extends Parser<HttpChunkTrailer> {
 
   HttpChunkTrailerParser(HttpParser http) {
     this(http, null, null, 1);
-  }
-
-  @Override
-  public Parser<HttpChunkTrailer> feed(Input input) {
-    return parse(input, this.http, this.header, this.headers, this.step);
   }
 
   static Parser<HttpChunkTrailer> parse(Input input, HttpParser http, Parser<? extends HttpHeader> header,
@@ -136,4 +132,10 @@ final class HttpChunkTrailerParser extends Parser<HttpChunkTrailer> {
   static Parser<HttpChunkTrailer> parse(Input input, HttpParser http) {
     return parse(input, http, null, null, 1);
   }
+
+  @Override
+  public Parser<HttpChunkTrailer> feed(Input input) {
+    return parse(input, this.http, this.header, this.headers, this.step);
+  }
+
 }

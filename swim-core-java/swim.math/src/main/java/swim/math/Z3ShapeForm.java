@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import swim.structure.Item;
 import swim.structure.Value;
 
 final class Z3ShapeForm extends Z3Form<Z3Shape> {
+
   @Override
   public Class<?> type() {
     return Z3Shape.class;
@@ -83,4 +84,5 @@ final class Z3ShapeForm extends Z3Form<Z3Shape> {
     }
     return null;
   }
+
 }

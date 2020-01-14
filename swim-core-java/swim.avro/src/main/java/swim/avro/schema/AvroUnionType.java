@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
 package swim.avro.schema;
 
 public abstract class AvroUnionType<T> extends AvroComplexType<T> {
+
   public abstract int variantCount();
 
   public abstract AvroType<? extends T> getVariant(int index);
 
   public abstract AvroUnionType<T> variant(AvroType<? extends T> variant);
+
 }

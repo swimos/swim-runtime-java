@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import swim.structure.Value;
  * typed {@code Item} and an instance of that {@code Map}.
  */
 public final class MapForm<K, V> extends Form<Map<K, V>> {
+
   final Class<?> type;
   final Form<K> keyForm;
   final Form<V> valForm;
@@ -131,4 +132,5 @@ public final class MapForm<K, V> extends Form<Map<K, V>> {
     }
     return null;
   }
+
 }

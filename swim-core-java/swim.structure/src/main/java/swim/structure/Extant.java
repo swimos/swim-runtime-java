@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,8 +18,16 @@ import swim.codec.Output;
 import swim.util.Murmur3;
 
 public final class Extant extends Value {
+
+  private static final Extant VALUE = new Extant();
+  private static int hashSeed;
+
   private Extant() {
     // stub
+  }
+
+  public static Extant extant() {
+    return VALUE;
   }
 
   /**
@@ -126,11 +134,4 @@ public final class Extant extends Value {
     output = output.write("Value").write('.').write("extant").write('(').write(')');
   }
 
-  private static int hashSeed;
-
-  private static final Extant VALUE = new Extant();
-
-  public static Extant extant() {
-    return VALUE;
-  }
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.math;
 import swim.structure.Form;
 
 public abstract class R3Form<T> extends Form<T> implements R3Boundary<T> {
+
   @Override
   public abstract double getXMin(T object);
 
@@ -44,4 +45,5 @@ public abstract class R3Form<T> extends Form<T> implements R3Boundary<T> {
   //public static <T> Z3Form<T> transformed(R3Form<T> form, R3ToZ3Function function) {
   //  return new R3ToZ3Form<T>(form, function);
   //}
+
 }

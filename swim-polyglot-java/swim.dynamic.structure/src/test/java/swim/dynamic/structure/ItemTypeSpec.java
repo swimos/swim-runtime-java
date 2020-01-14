@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.vm.VmBridge;
 import static org.testng.Assert.assertEquals;
 
 public class ItemTypeSpec {
+
   @Test
   public void testItems() {
     try (Context context = Context.create()) {
@@ -47,4 +48,5 @@ public class ItemTypeSpec {
       assertEquals(context.eval("js", "empty.isDistinct()").asBoolean(), true);
     }
   }
+
 }

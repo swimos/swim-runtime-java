@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.dynamic.Bridge;
 import swim.dynamic.BridgeGuest;
 
 public class GuestPlane extends BridgeGuest implements Plane {
+
   protected final PlaneContext planeContext;
 
   public GuestPlane(Bridge bridge, Object guest, PlaneContext planeContext) {
@@ -80,4 +81,5 @@ public class GuestPlane extends BridgeGuest implements Plane {
       this.bridge.guestInvokeMember(this.guest, "didFail", error);
     }
   }
+
 }

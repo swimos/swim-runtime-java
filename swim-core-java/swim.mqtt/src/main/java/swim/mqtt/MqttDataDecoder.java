@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.codec.InputBuffer;
 import swim.structure.Data;
 
 final class MqttDataDecoder extends Decoder<Data> {
+
   final Decoder<byte[]> decoder;
   final int remaining;
   final int step;
@@ -33,11 +34,6 @@ final class MqttDataDecoder extends Decoder<Data> {
 
   MqttDataDecoder() {
     this(null, 0, 1);
-  }
-
-  @Override
-  public Decoder<Data> feed(InputBuffer input) {
-    return decode(input, this.decoder, this.remaining, this.step);
   }
 
   static Decoder<Data> decode(InputBuffer input, Decoder<byte[]> decoder, int remaining, int step) {
@@ -84,4 +80,10 @@ final class MqttDataDecoder extends Decoder<Data> {
   static Decoder<Data> decode(InputBuffer input) {
     return decode(input, null, 0, 1);
   }
+
+  @Override
+  public Decoder<Data> feed(InputBuffer input) {
+    return decode(input, this.decoder, this.remaining, this.step);
+  }
+
 }

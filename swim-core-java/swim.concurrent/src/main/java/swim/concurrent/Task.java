@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ package swim.concurrent;
  * @see Stage
  */
 public interface Task extends TaskFunction {
+
   /**
    * Returns the context used to managed this {@code Task}.  Returns {@code
    * null} if this {@code Task} is not bound to a {@link Stage}.
@@ -69,4 +70,5 @@ public interface Task extends TaskFunction {
    * cancelled.
    */
   void taskDidCancel();
+
 }

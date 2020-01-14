@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.dynamic.BridgeGuest;
 import swim.observable.function.DidDrop;
 
 public class GuestDidDrop extends BridgeGuest implements DidDrop {
+
   public GuestDidDrop(Bridge bridge, Object guest) {
     super(bridge, guest);
   }
@@ -27,4 +28,5 @@ public class GuestDidDrop extends BridgeGuest implements DidDrop {
   public void didDrop(int lower) {
     this.bridge.guestExecuteVoid(this.guest, lower);
   }
+
 }

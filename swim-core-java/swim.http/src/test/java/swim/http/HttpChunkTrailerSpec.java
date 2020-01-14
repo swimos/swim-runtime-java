@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.http.header.RawHeader;
 import static swim.http.HttpAssertions.assertWrites;
 
 public class HttpChunkTrailerSpec {
+
   public void assertParses(String string, HttpChunkTrailer chunkTrailer) {
     HttpAssertions.assertParses(Http.standardParser().chunkTrailerParser(), string, chunkTrailer);
   }
@@ -30,16 +31,16 @@ public class HttpChunkTrailerSpec {
 
   @Test
   public void parseChunkTrailersWithASingleHeader() {
-    assertParses("Key: Value\r\n\r\n",  HttpChunkTrailer.from(RawHeader.from("Key", "Value")));
+    assertParses("Key: Value\r\n\r\n", HttpChunkTrailer.from(RawHeader.from("Key", "Value")));
   }
 
   @Test
   public void parseChunkTrailersWithMultipleHeaders() {
     assertParses("Key: Value\r\n"
-               + "Foo: Bar\r\n"
-               + "\r\n",
-                 HttpChunkTrailer.from(RawHeader.from("Key", "Value"),
-                                       RawHeader.from("Foo", "Bar")));
+            + "Foo: Bar\r\n"
+            + "\r\n",
+        HttpChunkTrailer.from(RawHeader.from("Key", "Value"),
+            RawHeader.from("Foo", "Bar")));
   }
 
   @Test
@@ -55,9 +56,10 @@ public class HttpChunkTrailerSpec {
   @Test
   public void writeChunkTrailersWithMultipleHeaders() {
     assertWrites(HttpChunkTrailer.from(RawHeader.from("Key", "Value"),
-                                       RawHeader.from("Foo", "Bar")),
-                 "Key: Value\r\n"
-               + "Foo: Bar\r\n"
-               + "\r\n");
+        RawHeader.from("Foo", "Bar")),
+        "Key: Value\r\n"
+            + "Foo: Bar\r\n"
+            + "\r\n");
   }
+
 }

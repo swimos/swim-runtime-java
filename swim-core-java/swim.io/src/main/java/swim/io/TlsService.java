@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.Collection;
 import javax.net.ssl.SSLEngine;
 
 class TlsService implements Transport, IpServiceContext {
+
   final Station station;
   final InetSocketAddress localAddress;
   final ServerSocketChannel serverChannel;
@@ -121,9 +122,15 @@ class TlsService implements Transport, IpServiceContext {
     final SSLEngine sslEngine = tlsSettings.sslContext().createSSLEngine(/*remoteAddress.getHostString(), remoteAddress.getPort()*/);
     sslEngine.setUseClientMode(false);
     switch (tlsSettings.clientAuth()) {
-      case NEED: sslEngine.setNeedClientAuth(true); break;
-      case WANT: sslEngine.setWantClientAuth(true); break;
-      case NONE: sslEngine.setWantClientAuth(false); break;
+      case NEED:
+        sslEngine.setNeedClientAuth(true);
+        break;
+      case WANT:
+        sslEngine.setWantClientAuth(true);
+        break;
+      case NONE:
+        sslEngine.setWantClientAuth(false);
+        break;
       default:
     }
     final Collection<String> cipherSuites = tlsSettings.cipherSuites();
@@ -189,4 +196,5 @@ class TlsService implements Transport, IpServiceContext {
   public void didFail(Throwable error) {
     this.service.didFail(error);
   }
+
 }

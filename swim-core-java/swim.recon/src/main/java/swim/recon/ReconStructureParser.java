@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ import swim.structure.operator.TimesOperator;
 import swim.util.Builder;
 
 public class ReconStructureParser extends ReconParser<Item, Value> {
+
   @Override
   public boolean isDistinct(Value value) {
     return value.isDistinct();
@@ -347,4 +348,5 @@ public class ReconStructureParser extends ReconParser<Item, Value> {
   public Value filter(Value selector, Value predicate) {
     return selector.filter(predicate);
   }
+
 }

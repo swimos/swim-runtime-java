@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package swim.streamlet;
  * Outlet} whenever the {@code Inlet} updates.
  */
 public class OutletInlet<I> extends AbstractInlet<I> {
+
   protected final Outlet<?> outlet;
 
   public OutletInlet(Outlet<?> outlet) {
@@ -39,4 +40,5 @@ public class OutletInlet<I> extends AbstractInlet<I> {
   protected void onReconcileOutput(int version) {
     this.outlet.reconcileInput(version);
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.structure.Value;
 import swim.util.Cursor;
 
 public abstract class Page {
+
   public boolean isBTreePage() {
     return false;
   }
@@ -125,6 +126,7 @@ public abstract class Page {
     System.out.println(pageRef());
     printTree(0);
   }
+
   void printTree(int indent) {
     for (int j = 0; j < indent; j += 1) {
       System.out.print(' ');
@@ -140,6 +142,7 @@ public abstract class Page {
   }
 
   static final class LoadSubtree implements Cont<Page> {
+
     final PageLoader pageLoader;
     final Page page;
     final int index;
@@ -176,5 +179,7 @@ public abstract class Page {
     public void trap(Throwable cause) {
       this.andThen.trap(cause);
     }
+
   }
+
 }

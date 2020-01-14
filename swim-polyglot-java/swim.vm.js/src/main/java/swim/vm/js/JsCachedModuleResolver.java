@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,12 +19,23 @@ import swim.uri.UriPath;
 import swim.util.HashGenCacheMap;
 
 public class JsCachedModuleResolver implements JsModuleResolver {
+
   final JsModuleResolver moduleResolver;
   final HashGenCacheMap<UriPath, Source> sourceCache;
 
   public JsCachedModuleResolver(JsModuleResolver moduleResolver) {
     this.moduleResolver = moduleResolver;
     this.sourceCache = createSourceCache();
+  }
+
+  static HashGenCacheMap<UriPath, Source> createSourceCache() {
+    int sourceCacheSize;
+    try {
+      sourceCacheSize = Integer.parseInt(System.getProperty("swim.vm.js.source.cache.size"));
+    } catch (NumberFormatException e) {
+      sourceCacheSize = 128;
+    }
+    return new HashGenCacheMap<UriPath, Source>(sourceCacheSize);
   }
 
   public final JsModuleResolver moduleResolver() {
@@ -46,13 +57,4 @@ public class JsCachedModuleResolver implements JsModuleResolver {
     return moduleSource;
   }
 
-  static HashGenCacheMap<UriPath, Source> createSourceCache() {
-    int sourceCacheSize;
-    try {
-      sourceCacheSize = Integer.parseInt(System.getProperty("swim.vm.js.source.cache.size"));
-    } catch (NumberFormatException e) {
-      sourceCacheSize = 128;
-    }
-    return new HashGenCacheMap<UriPath, Source>(sourceCacheSize);
-  }
 }

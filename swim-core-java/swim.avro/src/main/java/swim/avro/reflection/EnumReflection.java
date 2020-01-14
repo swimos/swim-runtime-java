@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.avro.schema.AvroEnumType;
 import swim.collections.FingerTrieSeq;
 
 final class EnumReflection<T extends Enum<T>> extends AvroEnumType<T> {
+
   final AvroName fullName;
   final String doc;
   final FingerTrieSeq<AvroName> aliases;
@@ -85,4 +86,5 @@ final class EnumReflection<T extends Enum<T>> extends AvroEnumType<T> {
   public T cast(int ordinal) {
     return this.symbols.get(ordinal);
   }
+
 }

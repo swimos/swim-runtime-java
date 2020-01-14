@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.streamlet.AbstractMapInoutlet;
 import swim.util.Cursor;
 
 public abstract class MapFieldValuesOperator<K, VI, VO, I> extends AbstractMapInoutlet<K, VI, VO, I, Map<K, VO>> {
+
   @Override
   public boolean containsKey(K key) {
     if (this.input != null) {
@@ -63,4 +64,5 @@ public abstract class MapFieldValuesOperator<K, VI, VO, I> extends AbstractMapIn
   }
 
   public abstract VO evaluate(K key, VI value);
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import swim.collections.FingerTrieSeq;
 import swim.util.Murmur3;
 
 public class Opt implements Cloneable, Debug {
+
+  private static int hashSeed;
   final String name;
   char flag;
   String desc;
@@ -33,6 +35,14 @@ public class Opt implements Cloneable, Debug {
     this.desc = desc;
     this.args = args;
     this.defs = defs;
+  }
+
+  public static Opt of(String name, char flag) {
+    return new Opt(name, flag, null, FingerTrieSeq.empty(), 0);
+  }
+
+  public static Opt of(String name) {
+    return new Opt(name, '\0', null, FingerTrieSeq.empty(), 0);
   }
 
   public String name() {
@@ -168,13 +178,4 @@ public class Opt implements Cloneable, Debug {
     return new Opt(this.name, this.flag, this.desc, args, this.defs);
   }
 
-  private static int hashSeed;
-
-  public static Opt of(String name, char flag) {
-    return new Opt(name, flag, null, FingerTrieSeq.empty(), 0);
-  }
-
-  public static Opt of(String name) {
-    return new Opt(name, '\0', null, FingerTrieSeq.empty(), 0);
-  }
 }

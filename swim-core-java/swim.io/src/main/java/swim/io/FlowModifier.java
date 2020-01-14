@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import swim.codec.Output;
  * @see FlowContext
  */
 public enum FlowModifier implements Debug {
+
   /**
    * <em>read</em> and <em>write</em> operations should not be modified.
    */
@@ -80,6 +81,37 @@ public enum FlowModifier implements Debug {
 
   FlowModifier(int flags) {
     this.flags = flags;
+  }
+
+  private static FlowModifier fromFlags(int flags) {
+    if ((flags ^ 0x5) == 0) {
+      flags &= ~0x1; // ENABLE_READ takes precedence over DISABLE_READ
+    }
+    if ((flags ^ 0xa) == 0) {
+      flags &= ~0x2; // ENABLE_WRITE takes precedence over DISABLE_WRITE
+    }
+    switch (flags) {
+      case 0x0:
+        return RESELECT;
+      case 0x1:
+        return DISABLE_READ;
+      case 0x2:
+        return DISABLE_WRITE;
+      case 0x3:
+        return DISABLE_READ_WRITE;
+      case 0x4:
+        return ENABLE_READ;
+      case 0x6:
+        return DISABLE_WRITE_ENABLE_READ;
+      case 0x8:
+        return ENABLE_WRITE;
+      case 0x9:
+        return DISABLE_READ_ENABLE_WRITE;
+      case 0xc:
+        return ENABLE_READ_WRITE;
+      default:
+        throw new IllegalArgumentException("0x" + Integer.toHexString(flags));
+    }
   }
 
   /**
@@ -152,24 +184,4 @@ public enum FlowModifier implements Debug {
     output = output.write("FlowModifier").write('.').write(name());
   }
 
-  private static FlowModifier fromFlags(int flags) {
-    if ((flags ^ 0x5) == 0) {
-      flags &= ~0x1; // ENABLE_READ takes precedence over DISABLE_READ
-    }
-    if ((flags ^ 0xa) == 0) {
-      flags &= ~0x2; // ENABLE_WRITE takes precedence over DISABLE_WRITE
-    }
-    switch (flags) {
-      case 0x0: return RESELECT;
-      case 0x1: return DISABLE_READ;
-      case 0x2: return DISABLE_WRITE;
-      case 0x3: return DISABLE_READ_WRITE;
-      case 0x4: return ENABLE_READ;
-      case 0x6: return DISABLE_WRITE_ENABLE_READ;
-      case 0x8: return ENABLE_WRITE;
-      case 0x9: return DISABLE_READ_ENABLE_WRITE;
-      case 0xc: return ENABLE_READ_WRITE;
-      default: throw new IllegalArgumentException("0x" + Integer.toHexString(flags));
-    }
-  }
 }

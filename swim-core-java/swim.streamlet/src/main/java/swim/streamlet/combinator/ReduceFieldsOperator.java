@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.streamlet.AbstractMapInletOutlet;
 import swim.streamlet.KeyEffect;
 
 public abstract class ReduceFieldsOperator<K, V, I, O> extends AbstractMapInletOutlet<K, V, I, O> {
+
   protected BTreeMap<K, V, O> state;
 
   public ReduceFieldsOperator() {
@@ -51,4 +52,5 @@ public abstract class ReduceFieldsOperator<K, V, I, O> extends AbstractMapInletO
   public abstract O accumulate(O result, V value);
 
   public abstract O combine(O result, O value);
+
 }

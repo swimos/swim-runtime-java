@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,10 +19,15 @@ import swim.codec.Decoder;
 import swim.codec.InputBuffer;
 
 final class NullDecoder<T> extends Decoder<T> {
+
   final AvroNullType<T> type;
 
   NullDecoder(AvroNullType<T> type) {
     this.type = type;
+  }
+
+  static <T> Decoder<T> decode(InputBuffer input, AvroNullType<T> type) {
+    return done(type.cast());
   }
 
   @Override
@@ -30,7 +35,4 @@ final class NullDecoder<T> extends Decoder<T> {
     return decode(input, this.type);
   }
 
-  static <T> Decoder<T> decode(InputBuffer input, AvroNullType<T> type) {
-    return done(type.cast());
-  }
 }

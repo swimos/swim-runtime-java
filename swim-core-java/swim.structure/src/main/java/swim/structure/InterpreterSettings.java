@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,10 +20,32 @@ import swim.codec.Output;
 import swim.util.Murmur3;
 
 public class InterpreterSettings implements Debug {
+
+  public static final int MAX_SCOPE_DEPTH;
+  private static InterpreterSettings standard;
+  private static int hashSeed;
+
+  static {
+    int maxScopeDepth;
+    try {
+      maxScopeDepth = Integer.parseInt(System.getProperty("swim.structure.interpreter.max.scope.depth"));
+    } catch (NumberFormatException e) {
+      maxScopeDepth = 1024;
+    }
+    MAX_SCOPE_DEPTH = maxScopeDepth;
+  }
+
   protected final int maxScopeDepth;
 
   public InterpreterSettings(int maxScopeDepth) {
     this.maxScopeDepth = maxScopeDepth;
+  }
+
+  public static InterpreterSettings standard() {
+    if (standard == null) {
+      standard = new InterpreterSettings(MAX_SCOPE_DEPTH);
+    }
+    return standard;
   }
 
   public final int maxScopeDepth() {
@@ -72,26 +94,4 @@ public class InterpreterSettings implements Debug {
     return Format.debug(this);
   }
 
-  public static final int MAX_SCOPE_DEPTH;
-
-  private static InterpreterSettings standard;
-
-  private static int hashSeed;
-
-  public static InterpreterSettings standard() {
-    if (standard == null) {
-      standard = new InterpreterSettings(MAX_SCOPE_DEPTH);
-    }
-    return standard;
-  }
-
-  static {
-    int maxScopeDepth;
-    try {
-      maxScopeDepth = Integer.parseInt(System.getProperty("swim.structure.interpreter.max.scope.depth"));
-    } catch (NumberFormatException e) {
-      maxScopeDepth = 1024;
-    }
-    MAX_SCOPE_DEPTH = maxScopeDepth;
-  }
 }

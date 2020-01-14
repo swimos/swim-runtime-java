@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,11 @@ import swim.codec.Utf8;
 import swim.codec.Writer;
 
 public abstract class HttpHeader extends HttpPart implements Debug {
+
+  public static HttpHeader parseHttp(String string) {
+    return Http.standardParser().parseHeaderString(string);
+  }
+
   public boolean isBlank() {
     return false;
   }
@@ -52,7 +57,4 @@ public abstract class HttpHeader extends HttpPart implements Debug {
     return Format.debug(this);
   }
 
-  public static HttpHeader parseHttp(String string) {
-    return Http.standardParser().parseHeaderString(string);
-  }
 }

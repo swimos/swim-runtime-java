@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,10 +21,16 @@ import swim.uri.Uri;
 import swim.util.Murmur3;
 
 public final class EdgeAddress extends CellAddress implements Debug {
+
+  private static int hashSeed;
   final String edgeName;
 
   public EdgeAddress(String edgeName) {
     this.edgeName = edgeName;
+  }
+
+  public static EdgeAddress from(String edgeName) {
+    return new EdgeAddress(edgeName);
   }
 
   public String edgeName() {
@@ -77,9 +83,4 @@ public final class EdgeAddress extends CellAddress implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  public static EdgeAddress from(String edgeName) {
-    return new EdgeAddress(edgeName);
-  }
 }

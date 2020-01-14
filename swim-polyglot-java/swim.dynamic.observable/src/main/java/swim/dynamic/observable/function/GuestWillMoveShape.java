@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.dynamic.BridgeGuest;
 import swim.observable.function.WillMoveShape;
 
 public class GuestWillMoveShape<K, S, V> extends BridgeGuest implements WillMoveShape<K, S, V> {
+
   public GuestWillMoveShape(Bridge bridge, Object guest) {
     super(bridge, guest);
   }
@@ -28,4 +29,5 @@ public class GuestWillMoveShape<K, S, V> extends BridgeGuest implements WillMove
   public V willMove(K key, S newShape, V newValue, S oldShape) {
     return (V) this.bridge.guestExecute(this.guest, key, newShape, newValue, oldShape);
   }
+
 }

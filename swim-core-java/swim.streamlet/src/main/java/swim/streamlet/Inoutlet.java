@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package swim.streamlet;
 
 public interface Inoutlet<I, O> extends Inlet<I>, Outlet<O> {
+
   /**
    * Disconnects all {@code Inlet}s dominated by this {@code Inoutlet} in the
    * dataflow dependency graph.  Used to recursively clean up chains of
@@ -30,4 +31,5 @@ public interface Inoutlet<I, O> extends Inlet<I>, Outlet<O> {
    */
   @Override
   void disconnectOutputs();
+
 }

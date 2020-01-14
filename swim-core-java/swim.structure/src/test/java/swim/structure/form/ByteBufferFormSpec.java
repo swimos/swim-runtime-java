@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import static org.testng.Assert.assertEquals;
 public class ByteBufferFormSpec {
 
   private static final ByteBuffer BB;
+
   static {
     BB = ByteBuffer.allocate(8)
         .putInt(0xCAFEBABE).putShort((short) 3).putShort((short) 45);
@@ -53,4 +54,5 @@ public class ByteBufferFormSpec {
   public void castAttributedDataToByteBuffer() {
     assertEquals(Form.forByteBuffer().cast(Record.of(Attr.of("test"), Data.fromBase16("CAFEBABE0003002D"))), BB);
   }
+
 }

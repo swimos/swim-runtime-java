@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.http.WebSocketExtension;
 import swim.util.Builder;
 
 final class SecWebSocketExtensionsParser extends Parser<SecWebSocketExtensions> {
+
   final HttpParser http;
   final Parser<WebSocketExtension> extension;
   final Builder<WebSocketExtension, FingerTrieSeq<WebSocketExtension>> extensions;
@@ -39,11 +40,6 @@ final class SecWebSocketExtensionsParser extends Parser<SecWebSocketExtensions> 
 
   SecWebSocketExtensionsParser(HttpParser http) {
     this(http, null, null, 1);
-  }
-
-  @Override
-  public Parser<SecWebSocketExtensions> feed(Input input) {
-    return parse(input, this.http, this.extension, this.extensions, this.step);
   }
 
   static Parser<SecWebSocketExtensions> parse(Input input, HttpParser http, Parser<WebSocketExtension> extension,
@@ -124,4 +120,10 @@ final class SecWebSocketExtensionsParser extends Parser<SecWebSocketExtensions> 
   static Parser<SecWebSocketExtensions> parse(Input input, HttpParser http) {
     return parse(input, http, null, null, 1);
   }
+
+  @Override
+  public Parser<SecWebSocketExtensions> feed(Input input) {
+    return parse(input, this.http, this.extension, this.extensions, this.step);
+  }
+
 }

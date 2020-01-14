@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import swim.util.Builder;
  * Factory for constructing Recon parsers and parse trees.
  */
 public abstract class ReconParser<I, V> {
+
   public abstract boolean isDistinct(V value);
 
   public abstract I item(V value);
@@ -305,4 +306,5 @@ public abstract class ReconParser<I, V> {
     }
     return parser.bind();
   }
+
 }

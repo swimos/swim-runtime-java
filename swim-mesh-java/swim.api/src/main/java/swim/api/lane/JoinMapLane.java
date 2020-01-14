@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import swim.observable.function.WillUpdateKey;
 import swim.structure.Form;
 
 public interface JoinMapLane<L, K, V> extends WarpLane, Iterable<Map.Entry<K, V>>, ObservableMap<K, V> {
+
   Form<L> linkForm();
 
   <L2> JoinMapLane<L2, K, V> linkForm(Form<L2> linkForm);
@@ -125,4 +126,5 @@ public interface JoinMapLane<L, K, V> extends WarpLane, Iterable<Map.Entry<K, V>
   Iterator<V> valueIterator();
 
   Iterator<Entry<L, MapDownlink<?, ?>>> downlinkIterator();
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.store;
 import swim.structure.Value;
 
 public interface MapDataContext extends DataContext {
+
   void didUpdate(Value key, Value newValue, Value oldValue);
 
   void didRemove(Value key, Value oldValue);
@@ -26,4 +27,5 @@ public interface MapDataContext extends DataContext {
   void didTake(long upper);
 
   void didClear();
+
 }

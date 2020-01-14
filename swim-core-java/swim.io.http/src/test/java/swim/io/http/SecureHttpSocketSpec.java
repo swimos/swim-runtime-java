@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import swim.io.IpServiceRef;
 import swim.io.IpSocketRef;
 
 public class SecureHttpSocketSpec extends HttpSocketBehaviors {
+
   final HttpSettings httpSettings = TestTlsSettings.httpSettings();
 
   @Override
@@ -29,4 +30,5 @@ public class SecureHttpSocketSpec extends HttpSocketBehaviors {
   protected IpSocketRef connect(HttpEndpoint endpoint, HttpClient client) {
     return endpoint.connectHttps("127.0.0.1", 33555, client, this.httpSettings);
   }
+
 }

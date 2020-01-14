@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.codec.Input;
 import swim.codec.Parser;
 
 final class LanguageRangeParser extends Parser<LanguageRange> {
+
   final HttpParser http;
   final StringBuilder tag;
   final StringBuilder subtag;
@@ -37,11 +38,6 @@ final class LanguageRangeParser extends Parser<LanguageRange> {
 
   LanguageRangeParser(HttpParser http) {
     this(http, null, null, null, 1);
-  }
-
-  @Override
-  public Parser<LanguageRange> feed(Input input) {
-    return parse(input, this.http, this.tag, this.subtag, this.weight, this.step);
   }
 
   static Parser<LanguageRange> parse(Input input, HttpParser http, StringBuilder tag,
@@ -148,4 +144,10 @@ final class LanguageRangeParser extends Parser<LanguageRange> {
   static Parser<LanguageRange> parse(Input input, HttpParser http) {
     return parse(input, http, null, null, null, 1);
   }
+
+  @Override
+  public Parser<LanguageRange> feed(Input input) {
+    return parse(input, this.http, this.tag, this.subtag, this.weight, this.step);
+  }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 import static swim.http.HttpAssertions.assertWrites;
 
 public class HttpMethodSpec {
+
   public void assertParses(String string, HttpMethod method) {
     HttpAssertions.assertParses(Http.standardParser().methodParser(), string, method);
   }
@@ -45,4 +46,5 @@ public class HttpMethodSpec {
     assertWrites(HttpMethod.OPTIONS, "OPTIONS");
     assertWrites(HttpMethod.TRACE, "TRACE");
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.concurrent.Stage;
 import swim.concurrent.Sync;
 
 public abstract class Store {
+
   public abstract StoreContext storeContext();
 
   public StoreSettings settings() {
@@ -130,4 +131,5 @@ public abstract class Store {
   void databaseCompactDidFail(Database database, Throwable error) {
     storeContext().databaseCompactDidFail(this, database, error);
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.codec.Writer;
 import swim.codec.WriterException;
 
 final class QuotedWriter extends Writer<Object, Object> {
+
   final String quoted;
   final int index;
   final int escape;
@@ -33,11 +34,6 @@ final class QuotedWriter extends Writer<Object, Object> {
 
   QuotedWriter(String quoted) {
     this(quoted, 0, 0, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.quoted, this.index, this.escape, this.step);
   }
 
   static Writer<Object, Object> write(Output<?> output, String quoted,
@@ -90,4 +86,10 @@ final class QuotedWriter extends Writer<Object, Object> {
   static Writer<Object, Object> write(Output<?> output, String quoted) {
     return write(output, quoted, 0, 0, 1);
   }
+
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.quoted, this.index, this.escape, this.step);
+  }
+
 }

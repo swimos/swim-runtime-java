@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ import swim.concurrent.AbstractTask;
 import swim.concurrent.Conts;
 
 final class FileStoreCommitter extends AbstractTask {
+
+  static final AtomicReferenceFieldUpdater<FileStoreCommitter, Commit> COMMIT =
+      AtomicReferenceFieldUpdater.newUpdater(FileStoreCommitter.class, Commit.class, "commit");
   final FileStore store;
   volatile Commit commit;
 
@@ -106,6 +109,4 @@ final class FileStoreCommitter extends AbstractTask {
     }
   }
 
-  static final AtomicReferenceFieldUpdater<FileStoreCommitter, Commit> COMMIT =
-      AtomicReferenceFieldUpdater.newUpdater(FileStoreCommitter.class, Commit.class, "commit");
 }

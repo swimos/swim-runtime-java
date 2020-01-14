@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,10 +19,19 @@ import swim.codec.Format;
 import swim.codec.Output;
 
 public class RN implements VectorSpace<VectorRN, Double>, FN<VectorRN, Double>, Debug {
+
   protected final TensorDims dims;
 
   protected RN(TensorDims dims) {
     this.dims = dims;
+  }
+
+  public static RN space(TensorDims dims) {
+    return new RN(dims);
+  }
+
+  public static RN space(int n) {
+    return new RN(TensorDims.of(n));
   }
 
   @Override
@@ -112,11 +121,4 @@ public class RN implements VectorSpace<VectorRN, Double>, FN<VectorRN, Double>, 
     return Format.debug(this);
   }
 
-  public static RN space(TensorDims dims) {
-    return new RN(dims);
-  }
-
-  public static RN space(int n) {
-    return new RN(TensorDims.of(n));
-  }
 }

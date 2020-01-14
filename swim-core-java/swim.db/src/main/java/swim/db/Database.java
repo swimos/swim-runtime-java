@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ import swim.util.Builder;
 import swim.util.Cursor;
 
 public class Database {
+
   final Store store;
   volatile DatabaseDelegate delegate;
   volatile Germ germ;
@@ -544,9 +545,9 @@ public class Database {
     do {
       final BTree oldMetaTree = this.metaTrunk.tree;
       metaTree = oldMetaTree.updated(Text.from("seed"), seedTree.rootRef().toValue(), version, this.post)
-                            .updated(Text.from("stem"), Num.from(this.stem), version, this.post)
-                            .updated(Text.from("time"), Num.from(time), version, this.post)
-                            .committed(zone, step, version, time);
+          .updated(Text.from("stem"), Num.from(this.stem), version, this.post)
+          .updated(Text.from("time"), Num.from(time), version, this.post)
+          .committed(zone, step, version, time);
       if (Trunk.TREE.compareAndSet(this.metaTrunk, oldMetaTree, metaTree)) {
         step += metaTree.diffSize(version);
         break;
@@ -581,7 +582,7 @@ public class Database {
     }
 
     final Germ germ = new Germ(this.stem, version, this.germ.created(), time,
-                               seedTree.rootRef().toValue());
+        seedTree.rootRef().toValue());
     this.germ = germ;
     return new Chunk(this, commit, zone, germ, commits, output.bind());
   }
@@ -738,9 +739,11 @@ public class Database {
   @SuppressWarnings("unchecked")
   static final AtomicReferenceFieldUpdater<Database, HashTrieMap<Value, Trunk<Tree>>> SPROUTS =
       AtomicReferenceFieldUpdater.newUpdater(Database.class, (Class<HashTrieMap<Value, Trunk<Tree>>>) (Class<?>) HashTrieMap.class, "sprouts");
+
 }
 
 final class DatabaseOpen implements Cont<Tree> {
+
   final Database database;
   final Cont<Database> andThen;
 
@@ -778,9 +781,11 @@ final class DatabaseOpen implements Cont<Tree> {
       }
     }
   }
+
 }
 
 final class DatabaseAwait implements ForkJoinPool.ManagedBlocker {
+
   final Database database;
 
   DatabaseAwait(Database database) {
@@ -799,9 +804,11 @@ final class DatabaseAwait implements ForkJoinPool.ManagedBlocker {
     }
     return (this.database.status & Database.OPENING) == 0;
   }
+
 }
 
 final class DatabaseClose implements Cont<Chunk> {
+
   final Database database;
   final Cont<Database> andThen;
 
@@ -829,9 +836,11 @@ final class DatabaseClose implements Cont<Chunk> {
   public void trap(Throwable cause) {
     this.andThen.trap(cause);
   }
+
 }
 
 final class DatabaseEvacuate implements Runnable {
+
   final Database database;
   final int post;
   final Cont<Database> andThen;
@@ -855,9 +864,11 @@ final class DatabaseEvacuate implements Runnable {
       }
     }
   }
+
 }
 
 final class DatabaseTreeIterator implements Iterator<MetaTree> {
+
   final Cursor<Map.Entry<Value, Value>> seeds;
 
   DatabaseTreeIterator(Cursor<Map.Entry<Value, Value>> seeds) {
@@ -879,9 +890,11 @@ final class DatabaseTreeIterator implements Iterator<MetaTree> {
   public void remove() {
     throw new UnsupportedOperationException();
   }
+
 }
 
 final class DatabaseLeafIterator implements Iterator<MetaLeaf> {
+
   final Database database;
   final Iterator<MetaTree> trees;
   Trunk<Tree> trunk;
@@ -947,4 +960,5 @@ final class DatabaseLeafIterator implements Iterator<MetaLeaf> {
   public void remove() {
     throw new UnsupportedOperationException();
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -71,6 +71,7 @@ import swim.warp.CommandMessage;
  * internal, immutable {@link AgentContext}.
  */
 public class AbstractAgent implements Agent, SwimRef, LaneFactory, Schedule, Store, Log {
+
   /**
    * Internal, immutable context that provides contextual {@code Lane} and
    * {@code Store} creation mechanisms, URI-based addressability, logging, and
@@ -799,4 +800,5 @@ public class AbstractAgent implements Agent, SwimRef, LaneFactory, Schedule, Sto
   public void close() {
     this.context.close();
   }
+
 }

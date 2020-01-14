@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ import swim.structure.Text;
 import swim.structure.Value;
 
 public class JavaKernel extends KernelProxy {
+
+  private static final double KERNEL_PRIORITY = 1.5;
   final double kernelPriority;
 
   public JavaKernel(double kernelPriority) {
@@ -40,6 +42,16 @@ public class JavaKernel extends KernelProxy {
 
   public JavaKernel() {
     this(KERNEL_PRIORITY);
+  }
+
+  public static JavaKernel fromValue(Value moduleConfig) {
+    final Value header = moduleConfig.getAttr("kernel");
+    final String kernelClassName = header.get("class").stringValue(null);
+    if (kernelClassName == null || JavaKernel.class.getName().equals(kernelClassName)) {
+      final double kernelPriority = header.get("priority").doubleValue(KERNEL_PRIORITY);
+      return new JavaKernel(kernelPriority);
+    }
+    return null;
   }
 
   @Override
@@ -190,15 +202,4 @@ public class JavaKernel extends KernelProxy {
     return agentRoute;
   }
 
-  private static final double KERNEL_PRIORITY = 1.5;
-
-  public static JavaKernel fromValue(Value moduleConfig) {
-    final Value header = moduleConfig.getAttr("kernel");
-    final String kernelClassName = header.get("class").stringValue(null);
-    if (kernelClassName == null || JavaKernel.class.getName().equals(kernelClassName)) {
-      final double kernelPriority = header.get("priority").doubleValue(KERNEL_PRIORITY);
-      return new JavaKernel(kernelPriority);
-    }
-    return null;
-  }
 }

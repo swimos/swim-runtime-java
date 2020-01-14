@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import swim.avro.AvroName;
 import swim.avro.AvroNamespace;
 
 public abstract class AvroNamedType<T> extends AvroComplexType<T> {
+
   public AvroNamespace namespace() {
     return fullName().namespace();
   }
@@ -33,4 +34,5 @@ public abstract class AvroNamedType<T> extends AvroComplexType<T> {
   public abstract AvroName getAlias(int index);
 
   public abstract AvroNamedType<T> alias(AvroName alias);
+
 }

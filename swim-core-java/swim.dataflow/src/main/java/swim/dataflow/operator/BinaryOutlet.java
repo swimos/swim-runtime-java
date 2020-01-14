@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.structure.Item;
 import swim.structure.Value;
 
 public abstract class BinaryOutlet extends AbstractOutlet<Value> {
+
   final Inlet<Value> operand1Inlet;
   final Inlet<Value> operand2Inlet;
 
@@ -54,4 +55,5 @@ public abstract class BinaryOutlet extends AbstractOutlet<Value> {
   }
 
   protected abstract Item evaluate(Value argument1, Value argument2);
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,22 @@ import swim.codec.DecoderException;
 import swim.codec.InputBuffer;
 
 final class PayloadDecoder<V> extends Decoder<V> {
+
+  static final int DETECTION_WINDOW;
+  static final Decoder<Object> DETECTION_FAILED;
+
+  static {
+    int detectionWindow;
+    try {
+      detectionWindow = Integer.parseInt(System.getProperty("swim.protobuf.payload.detection.window"));
+    } catch (NumberFormatException e) {
+      detectionWindow = 128;
+    }
+    DETECTION_WINDOW = detectionWindow;
+
+    DETECTION_FAILED = error(new DecoderException("detection failed"));
+  }
+
   final ProtobufDecoder<?, V> protobuf;
   final Decoder<V> messageDecoder;
   final Decoder<V> textDecoder;
@@ -36,12 +52,6 @@ final class PayloadDecoder<V> extends Decoder<V> {
 
   PayloadDecoder(ProtobufDecoder<?, V> protobuf) {
     this(protobuf, null, null, null, 0);
-  }
-
-  @Override
-  public Decoder<V> feed(InputBuffer input) {
-    return decode(input, this.protobuf, this.messageDecoder, this.textDecoder,
-                  this.dataDecoder, this.consumed);
   }
 
   static <V> Decoder<V> decode(InputBuffer input, ProtobufDecoder<?, V> protobuf,
@@ -112,18 +122,10 @@ final class PayloadDecoder<V> extends Decoder<V> {
     return decode(input, protobuf, null, null, null, 0);
   }
 
-  static final int DETECTION_WINDOW;
-  static final Decoder<Object> DETECTION_FAILED;
-
-  static {
-    int detectionWindow;
-    try {
-      detectionWindow = Integer.parseInt(System.getProperty("swim.protobuf.payload.detection.window"));
-    } catch (NumberFormatException e) {
-      detectionWindow = 128;
-    }
-    DETECTION_WINDOW = detectionWindow;
-
-    DETECTION_FAILED = error(new DecoderException("detection failed"));
+  @Override
+  public Decoder<V> feed(InputBuffer input) {
+    return decode(input, this.protobuf, this.messageDecoder, this.textDecoder,
+        this.dataDecoder, this.consumed);
   }
+
 }

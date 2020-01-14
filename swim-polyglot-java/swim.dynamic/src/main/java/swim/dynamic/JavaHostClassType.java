@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package swim.dynamic;
 
 public class JavaHostClassType<T> extends JavaHostObjectType<T> implements HostClassType<T> {
+
   HostConstructor constructor;
 
   public JavaHostClassType(Class<?> hostClass) {
@@ -30,4 +31,5 @@ public class JavaHostClassType<T> extends JavaHostObjectType<T> implements HostC
   public void setConstructor(HostConstructor constructor) {
     this.constructor = constructor;
   }
+
 }

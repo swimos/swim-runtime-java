@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.util.CombinerFunction;
 import swim.util.OrderedMapCursor;
 
 public final class BTree extends Tree {
+
   final TreeContext treeContext;
   final BTreePageRef rootRef;
   final Seed seed;
@@ -99,7 +100,7 @@ public final class BTree extends Tree {
   @Override
   public BTree isTransient(boolean isTransient) {
     if (this.isTransient != isTransient) {
-      return new BTree(this.treeContext,  this.rootRef, this.seed, this.isResident, isTransient);
+      return new BTree(this.treeContext, this.rootRef, this.seed, this.isResident, isTransient);
     } else {
       return this;
     }
@@ -236,7 +237,7 @@ public final class BTree extends Tree {
         .balanced(newVersion).evacuated(newPost, newVersion);
     if (oldRoot != newRoot) {
       return new BTree(this.treeContext, newRoot.pageRef(), this.seed,
-                       this.isResident, this.isTransient);
+          this.isResident, this.isTransient);
     } else {
       return this;
     }
@@ -248,7 +249,7 @@ public final class BTree extends Tree {
         .balanced(newVersion).evacuated(newPost, newVersion);
     if (oldRoot != newRoot) {
       return new BTree(this.treeContext, newRoot.pageRef(), this.seed,
-                       this.isResident, this.isTransient);
+          this.isResident, this.isTransient);
     } else {
       return this;
     }
@@ -265,7 +266,7 @@ public final class BTree extends Tree {
         newRoot = BTreePage.empty(this.treeContext, this.seed.stem, newVersion);
       }
       return new BTree(this.treeContext, newRoot.pageRef(), this.seed,
-                       this.isResident, this.isTransient);
+          this.isResident, this.isTransient);
     } else {
       return this;
     }
@@ -282,7 +283,7 @@ public final class BTree extends Tree {
         newRoot = BTreePage.empty(this.treeContext, this.seed.stem, newVersion);
       }
       return new BTree(this.treeContext, newRoot.pageRef(), this.seed,
-                       this.isResident, this.isTransient);
+          this.isResident, this.isTransient);
     } else {
       return this;
     }
@@ -292,7 +293,7 @@ public final class BTree extends Tree {
     if (!this.rootRef.isEmpty()) {
       final BTreePage newRoot = BTreePage.empty(this.treeContext, this.seed.stem, newVersion);
       return new BTree(this.treeContext, newRoot.pageRef(), this.seed,
-                       this.isResident, this.isTransient);
+          this.isResident, this.isTransient);
     } else {
       return this;
     }
@@ -401,4 +402,5 @@ public final class BTree extends Tree {
   public OrderedMapCursor<Value, Value> depthCursor(int maxDepth) {
     return this.rootRef.depthCursor(maxDepth);
   }
+
 }

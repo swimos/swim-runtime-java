@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 final class RecordIterator implements ListIterator<Item> {
+
   final Record record;
-  int index;
   final int fromIndex;
   final int toIndex;
+  int index;
   int direction;
 
   RecordIterator(Record record, int index, int fromIndex, int toIndex) {
@@ -122,4 +123,5 @@ final class RecordIterator implements ListIterator<Item> {
     this.record.remove(this.index);
     this.direction = 0;
   }
+
 }

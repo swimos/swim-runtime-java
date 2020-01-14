@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.dynamic.JavaHostRuntime;
 import swim.uri.UriPath;
 
 public class JsHostRuntime extends JavaHostRuntime implements JsRuntime {
+
   JsModuleResolver moduleResolver;
   HashTrieMap<UriPath, HostLibrary> hostModules;
 
@@ -60,4 +61,5 @@ public class JsHostRuntime extends JavaHostRuntime implements JsRuntime {
   public void addHostModule(String moduleId, HostLibrary hostLibrary) {
     addHostModule(UriPath.parse(moduleId), hostLibrary);
   }
+
 }

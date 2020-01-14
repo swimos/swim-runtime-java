@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.codec.Writer;
 import swim.codec.WriterException;
 
 final class HttpChunkHeaderWriter extends Writer<Object, Object> {
+
   final HttpWriter http;
   final long size;
   final Iterator<ChunkExtension> extensions;
@@ -38,11 +39,6 @@ final class HttpChunkHeaderWriter extends Writer<Object, Object> {
 
   HttpChunkHeaderWriter(HttpWriter http, long size, Iterator<ChunkExtension> extensions) {
     this(http, size, extensions, null, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.http, this.size, this.extensions, this.part, this.step);
   }
 
   static Writer<Object, Object> write(Output<?> output, HttpWriter http, long size,
@@ -106,4 +102,10 @@ final class HttpChunkHeaderWriter extends Writer<Object, Object> {
                                       Iterator<ChunkExtension> extensions) {
     return write(output, http, size, extensions, null, 1);
   }
+
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.http, this.size, this.extensions, this.part, this.step);
+  }
+
 }

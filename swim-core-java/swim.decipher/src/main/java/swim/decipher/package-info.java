@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,4 +16,5 @@
  * Universal decoder that detects and incrementally parses Recon, JSON, XML,
  * Protobuf, raw text, and binary data formats as <strong>swim-structure</strong> values.
  */
+
 package swim.decipher;

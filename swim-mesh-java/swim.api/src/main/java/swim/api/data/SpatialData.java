@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.structure.Form;
 import swim.structure.Value;
 
 public interface SpatialData<K, S, V> extends SpatialMap<K, S, V> {
+
   Value name();
 
   Form<K> keyForm();
@@ -47,4 +48,5 @@ public interface SpatialData<K, S, V> extends SpatialMap<K, S, V> {
   SpatialMap<K, S, V> snapshot();
 
   void close();
+
 }

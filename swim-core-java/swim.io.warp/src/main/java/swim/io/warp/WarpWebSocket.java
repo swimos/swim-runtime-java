@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import swim.ws.WsFrame;
 import swim.ws.WsText;
 
 public class WarpWebSocket implements WebSocket<Envelope, Envelope>, WarpSocketContext, PullContext<Envelope> {
+
   protected final WarpSocket socket;
   protected final WarpSettings warpSettings;
   final ConcurrentTrancheQueue<PullRequest<Envelope>> supply;
@@ -317,8 +318,8 @@ public class WarpWebSocket implements WebSocket<Envelope, Envelope>, WarpSocketC
       if (newDemand >= 0L) {
         if (newBuffer <= BUFFER_MAX) {
           final long newStatus = oldStatus & ~(DEMAND_MASK | BUFFER_MASK)
-                                           | newDemand << DEMAND_SHIFT
-                                           | newBuffer << BUFFER_SHIFT;
+              | newDemand << DEMAND_SHIFT
+              | newBuffer << BUFFER_SHIFT;
           if (STATUS.compareAndSet(this, oldStatus, newStatus)) {
             break;
           }
@@ -350,7 +351,8 @@ public class WarpWebSocket implements WebSocket<Envelope, Envelope>, WarpSocketC
   }
 
   protected void generateDemand() {
-    demand: do {
+    demand:
+    do {
       PullRequest<Envelope> pullRequest = null;
       do {
         final long oldStatus = this.status;
@@ -492,4 +494,5 @@ public class WarpWebSocket implements WebSocket<Envelope, Envelope>, WarpSocketC
     }
     TRANCHES = tranches;
   }
+
 }

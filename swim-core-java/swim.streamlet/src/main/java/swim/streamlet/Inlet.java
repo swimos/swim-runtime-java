@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ package swim.streamlet;
  * {@code Inlet} to reconcile their state.
  */
 public interface Inlet<I> {
+
   /**
    * Returns the {@code Outlet} from which this {@code Inlet} acquires its
    * state; returns {@code null} if this {@code Inlet} is disconnected.
@@ -92,4 +93,5 @@ public interface Inlet<I> {
    * state.
    */
   void reconcileOutput(int version);
+
 }

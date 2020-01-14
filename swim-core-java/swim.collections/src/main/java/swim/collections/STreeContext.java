@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.collections;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class STreeContext<T> {
+
   @SuppressWarnings("unchecked")
   protected Object identify(T value) {
     final byte[] bytes = new byte[6];
@@ -40,4 +41,5 @@ public abstract class STreeContext<T> {
   protected boolean pageShouldMerge(STreePage<T> page) {
     return page.arity() < pageSplitSize() >>> 1;
   }
+
 }

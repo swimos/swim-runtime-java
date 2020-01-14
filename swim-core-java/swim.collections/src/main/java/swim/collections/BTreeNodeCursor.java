@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.util.NoSuchElementException;
 import swim.util.OrderedMapCursor;
 
 final class BTreeNodeCursor<K, V, U> implements OrderedMapCursor<K, V> {
+
   final BTreePage<K, V, U>[] pages;
   long index;
   int pageIndex;
@@ -285,4 +286,5 @@ final class BTreeNodeCursor<K, V, U> implements OrderedMapCursor<K, V> {
   public void remove() {
     this.pageCursor.remove();
   }
+
 }

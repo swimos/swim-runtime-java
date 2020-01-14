@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import static swim.warp.Assertions.assertParses;
 import static swim.warp.Assertions.assertWrites;
 
 public class DeauthRequestSpec {
+
   @Test
   public void parseDeauth() {
     assertParses("@deauth", new DeauthRequest());
@@ -40,4 +41,5 @@ public class DeauthRequestSpec {
   public void writeDeauthWithBody() {
     assertWrites(new DeauthRequest(Record.of(Attr.of("test"))), "@deauth@test");
   }
+
 }

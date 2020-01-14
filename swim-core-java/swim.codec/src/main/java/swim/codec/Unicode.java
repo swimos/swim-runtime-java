@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ package swim.codec;
  * Output#bind() bind} a {@code String} containing all written code points.</p>
  */
 public final class Unicode {
+
   private Unicode() {
     // nop
   }
@@ -165,4 +166,5 @@ public final class Unicode {
   public static Parser<String> parseLine(Input input) {
     return LineParser.parse(input, new StringBuilder());
   }
+
 }

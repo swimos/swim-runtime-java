@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.codec.InputBuffer;
 import swim.deflate.Inflate;
 
 public class WsDeflateDecoder extends WsDecoder implements Cloneable {
+
   protected final Inflate<?> inflate;
   protected boolean decompressing;
 
@@ -74,4 +75,5 @@ public class WsDeflateDecoder extends WsDecoder implements Cloneable {
   public WsDeflateDecoder clone() {
     return new WsDeflateDecoder(this.inflate.clone(), this.decompressing);
   }
+
 }

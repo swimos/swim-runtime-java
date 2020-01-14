@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.ws;
 import swim.deflate.Deflate;
 
 final class WsDeflateEncoderUnmasked extends WsDeflateEncoder {
+
   WsDeflateEncoderUnmasked(Deflate<?> deflate, int flush) {
     super(deflate, flush);
   }
@@ -30,4 +31,5 @@ final class WsDeflateEncoderUnmasked extends WsDeflateEncoder {
   public void maskingKey(byte[] maskingKey) {
     // nop
   }
+
 }

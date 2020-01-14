@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package swim.codec;
  * Base-10 (decimal) encoding {@link Parser}/{@link Writer} factory.
  */
 public final class Base10 {
+
   private Base10() {
     // nop
   }
@@ -198,4 +199,5 @@ public final class Base10 {
   public static Writer<?, ?> writeDouble(double input, Output<?> output) {
     return StringWriter.write(output, null, input);
   }
+
 }

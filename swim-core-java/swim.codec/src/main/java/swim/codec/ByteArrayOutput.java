@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
 final class ByteArrayOutput extends OutputBuffer<ByteBuffer> {
+
   byte[] array;
   int index;
   int limit;
@@ -222,4 +223,5 @@ final class ByteArrayOutput extends OutputBuffer<ByteBuffer> {
   public OutputBuffer<ByteBuffer> clone() {
     return new ByteArrayOutput(this.array, this.index, this.limit, this.settings, this.isPart);
   }
+
 }

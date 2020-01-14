@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,10 +22,16 @@ import swim.codec.OutputBuffer;
 import swim.util.Murmur3;
 
 public final class WsValue<T> extends WsData<T> implements Debug {
+
+  private static int hashSeed;
   final T value;
 
   WsValue(T value) {
     this.value = value;
+  }
+
+  public static <T> WsValue<T> from(T value) {
+    return new WsValue<T>(value);
   }
 
   @Override
@@ -88,9 +94,4 @@ public final class WsValue<T> extends WsData<T> implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  public static <T> WsValue<T> from(T value) {
-    return new WsValue<T>(value);
-  }
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,10 +20,16 @@ import swim.codec.Output;
 import swim.util.Murmur3;
 
 public final class StoreAddress extends CellAddress implements Debug {
+
+  private static int hashSeed;
   final String storeName;
 
   public StoreAddress(String storeName) {
     this.storeName = storeName;
+  }
+
+  public static StoreAddress from(String storeName) {
+    return new StoreAddress(storeName);
   }
 
   public String storeName() {
@@ -68,9 +74,4 @@ public final class StoreAddress extends CellAddress implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  public static StoreAddress from(String storeName) {
-    return new StoreAddress(storeName);
-  }
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package swim.util;
  * type {@code O}.
  */
 public interface PairBuilder<K, V, O> {
+
   /**
    * Adds an input pair to this builder, returning {@code true} if the state
    * of the builder changed.
@@ -29,4 +30,5 @@ public interface PairBuilder<K, V, O> {
    * Returns the output result of this builder.
    */
   O bind();
+
 }

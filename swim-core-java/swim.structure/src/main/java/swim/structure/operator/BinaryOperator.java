@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.structure.Operator;
  * two operands.
  */
 public abstract class BinaryOperator extends Operator {
+
   final Item operand1;
   final Item operand2;
 
@@ -48,4 +49,5 @@ public abstract class BinaryOperator extends Operator {
   public boolean isConstant() {
     return this.operand1.isConstant() && this.operand2.isConstant();
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.math;
 import java.lang.reflect.Array;
 
 final class TensorArrayIdentityForm<V> extends TensorArrayForm<V[], V> {
+
   final TensorForm<V> next;
 
   TensorArrayIdentityForm(TensorForm<V> next) {
@@ -43,4 +44,5 @@ final class TensorArrayIdentityForm<V> extends TensorArrayForm<V[], V> {
   public Object[] toArray(V[] tensor) {
     return tensor;
   }
+
 }

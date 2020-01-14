@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.codec.Output;
 import swim.codec.Parser;
 
 final class AttributeValueParser<V> extends Parser<V> {
+
   final XmlParser<?, V> xml;
   final Output<V> output;
   final Parser<?> referenceParser;
@@ -33,11 +34,6 @@ final class AttributeValueParser<V> extends Parser<V> {
     this.referenceParser = referenceParser;
     this.quote = quote;
     this.step = step;
-  }
-
-  @Override
-  public Parser<V> feed(Input input) {
-    return parse(input, this.xml, this.output, this.referenceParser, this.quote, this.step);
   }
 
   static <V> Parser<V> parse(Input input, XmlParser<?, V> xml, Output<V> output,
@@ -113,4 +109,10 @@ final class AttributeValueParser<V> extends Parser<V> {
   static <V> Parser<V> parse(Input input, XmlParser<?, V> xml) {
     return parse(input, xml, null, null, 0, 1);
   }
+
+  @Override
+  public Parser<V> feed(Input input) {
+    return parse(input, this.xml, this.output, this.referenceParser, this.quote, this.step);
+  }
+
 }

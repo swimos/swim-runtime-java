@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.structure.Value;
 import swim.structure.collections.ValueIterator;
 
 public class SpatialValueMap<K, S, V> implements SpatialMap<K, S, V> {
+
   protected SpatialMap<Value, S, Value> inner;
   protected Form<K> keyForm;
   protected Form<V> valueForm;
@@ -261,4 +262,5 @@ public class SpatialValueMap<K, S, V> implements SpatialMap<K, S, V> {
     } while (true);
     return sb.append('}').toString();
   }
+
 }

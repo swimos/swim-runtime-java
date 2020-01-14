@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package swim.util;
  * support efficient, incremental reduction of continuously mutating datasets.
  */
 public interface ReducedMap<K, V, U> extends OrderedMap<K, V> {
+
   /**
    * Returns the reduction of this {@code ReducedMap}, combining all contained
    * elements with the given {@code accumulator} and {@code combiner} functions,
@@ -27,4 +28,5 @@ public interface ReducedMap<K, V, U> extends OrderedMap<K, V> {
    * of continuously mutating datasets.
    */
   U reduced(U identity, CombinerFunction<? super V, U> accumulator, CombinerFunction<U, U> combiner);
+
 }

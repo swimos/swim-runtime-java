@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.codec.Decoder;
 import swim.codec.Encoder;
 
 public abstract class AbstractIpModem<I, O> implements IpModem<I, O>, IpContext, FlowContext {
+
   protected IpModemContext<I, O> context;
 
   @Override
@@ -198,4 +199,5 @@ public abstract class AbstractIpModem<I, O> implements IpModem<I, O>, IpContext,
   public void close() {
     this.context.close();
   }
+
 }

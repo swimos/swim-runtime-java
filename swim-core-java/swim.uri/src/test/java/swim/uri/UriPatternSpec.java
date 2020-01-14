@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class UriPatternSpec {
+
   @Test
   public void applyPathSegments() {
     assertEquals(UriPattern.parse("/:entity").apply("foo"), Uri.parse("/foo"));
@@ -104,4 +105,5 @@ public class UriPatternSpec {
     assertFalse(UriPattern.parse("http://example.com/:entity?q#f").matches("http://example.com/foo?q"));
     assertFalse(UriPattern.parse("http://example.com/:entity?q#f").matches("http://example.com/foo#f"));
   }
+
 }

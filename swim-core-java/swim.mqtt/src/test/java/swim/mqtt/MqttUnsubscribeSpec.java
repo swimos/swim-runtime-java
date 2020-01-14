@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.structure.Data;
 import static swim.mqtt.MqttAssertions.assertEncodes;
 
 public class MqttUnsubscribeSpec {
+
   public static void assertDecodes(Data data, MqttUnsubscribe packet) {
     MqttAssertions.assertDecodesPacket(data, packet);
   }
@@ -36,30 +37,31 @@ public class MqttUnsubscribeSpec {
   @Test
   public void decodeUnsubscribePacketsWithSingleTopicName() {
     assertDecodes(Data.fromBase16("A2080000000474657374"),
-                  MqttUnsubscribe.from(0).topicName("test"));
+        MqttUnsubscribe.from(0).topicName("test"));
   }
 
   @Test
   public void encodeUnsubscribePacketsWithSingleTopicName() {
     assertEncodes(MqttUnsubscribe.from(0).topicName("test"),
-                  Data.fromBase16("A2080000000474657374"));
+        Data.fromBase16("A2080000000474657374"));
   }
 
   @Test
   public void decodeUnsubscribePacketsWithMultipleTopicNames() {
     assertDecodes(Data.fromBase16("A21200000004746573740003666F6F0003626172"),
-                  MqttUnsubscribe.from(0)
-                                 .topicName("test")
-                                 .topicName("foo")
-                                 .topicName("bar"));
+        MqttUnsubscribe.from(0)
+            .topicName("test")
+            .topicName("foo")
+            .topicName("bar"));
   }
 
   @Test
   public void encodeUnsubscribePacketsWithMultipleTopicNames() {
     assertEncodes(MqttUnsubscribe.from(0)
-                                 .topicName("test")
-                                 .topicName("foo")
-                                 .topicName("bar"),
-                  Data.fromBase16("A21200000004746573740003666F6F0003626172"));
+            .topicName("test")
+            .topicName("foo")
+            .topicName("bar"),
+        Data.fromBase16("A21200000004746573740003666F6F0003626172"));
   }
+
 }

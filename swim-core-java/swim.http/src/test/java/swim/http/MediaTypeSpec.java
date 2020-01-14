@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 import static swim.http.HttpAssertions.assertWrites;
 
 public class MediaTypeSpec {
+
   public void assertParses(String string, MediaType mediaType) {
     HttpAssertions.assertParses(Http.standardParser().mediaTypeParser(), string, mediaType);
   }
@@ -35,14 +36,15 @@ public class MediaTypeSpec {
   @Test
   public void parseMediaTypesWithParams() {
     assertParses("text/html;charset=UTF-8",
-                 MediaType.from("text", "html").param("charset", "UTF-8"));
+        MediaType.from("text", "html").param("charset", "UTF-8"));
     assertParses("text/html ; charset = UTF-8",
-                 MediaType.from("text", "html").param("charset", "UTF-8"));
+        MediaType.from("text", "html").param("charset", "UTF-8"));
   }
 
   @Test
   public void writeMediaTypesWithParams() {
     assertWrites(MediaType.from("text", "html").param("charset", "UTF-8"),
-                 "text/html; charset=UTF-8");
+        "text/html; charset=UTF-8");
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import swim.http.WebSocketExtension;
  * WebSocket handshake response.
  */
 public class WsResponse {
+
   protected final HttpRequest<?> httpRequest;
   protected final HttpResponse<?> httpResponse;
   protected final String protocol;
@@ -59,4 +60,5 @@ public class WsResponse {
   public WsEngine serverEngine(WsEngineSettings settings) {
     return WsEngine.standardServerEngine().extensions(this.extensions, settings);
   }
+
 }

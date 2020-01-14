@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.codec.Utf8;
 import swim.http.Http;
 
 final class ExpectParser extends Parser<Expect> {
+
   final Output<String> value;
   final int step;
 
@@ -31,11 +32,6 @@ final class ExpectParser extends Parser<Expect> {
 
   ExpectParser() {
     this(null, 1);
-  }
-
-  @Override
-  public Parser<Expect> feed(Input input) {
-    return parse(input, this.value, this.step);
   }
 
   static Parser<Expect> parse(Input input, Output<String> value, int step) {
@@ -91,4 +87,10 @@ final class ExpectParser extends Parser<Expect> {
   static Parser<Expect> parse(Input input) {
     return parse(input, null, 1);
   }
+
+  @Override
+  public Parser<Expect> feed(Input input) {
+    return parse(input, this.value, this.step);
+  }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.codec.DecoderException;
 import swim.codec.InputBuffer;
 
 final class RecordDecoder<T, R> extends Decoder<T> {
+
   final AvroDecoder avro;
   final AvroRecordType<T, R> type;
   final R record;
@@ -38,11 +39,6 @@ final class RecordDecoder<T, R> extends Decoder<T> {
 
   RecordDecoder(AvroDecoder avro, AvroRecordType<T, R> type) {
     this(avro, type, null, null, 0);
-  }
-
-  @Override
-  public Decoder<T> feed(InputBuffer input) {
-    return decode(input, this.avro, this.type, this.record, this.valueDecoder, this.fieldIndex);
   }
 
   @SuppressWarnings("unchecked")
@@ -88,4 +84,10 @@ final class RecordDecoder<T, R> extends Decoder<T> {
   static <T, R> Decoder<T> decode(InputBuffer input, AvroDecoder avro, AvroRecordType<T, R> type) {
     return decode(input, avro, type, null, null, 0);
   }
+
+  @Override
+  public Decoder<T> feed(InputBuffer input) {
+    return decode(input, this.avro, this.type, this.record, this.valueDecoder, this.fieldIndex);
+  }
+
 }

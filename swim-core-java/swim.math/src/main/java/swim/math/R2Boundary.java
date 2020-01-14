@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package swim.math;
 
 public interface R2Boundary<T> extends Boundary<T> {
+
   double getXMin(T object);
 
   double getYMin(T object);
@@ -22,4 +23,5 @@ public interface R2Boundary<T> extends Boundary<T> {
   double getXMax(T object);
 
   double getYMax(T object);
+
 }

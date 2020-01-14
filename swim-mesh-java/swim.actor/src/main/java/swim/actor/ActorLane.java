@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import swim.util.Log;
 import swim.warp.CommandMessage;
 
 public class ActorLane extends ActorTier implements LaneBinding, LaneContext {
+
   final LaneBinding laneBinding;
   LaneContext laneContext;
   LaneDef laneDef;
@@ -323,4 +324,5 @@ public class ActorLane extends ActorTier implements LaneBinding, LaneContext {
   public void didFail(Throwable error) {
     this.laneBinding.didFail(error);
   }
+
 }

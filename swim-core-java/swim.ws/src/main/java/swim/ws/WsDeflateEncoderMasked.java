@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import swim.deflate.Deflate;
 
 final class WsDeflateEncoderMasked extends WsDeflateEncoder {
+
   WsDeflateEncoderMasked(Deflate<?> deflate, int flush) {
     super(deflate, flush);
   }
@@ -31,4 +32,5 @@ final class WsDeflateEncoderMasked extends WsDeflateEncoder {
   public void maskingKey(byte[] maskingKey) {
     ThreadLocalRandom.current().nextBytes(maskingKey);
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,11 +21,12 @@ import swim.structure.Value;
  * Factory for constructing Protocol Buffer decoders and encoders.
  */
 public final class Protobuf {
+
+  private static ProtobufDecoder<Item, Value> structureDecoder;
+
   private Protobuf() {
     // static
   }
-
-  private static ProtobufDecoder<Item, Value> structureDecoder;
   //private static ProtobufEncoder<Item, Value> structureEncoder;
 
   public static ProtobufDecoder<Item, Value> structureDecoder() {
@@ -41,4 +42,5 @@ public final class Protobuf {
   //  }
   //  return structureEncoder;
   //}
+
 }

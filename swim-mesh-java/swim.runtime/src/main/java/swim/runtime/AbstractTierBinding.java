@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,29 @@ package swim.runtime;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
 public abstract class AbstractTierBinding extends AbstractSwimRef implements TierBinding {
+
+  protected static final int STATE_MASK = 0xf;
+  protected static final int CLOSED_STATE = 0;
+  protected static final int CLOSING_STATE = 1;
+  protected static final int UNLOADING_STATE = 2;
+  protected static final int STOPPING_STATE = 3;
+  protected static final int RECOVERING_STATE = 4;
+  protected static final int FAILING_STATE = 5;
+  protected static final int FAILED_STATE = 6;
+  protected static final int OPENING_STATE = 7;
+  protected static final int OPENED_STATE = 8;
+  protected static final int LOADING_STATE = 9;
+  protected static final int LOADED_STATE = 10;
+  protected static final int STARTING_STATE = 11;
+  protected static final int STARTED_STATE = 12;
+  protected static final int PHASE_SHIFT = 4;
+  protected static final int PHASE_MASK = 0xf << PHASE_SHIFT;
+  protected static final int CLOSED_PHASE = 0;
+  protected static final int OPENED_PHASE = 1;
+  protected static final int LOADED_PHASE = 2;
+  protected static final int STARTED_PHASE = 3;
+  protected static final AtomicIntegerFieldUpdater<AbstractTierBinding> STATUS =
+      AtomicIntegerFieldUpdater.newUpdater(AbstractTierBinding.class, "status");
   protected volatile int status;
 
   @Override
@@ -24,26 +47,26 @@ public abstract class AbstractTierBinding extends AbstractSwimRef implements Tie
 
   @Override
   public boolean isClosed() {
-    final int phase = (this.status & PHASE_MASK) >>> PHASE_SHIFT;
-    return phase == CLOSED_PHASE;
+    final int state = (this.status & STATE_MASK);
+    return state == CLOSED_STATE;
   }
 
   @Override
   public boolean isOpened() {
-    final int phase = (this.status & PHASE_MASK) >>> PHASE_SHIFT;
-    return phase >= OPENED_PHASE;
+    final int state = (this.status & STATE_MASK);
+    return state >= OPENED_STATE;
   }
 
   @Override
   public boolean isLoaded() {
-    final int phase = (this.status & PHASE_MASK) >>> PHASE_SHIFT;
-    return phase >= LOADED_PHASE;
+    final int state = (this.status & STATE_MASK);
+    return state >= LOADED_STATE;
   }
 
   @Override
   public boolean isStarted() {
-    final int phase = (this.status & PHASE_MASK) >>> PHASE_SHIFT;
-    return phase == STARTED_PHASE;
+    final int state = (this.status & STATE_MASK);
+    return state == STARTED_STATE;
   }
 
   protected void activate(TierBinding childTier) {
@@ -286,7 +309,8 @@ public abstract class AbstractTierBinding extends AbstractSwimRef implements Tie
   }
 
   void convergeState() {
-    call: do {
+    call:
+    do {
       int oldStatus;
       int newStatus;
       int oldState;
@@ -462,28 +486,4 @@ public abstract class AbstractTierBinding extends AbstractSwimRef implements Tie
     error.printStackTrace();
   }
 
-  protected static final int STATE_MASK = 0xf;
-  protected static final int CLOSED_STATE = 0;
-  protected static final int CLOSING_STATE = 1;
-  protected static final int UNLOADING_STATE = 2;
-  protected static final int STOPPING_STATE = 3;
-  protected static final int RECOVERING_STATE = 4;
-  protected static final int FAILING_STATE = 5;
-  protected static final int FAILED_STATE = 6;
-  protected static final int OPENING_STATE = 7;
-  protected static final int OPENED_STATE = 8;
-  protected static final int LOADING_STATE = 9;
-  protected static final int LOADED_STATE = 10;
-  protected static final int STARTING_STATE = 11;
-  protected static final int STARTED_STATE = 12;
-
-  protected static final int PHASE_SHIFT = 4;
-  protected static final int PHASE_MASK = 0xf << PHASE_SHIFT;
-  protected static final int CLOSED_PHASE = 0;
-  protected static final int OPENED_PHASE = 1;
-  protected static final int LOADED_PHASE = 2;
-  protected static final int STARTED_PHASE = 3;
-
-  protected static final AtomicIntegerFieldUpdater<AbstractTierBinding> STATUS =
-      AtomicIntegerFieldUpdater.newUpdater(AbstractTierBinding.class, "status");
 }

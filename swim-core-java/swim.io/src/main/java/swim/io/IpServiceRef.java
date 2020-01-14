@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.net.InetSocketAddress;
  * External handle to a network {@link IpService} listener.
  */
 public interface IpServiceRef {
+
   /**
    * Returns the IP address and port to which the underlying network listener
    * is bound.  Returns {@code null} if the underlying network listener is not
@@ -31,4 +32,5 @@ public interface IpServiceRef {
    * Unbinds the underlying network listener.
    */
   void unbind();
+
 }

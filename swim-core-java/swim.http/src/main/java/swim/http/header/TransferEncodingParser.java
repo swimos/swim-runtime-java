@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.http.TransferCoding;
 import swim.util.Builder;
 
 final class TransferEncodingParser extends Parser<TransferEncoding> {
+
   final HttpParser http;
   final Parser<TransferCoding> coding;
   final Builder<TransferCoding, FingerTrieSeq<TransferCoding>> codings;
@@ -39,11 +40,6 @@ final class TransferEncodingParser extends Parser<TransferEncoding> {
 
   TransferEncodingParser(HttpParser http) {
     this(http, null, null, 1);
-  }
-
-  @Override
-  public Parser<TransferEncoding> feed(Input input) {
-    return parse(input, this.http, this.coding, this.codings, this.step);
   }
 
   static Parser<TransferEncoding> parse(Input input, HttpParser http, Parser<TransferCoding> coding,
@@ -124,4 +120,10 @@ final class TransferEncodingParser extends Parser<TransferEncoding> {
   static Parser<TransferEncoding> parse(Input input, HttpParser http) {
     return parse(input, http, null, null, 1);
   }
+
+  @Override
+  public Parser<TransferEncoding> feed(Input input) {
+    return parse(input, this.http, this.coding, this.codings, this.step);
+  }
+
 }

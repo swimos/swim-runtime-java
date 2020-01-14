@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,12 +30,13 @@ import swim.concurrent.Conts;
  * controlled {@link IpModem}.
  */
 public class IpSocketModem<I, O> implements IpSocket, IpModemContext<I, O> {
+
   final IpModem<I, O> modem;
   final ConcurrentLinkedQueue<Decoder<? extends I>> readerQueue;
   final ConcurrentLinkedQueue<Encoder<?, ? extends O>> writerQueue;
+  protected volatile IpSocketContext context;
   volatile Decoder<? extends I> reading;
   volatile Encoder<?, ? extends O> writing;
-  protected volatile IpSocketContext context;
 
   public IpSocketModem(IpModem<I, O> modem) {
     this.modem = modem;
@@ -413,4 +414,5 @@ public class IpSocketModem<I, O> implements IpSocket, IpModemContext<I, O> {
   public void close() {
     this.context.close();
   }
+
 }

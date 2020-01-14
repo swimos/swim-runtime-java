@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.kernel.KernelContext;
 import swim.web.WebRoute;
 
 public class WebServiceFactory implements ServiceFactory<WebService> {
+
   final KernelContext kernel;
   final WebServiceDef serviceDef;
   final WebRoute router;
@@ -46,4 +47,5 @@ public class WebServiceFactory implements ServiceFactory<WebService> {
   public WebService createService(ServiceContext context) {
     return new WebService(this.kernel, context, this.serviceDef, this.router);
   }
+
 }

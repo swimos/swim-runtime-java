@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.io.http.HttpServerContext;
 import swim.ws.WsResponse;
 
 public abstract class AbstractWsServer extends AbstractHttpServer {
+
   protected WsSettings wsSettings;
 
   public AbstractWsServer(WsSettings wsSettings) {
@@ -44,4 +45,5 @@ public abstract class AbstractWsServer extends AbstractHttpServer {
   protected WsUpgradeResponder upgrade(WebSocket<?, ?> webSocket, WsResponse wsResponse) {
     return new WsUpgradeResponder(webSocket, wsResponse, this.wsSettings);
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import swim.structure.Value;
 import swim.uri.Uri;
 
 public class HostTableNode implements NodeContext {
+
   protected final HostTable host;
   protected final NodeBinding node;
   protected final NodeAddress nodeAddress;
@@ -295,4 +296,5 @@ public class HostTableNode implements NodeContext {
   public void willClose() {
     // nop
   }
+
 }

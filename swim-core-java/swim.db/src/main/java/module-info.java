@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 /**
  * Lock-free document store—optimized for high rate atomic state changes—that
  * concurrently commits and compacts on-disk log-structured storage files
- * without blocking parallel in-memory updates to associative B-tree maps, 
+ * without blocking parallel in-memory updates to associative B-tree maps,
  * spatial Q-tree maps, sequential S-tree lists, and singleton U-tree values.
  */
 module swim.db {

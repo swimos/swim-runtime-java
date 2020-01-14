@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import swim.ws.WsData;
 import swim.ws.WsRequest;
 
 public abstract class AbstractWarpClient extends AbstractWsClient implements WebSocketContext<Envelope, Envelope> {
+
   protected WarpSettings warpSettings;
 
   public AbstractWarpClient(WarpSettings warpSettings) {
@@ -72,4 +73,5 @@ public abstract class AbstractWarpClient extends AbstractWsClient implements Web
     warpSocket.setWarpSocketContext(webSocket); // eagerly set
     return new WsUpgradeRequester(webSocket, wsRequest, this.wsSettings);
   }
+
 }

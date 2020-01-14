@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.codec.InputSettings;
 import swim.codec.Mark;
 
 final class CsvInput extends Input {
+
   final CsvParser csv;
   Input input;
 
@@ -148,4 +149,5 @@ final class CsvInput extends Input {
   public Input clone() {
     return new CsvInput(this.csv, this.input.clone());
   }
+
 }

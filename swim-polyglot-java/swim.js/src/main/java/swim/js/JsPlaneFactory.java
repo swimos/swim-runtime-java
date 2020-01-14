@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import swim.vm.js.JsModule;
 import swim.vm.js.JsModuleSystem;
 
 public class JsPlaneFactory implements PlaneFactory<JsPlane> {
+
   protected final JsKernel jsKernel;
   protected final UriPath basePath;
   protected final JsPlaneDef planeDef;
@@ -95,4 +96,5 @@ public class JsPlaneFactory implements PlaneFactory<JsPlane> {
     final Value guest = createGuestPlane(planeContext, jsBridge, module);
     return new JsPlane(planeContext, jsBridge, module, guest);
   }
+
 }

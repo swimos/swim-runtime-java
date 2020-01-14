@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import swim.uri.Uri;
 import swim.warp.Envelope;
 
 class RemoteWarpUplink implements WarpContext, PullRequest<Envelope> {
+
   final RemoteHost host;
   final WarpBinding link;
   final Uri remoteNodeUri;
@@ -333,4 +334,5 @@ class RemoteWarpUplink implements WarpContext, PullRequest<Envelope> {
 
   static final AtomicIntegerFieldUpdater<RemoteWarpUplink> STATUS =
       AtomicIntegerFieldUpdater.newUpdater(RemoteWarpUplink.class, "status");
+
 }

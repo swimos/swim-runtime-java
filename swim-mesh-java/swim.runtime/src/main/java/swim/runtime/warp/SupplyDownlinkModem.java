@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.uri.Uri;
 import swim.warp.CommandMessage;
 
 public abstract class SupplyDownlinkModem<View extends WarpDownlinkView> extends WarpDownlinkModel<View> {
+
   final ConcurrentLinkedQueue<Push<CommandMessage>> upQueue;
 
   public SupplyDownlinkModem(Uri meshUri, Uri hostUri, Uri nodeUri, Uri laneUri,
@@ -43,11 +44,12 @@ public abstract class SupplyDownlinkModem<View extends WarpDownlinkView> extends
     final float prio = prio();
     final CommandMessage message = new CommandMessage(nodeUri, laneUri, body);
     this.upQueue.add(new Push<CommandMessage>(Uri.empty(), hostUri, nodeUri, laneUri,
-                                              prio, null, message, cont));
+        prio, null, message, cont));
   }
 
   @Override
   protected Push<CommandMessage> nextUpQueue() {
     return this.upQueue.poll();
   }
+
 }

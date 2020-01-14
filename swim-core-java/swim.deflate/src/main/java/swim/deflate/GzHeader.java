@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ package swim.deflate;
 
 @SuppressWarnings("checkstyle:all")
 final class GzHeader implements Cloneable {
+
   // true if compressed data believed to be text
   boolean text;
 
@@ -67,4 +68,5 @@ final class GzHeader implements Cloneable {
   public GzHeader clone() {
     return new GzHeader(this);
   }
+
 }

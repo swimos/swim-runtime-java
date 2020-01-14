@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.structure.Record;
 import swim.structure.Value;
 
 final class VectorZ2Form extends TensorForm<VectorZ2> {
+
   @Override
   public String tag() {
     return "vector";
@@ -145,4 +146,5 @@ final class VectorZ2Form extends TensorForm<VectorZ2> {
       tensor[offset] = header.getItem(1).doubleValue(0.0);
     }
   }
+
 }

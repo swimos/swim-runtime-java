@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 public class UriMapperSpec {
+
   @Test
   public void mapUriPathMatches() {
     assertEquals(UriMapper.from("path", "test").get("path"), "test");
@@ -282,4 +283,5 @@ public class UriMapperSpec {
     assertEquals(childIterator.next(), UriPath.segment("3"));
     assertFalse(childIterator.hasNext());
   }
+
 }

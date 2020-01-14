@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import swim.api.http.function.WillRequestHttp;
 import swim.api.http.function.WillRespondHttp;
 
 public class RestLaneView<V> extends HttpLaneView<V> {
+
   protected final AgentContext agentContext;
   protected RestLaneModel laneBinding;
 
@@ -96,4 +97,5 @@ public class RestLaneView<V> extends HttpLaneView<V> {
   public RestLaneView<V> didRespond(DidRespondHttp<?> didRespond) {
     return observe(didRespond);
   }
+
 }

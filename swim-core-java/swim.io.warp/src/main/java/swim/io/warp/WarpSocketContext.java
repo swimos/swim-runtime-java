@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import swim.warp.Envelope;
 import swim.ws.WsControl;
 
 public interface WarpSocketContext extends IpContext, FlowContext {
+
   WarpSettings warpSettings();
 
   void feed(PullRequest<Envelope> pullRequest);
@@ -35,4 +36,5 @@ public interface WarpSocketContext extends IpContext, FlowContext {
   void become(IpSocket socket);
 
   void close();
+
 }

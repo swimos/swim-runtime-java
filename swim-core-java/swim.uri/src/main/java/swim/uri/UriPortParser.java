@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.codec.Input;
 import swim.codec.Parser;
 
 final class UriPortParser extends Parser<UriPort> {
+
   final UriParser uri;
   final int number;
 
@@ -30,11 +31,6 @@ final class UriPortParser extends Parser<UriPort> {
 
   UriPortParser(UriParser uri) {
     this(uri, 0);
-  }
-
-  @Override
-  public Parser<UriPort> feed(Input input) {
-    return parse(input, this.uri, this.number);
   }
 
   static Parser<UriPort> parse(Input input, UriParser uri, int number) {
@@ -60,4 +56,10 @@ final class UriPortParser extends Parser<UriPort> {
   static Parser<UriPort> parse(Input input, UriParser uri) {
     return parse(input, uri, 0);
   }
+
+  @Override
+  public Parser<UriPort> feed(Input input) {
+    return parse(input, this.uri, this.number);
+  }
+
 }

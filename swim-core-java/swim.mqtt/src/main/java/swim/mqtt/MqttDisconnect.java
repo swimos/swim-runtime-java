@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,10 +22,28 @@ import swim.codec.OutputBuffer;
 import swim.util.Murmur3;
 
 public final class MqttDisconnect extends MqttPacket<Object> implements Debug {
+
+  private static int hashSeed;
+  private static MqttDisconnect packet;
   final int packetFlags;
 
   MqttDisconnect(int packetFlags) {
     this.packetFlags = packetFlags;
+  }
+
+  public static MqttDisconnect packet() {
+    if (packet == null) {
+      packet = new MqttDisconnect(0);
+    }
+    return packet;
+  }
+
+  public static MqttDisconnect from(int packetFlags) {
+    if (packetFlags == 0) {
+      return packet();
+    } else {
+      return new MqttDisconnect(packetFlags);
+    }
   }
 
   @Override
@@ -89,22 +107,4 @@ public final class MqttDisconnect extends MqttPacket<Object> implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  private static MqttDisconnect packet;
-
-  public static MqttDisconnect packet() {
-    if (packet == null) {
-      packet = new MqttDisconnect(0);
-    }
-    return packet;
-  }
-
-  public static MqttDisconnect from(int packetFlags) {
-    if (packetFlags == 0) {
-      return packet();
-    } else {
-      return new MqttDisconnect(packetFlags);
-    }
-  }
 }

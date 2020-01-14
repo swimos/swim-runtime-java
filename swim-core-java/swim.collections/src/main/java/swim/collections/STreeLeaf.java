@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,10 +19,20 @@ import java.util.Map;
 import swim.util.Cursor;
 
 final class STreeLeaf<T> extends STreePage<T> {
+
+  private static STreeLeaf<Object> empty;
   final Map.Entry<Object, T>[] slots;
 
   STreeLeaf(Map.Entry<Object, T>[] slots) {
     this.slots = slots;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> STreeLeaf<T> empty() {
+    if (empty == null) {
+      empty = new STreeLeaf<Object>((Map.Entry<Object, Object>[]) new Map.Entry<?, ?>[0]);
+    }
+    return (STreeLeaf<T>) empty;
   }
 
   @Override
@@ -268,13 +278,4 @@ final class STreeLeaf<T> extends STreePage<T> {
     return Cursor.array(this.slots, this.slots.length);
   }
 
-  private static STreeLeaf<Object> empty;
-
-  @SuppressWarnings("unchecked")
-  public static <T> STreeLeaf<T> empty() {
-    if (empty == null) {
-      empty = new STreeLeaf<Object>((Map.Entry<Object, Object>[]) new Map.Entry<?, ?>[0]);
-    }
-    return (STreeLeaf<T>) empty;
-  }
 }

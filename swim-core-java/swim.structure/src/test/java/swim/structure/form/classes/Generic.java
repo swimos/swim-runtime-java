@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,14 +19,18 @@ import swim.util.Murmur3;
 
 @SuppressWarnings("checkstyle:VisibilityModifier")
 public class Generic<T> {
+
   @Header
   public T value;
+
   public Generic(T value) {
     this.value = value;
   }
+
   public Generic() {
     // Form.cast constructor
   }
+
   @Override
   public boolean equals(Object other) {
     if (other instanceof Generic<?>) {
@@ -35,12 +39,15 @@ public class Generic<T> {
     }
     return false;
   }
+
   @Override
   public int hashCode() {
     return Murmur3.hash(value);
   }
+
   @Override
   public String toString() {
     return "Generic(" + this.value + ")";
   }
+
 }

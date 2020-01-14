@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,20 @@ import swim.structure.Value;
 import swim.util.Cursor;
 
 public abstract class UTreePage extends Page {
+
+  public static UTreePage empty(PageContext context, int stem, long version) {
+    return UTreeLeaf.empty(context, stem, version);
+  }
+
+  public static UTreePage fromValue(UTreePageRef pageRef, Value value) {
+    switch (pageRef.pageType()) {
+      case LEAF:
+        return UTreeLeaf.fromValue(pageRef, value);
+      default:
+        throw new IllegalArgumentException(pageRef.toString());
+    }
+  }
+
   @Override
   public boolean isUTreePage() {
     return true;
@@ -50,14 +64,4 @@ public abstract class UTreePage extends Page {
   @Override
   public abstract Cursor<Value> cursor();
 
-  public static UTreePage empty(PageContext context, int stem, long version) {
-    return UTreeLeaf.empty(context, stem, version);
-  }
-
-  public static UTreePage fromValue(UTreePageRef pageRef, Value value) {
-    switch (pageRef.pageType()) {
-      case LEAF: return UTreeLeaf.fromValue(pageRef, value);
-      default: throw new IllegalArgumentException(pageRef.toString());
-    }
-  }
 }

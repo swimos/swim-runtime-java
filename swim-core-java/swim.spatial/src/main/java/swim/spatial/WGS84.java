@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,15 @@ import swim.math.Z2ToR2Operator;
 import swim.structure.Item;
 
 final class WGS84 extends Z2Form<R2Shape> implements R2ToZ2Operator {
+
+  static long transformLng(double lng) {
+    return (long) (((Math.min(Math.max(-180.0, lng), 180.0) + 180.0) / 360.0) * (double) 0x7fffffffffffffffL);
+  }
+
+  static long transformLat(double lat) {
+    return (long) (((Math.min(Math.max(-90.0, lat), 90.0) + 90.0) / 180.0) * (double) 0x7fffffffffffffffL);
+  }
+
   @Override
   public Class<?> type() {
     return R2Shape.class;
@@ -81,11 +90,4 @@ final class WGS84 extends Z2Form<R2Shape> implements R2ToZ2Operator {
     return GeoProjection.wgs84Inverse();
   }
 
-  static long transformLng(double lng) {
-    return (long) (((Math.min(Math.max(-180.0, lng), 180.0) + 180.0) / 360.0) * (double) 0x7fffffffffffffffL);
-  }
-
-  static long transformLat(double lat) {
-    return (long) (((Math.min(Math.max(-90.0, lat), 90.0) + 90.0) / 180.0) * (double) 0x7fffffffffffffffL);
-  }
 }

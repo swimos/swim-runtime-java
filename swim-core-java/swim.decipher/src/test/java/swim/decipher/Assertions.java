@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 public final class Assertions {
+
   private Assertions() {
     // static
   }
@@ -104,4 +105,5 @@ public final class Assertions {
   public static <T> void assertDecodes(Decoder<T> decodee, Data input, T expected) {
     assertDecodes(decodee, Binary.inputBuffer(input.toByteBuffer()), expected);
   }
+
 }

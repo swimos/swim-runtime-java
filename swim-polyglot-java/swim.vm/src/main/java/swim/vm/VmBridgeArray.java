@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.ProxyArray;
 
 public class VmBridgeArray extends VmHostProxy<Object[]> implements ProxyArray {
+
   final VmBridge bridge;
   final Object[] array;
 
@@ -50,4 +51,5 @@ public class VmBridgeArray extends VmHostProxy<Object[]> implements ProxyArray {
   public boolean remove(long index) {
     throw new UnsupportedOperationException();
   }
+
 }

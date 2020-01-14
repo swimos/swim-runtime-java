@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package swim.streamlet;
  * {@code Outlet} whenever the {@code MapInlet} updates.
  */
 public class OutletMapInlet<K, V, O> extends AbstractMapInlet<K, V, O> {
+
   protected final Outlet<?> outlet;
 
   public OutletMapInlet(Outlet<?> outlet) {
@@ -49,4 +50,5 @@ public class OutletMapInlet<K, V, O> extends AbstractMapInlet<K, V, O> {
   protected void onReconcileOutput(int version) {
     this.outlet.reconcileInput(version);
   }
+
 }

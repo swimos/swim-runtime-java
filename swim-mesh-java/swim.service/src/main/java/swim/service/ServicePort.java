@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,11 +32,14 @@ import swim.runtime.ServiceAddress;
 import swim.util.Log;
 
 public class ServicePort implements ServiceContext {
+
+  protected static final int STARTED = 0x01;
+  protected static final AtomicIntegerFieldUpdater<ServicePort> STATUS =
+      AtomicIntegerFieldUpdater.newUpdater(ServicePort.class, "status");
   protected final String serviceName;
   protected final KernelContext kernel;
   protected Service service;
   protected volatile int status;
-
   protected Log log;
   protected Policy policy;
   protected Stage stage;
@@ -215,8 +218,4 @@ public class ServicePort implements ServiceContext {
     }
   }
 
-  protected static final int STARTED = 0x01;
-
-  protected static final AtomicIntegerFieldUpdater<ServicePort> STATUS =
-      AtomicIntegerFieldUpdater.newUpdater(ServicePort.class, "status");
 }

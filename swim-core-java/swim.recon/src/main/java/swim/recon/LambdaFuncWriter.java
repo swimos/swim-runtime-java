@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.codec.Writer;
 import swim.codec.WriterException;
 
 final class LambdaFuncWriter<I, V> extends Writer<Object, Object> {
+
   final ReconWriter<I, V> recon;
   final V bindings;
   final V template;
@@ -31,11 +32,6 @@ final class LambdaFuncWriter<I, V> extends Writer<Object, Object> {
     this.template = template;
     this.part = part;
     this.step = step;
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.recon, this.bindings, this.template, this.part, this.step);
   }
 
   static <I, V> int sizeOf(ReconWriter<I, V> recon, V bindings, V template) {
@@ -101,4 +97,10 @@ final class LambdaFuncWriter<I, V> extends Writer<Object, Object> {
                                              V bindings, V template) {
     return write(output, recon, bindings, template, null, 1);
   }
+
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.recon, this.bindings, this.template, this.part, this.step);
+  }
+
 }

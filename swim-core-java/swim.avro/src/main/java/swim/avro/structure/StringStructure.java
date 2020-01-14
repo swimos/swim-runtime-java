@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,9 +23,11 @@ import swim.structure.Text;
 import swim.structure.Value;
 
 final class StringStructure extends AvroStringType<Value> {
+
   @SuppressWarnings("unchecked")
   @Override
   public Parser<Value> parseString(Input input) {
     return Unicode.parseOutput((Output<Value>) (Output<?>) Text.output(), input);
   }
+
 }

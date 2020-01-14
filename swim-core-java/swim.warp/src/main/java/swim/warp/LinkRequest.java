@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,10 @@ import swim.structure.Value;
 import swim.uri.Uri;
 
 public final class LinkRequest extends LinkAddressed {
+
+  @Kind
+  public static final Form<LinkRequest> FORM = new LinkRequestForm();
+
   public LinkRequest(Uri nodeUri, Uri laneUri, float prio, float rate, Value body) {
     super(nodeUri, laneUri, prio, rate, body);
   }
@@ -77,11 +81,10 @@ public final class LinkRequest extends LinkAddressed {
     return new LinkRequest(this.nodeUri, this.laneUri, this.prio, this.rate, body);
   }
 
-  @Kind
-  public static final Form<LinkRequest> FORM = new LinkRequestForm();
 }
 
 final class LinkRequestForm extends LinkAddressedForm<LinkRequest> {
+
   @Override
   public String tag() {
     return "link";
@@ -96,4 +99,5 @@ final class LinkRequestForm extends LinkAddressedForm<LinkRequest> {
   public LinkRequest from(Uri nodeUri, Uri laneUri, float prio, float rate, Value body) {
     return new LinkRequest(nodeUri, laneUri, prio, rate, body);
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.codec.Parser;
 import swim.csv.schema.CsvHeader;
 
 final class TableParser<T, R, C> extends Parser<T> {
+
   final CsvParser csv;
   final CsvHeader<T, R, C> header;
   final Parser<CsvHeader<T, R, C>> headerParser;
@@ -35,11 +36,6 @@ final class TableParser<T, R, C> extends Parser<T> {
 
   TableParser(CsvParser csv, CsvHeader<T, R, C> header) {
     this(csv, header, null, 1);
-  }
-
-  @Override
-  public Parser<T> feed(Input input) {
-    return parse(input, this.csv, this.header, this.headerParser, this.step);
   }
 
   static <T, R, C> Parser<T> parse(Input input, CsvParser csv, CsvHeader<T, R, C> header,
@@ -91,4 +87,10 @@ final class TableParser<T, R, C> extends Parser<T> {
   static <T, R, C> Parser<T> parse(Input input, CsvParser csv, CsvHeader<T, R, C> header) {
     return parse(input, csv, header, null, 1);
   }
+
+  @Override
+  public Parser<T> feed(Input input) {
+    return parse(input, this.csv, this.header, this.headerParser, this.step);
+  }
+
 }

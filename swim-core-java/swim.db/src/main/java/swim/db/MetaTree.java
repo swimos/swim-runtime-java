@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import swim.structure.Record;
 import swim.structure.Value;
 
 public class MetaTree {
+
   final Value name;
   final TreeType type;
   final int stem;
@@ -30,6 +31,15 @@ public class MetaTree {
     this.stem = stem;
     this.created = created;
     this.updated = updated;
+  }
+
+  public static MetaTree fromValue(Value name, Value value) {
+    final String tag = value.tag();
+    final TreeType type = TreeType.fromTag(tag);
+    final int stem = value.get("stem").intValue(0);
+    final long created = value.get("created").longValue(0L);
+    final long updated = value.get("updated").longValue(0L);
+    return new MetaTree(name, type, stem, created, updated);
   }
 
   public final Value name() {
@@ -61,12 +71,4 @@ public class MetaTree {
         .slot("updated", this.updated);
   }
 
-  public static MetaTree fromValue(Value name, Value value) {
-    final String tag = value.tag();
-    final TreeType type = TreeType.fromTag(tag);
-    final int stem = value.get("stem").intValue(0);
-    final long created = value.get("created").longValue(0L);
-    final long updated = value.get("updated").longValue(0L);
-    return new MetaTree(name, type, stem, created, updated);
-  }
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.structure.Data;
 import static swim.mqtt.MqttAssertions.assertEncodes;
 
 public class MqttPingRespSpec {
+
   public static void assertDecodes(Data data, MqttPingResp packet) {
     MqttAssertions.assertDecodesPacket(data, packet);
   }
@@ -32,4 +33,5 @@ public class MqttPingRespSpec {
   public void encodePingRespPackets() {
     assertEncodes(MqttPingResp.packet(), Data.fromBase16("D000"));
   }
+
 }

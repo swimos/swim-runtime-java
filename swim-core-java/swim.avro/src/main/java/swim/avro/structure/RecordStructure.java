@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.collections.FingerTrieSeq;
 import swim.structure.Record;
 
 final class RecordStructure extends AvroRecordType<Record, Record> {
+
   final AvroName fullName;
   final String doc;
   final FingerTrieSeq<AvroName> aliases;
@@ -92,4 +93,5 @@ final class RecordStructure extends AvroRecordType<Record, Record> {
   public Record cast(Record record) {
     return record;
   }
+
 }

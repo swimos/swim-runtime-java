@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.math;
 import swim.structure.Item;
 
 final class R3ToZ3Form<T> extends Z3Form<T> {
+
   final R3Form<T> form;
   final R3ToZ3Function function;
 
@@ -89,4 +90,5 @@ final class R3ToZ3Form<T> extends Z3Form<T> {
   public T cast(Item item) {
     return this.form.cast(item);
   }
+
 }

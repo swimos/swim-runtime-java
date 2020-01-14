@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import swim.io.IpSocketModem;
 import swim.io.IpSocketRef;
 
 public interface HttpInterface extends IpInterface {
+
   HttpSettings httpSettings();
 
   default IpServiceRef bindHttp(InetSocketAddress localAddress, HttpService service, HttpSettings httpSettings) {
@@ -94,4 +95,5 @@ public interface HttpInterface extends IpInterface {
   default IpSocketRef connectHttps(String address, int port, HttpClient client) {
     return connectHttps(new InetSocketAddress(address, port), client, httpSettings());
   }
+
 }

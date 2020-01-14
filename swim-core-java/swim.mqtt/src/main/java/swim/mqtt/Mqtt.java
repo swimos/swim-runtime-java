@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
 package swim.mqtt;
 
 public final class Mqtt {
-  private Mqtt() {
-    // stub
-  }
 
   private static MqttDecoder standardDecoder;
   private static MqttEncoder standardEncoder;
+
+  private Mqtt() {
+    // stub
+  }
 
   public static MqttDecoder standardDecoder() {
     if (standardDecoder == null) {
@@ -35,4 +36,5 @@ public final class Mqtt {
     }
     return standardEncoder;
   }
+
 }

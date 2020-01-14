@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.structure.Form;
 import swim.structure.Value;
 
 public final class SpatialValueEntry<K, S, V> implements SpatialMap.Entry<K, S, V> {
+
   final SpatialMap.Entry<Value, S, Value> inner;
   final Form<K> keyForm;
   final Form<V> valueForm;
@@ -97,11 +98,12 @@ public final class SpatialValueEntry<K, S, V> implements SpatialMap.Entry<K, S, 
     final K keyObject = getKey();
     final V valueObject = getValue();
     return (keyObject == null ? 0 : keyObject.hashCode())
-         ^ (valueObject == null ? 0 : valueObject.hashCode());
+        ^ (valueObject == null ? 0 : valueObject.hashCode());
   }
 
   @Override
   public String toString() {
     return new StringBuilder().append(getKey()).append('=').append(getValue()).toString();
   }
+
 }

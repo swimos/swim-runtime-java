@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,22 @@ import swim.util.CombinerFunction;
 import swim.util.Cursor;
 
 public abstract class STreePage extends Page {
+
+  public static STreePage empty(PageContext context, int stem, long version) {
+    return STreeLeaf.empty(context, stem, version);
+  }
+
+  public static STreePage fromValue(STreePageRef pageRef, Value value) {
+    switch (pageRef.pageType()) {
+      case LEAF:
+        return STreeLeaf.fromValue(pageRef, value);
+      case NODE:
+        return STreeNode.fromValue(pageRef, value);
+      default:
+        throw new IllegalArgumentException(pageRef.toString());
+    }
+  }
+
   @Override
   public boolean isSTreePage() {
     return true;
@@ -97,15 +113,4 @@ public abstract class STreePage extends Page {
 
   public abstract Cursor<Slot> deltaCursor(long sinceVersion);
 
-  public static STreePage empty(PageContext context, int stem, long version) {
-    return STreeLeaf.empty(context, stem, version);
-  }
-
-  public static STreePage fromValue(STreePageRef pageRef, Value value) {
-    switch (pageRef.pageType()) {
-      case LEAF: return STreeLeaf.fromValue(pageRef, value);
-      case NODE: return STreeNode.fromValue(pageRef, value);
-      default: throw new IllegalArgumentException(pageRef.toString());
-    }
-  }
 }

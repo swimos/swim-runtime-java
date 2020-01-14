@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,4 +16,5 @@
  * High-level web server API and routing DSL, with HTTP, WebSocket, and WARP
  * routing directives.
  */
+
 package swim.web;

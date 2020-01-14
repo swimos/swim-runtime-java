@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +40,13 @@ import swim.warp.LinkRequest;
 import swim.warp.SyncRequest;
 
 class RemoteWarpDownlink implements WarpBinding, PullRequest<Envelope> {
+
+  static final int FEEDING_DOWN = 1 << 0;
+  static final int PULLING_DOWN = 1 << 1;
+  static final int FEEDING_UP = 1 << 2;
+  static final int SYNC = 1 << 3;
+  static final AtomicIntegerFieldUpdater<RemoteWarpDownlink> STATUS =
+      AtomicIntegerFieldUpdater.newUpdater(RemoteWarpDownlink.class, "status");
   final RemoteHost host;
   final Uri remoteNodeUri;
   final Uri nodeUri;
@@ -47,7 +54,6 @@ class RemoteWarpDownlink implements WarpBinding, PullRequest<Envelope> {
   final float prio;
   final float rate;
   final Value body;
-
   final ConcurrentLinkedQueue<Envelope> upQueue;
   WarpContext linkContext;
   PullContext<? super Envelope> pullContext;
@@ -315,7 +321,7 @@ class RemoteWarpDownlink implements WarpBinding, PullRequest<Envelope> {
     } while (oldStatus != newStatus && !STATUS.compareAndSet(this, oldStatus, newStatus));
     if (envelope != null) {
       this.linkContext.pushUp(new Push<Envelope>(Uri.empty(), Uri.empty(), this.nodeUri, this.laneUri,
-                                                 this.prio, this.host.remoteIdentity(), envelope, null));
+          this.prio, this.host.remoteIdentity(), envelope, null));
     }
     feedUpQueue();
   }
@@ -422,11 +428,4 @@ class RemoteWarpDownlink implements WarpBinding, PullRequest<Envelope> {
     this.host.fail(message);
   }
 
-  static final int FEEDING_DOWN = 1 << 0;
-  static final int PULLING_DOWN = 1 << 1;
-  static final int FEEDING_UP = 1 << 2;
-  static final int SYNC = 1 << 3;
-
-  static final AtomicIntegerFieldUpdater<RemoteWarpDownlink> STATUS =
-      AtomicIntegerFieldUpdater.newUpdater(RemoteWarpDownlink.class, "status");
 }

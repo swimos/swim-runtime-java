@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.codec.EncoderException;
 import swim.codec.OutputBuffer;
 
 final class MqttSubscriptionEncoder extends Encoder<MqttSubscription, MqttSubscription> {
+
   final MqttEncoder mqtt;
   final MqttSubscription subscription;
   final Encoder<?, ?> part;
@@ -34,16 +35,6 @@ final class MqttSubscriptionEncoder extends Encoder<MqttSubscription, MqttSubscr
 
   MqttSubscriptionEncoder(MqttEncoder mqtt, MqttSubscription subscription) {
     this(mqtt, subscription, null, 1);
-  }
-
-  @Override
-  public Encoder<MqttSubscription, MqttSubscription> feed(MqttSubscription subscription) {
-    return new MqttSubscriptionEncoder(this.mqtt, subscription, null, 1);
-  }
-
-  @Override
-  public Encoder<MqttSubscription, MqttSubscription> pull(OutputBuffer<?> output) {
-    return encode(output, this.mqtt, this.subscription, this.part, this.step);
   }
 
   static int sizeOf(MqttEncoder mqtt, MqttSubscription subscription) {
@@ -82,4 +73,15 @@ final class MqttSubscriptionEncoder extends Encoder<MqttSubscription, MqttSubscr
                                                             MqttSubscription subscription) {
     return encode(output, mqtt, subscription, null, 1);
   }
+
+  @Override
+  public Encoder<MqttSubscription, MqttSubscription> feed(MqttSubscription subscription) {
+    return new MqttSubscriptionEncoder(this.mqtt, subscription, null, 1);
+  }
+
+  @Override
+  public Encoder<MqttSubscription, MqttSubscription> pull(OutputBuffer<?> output) {
+    return encode(output, this.mqtt, this.subscription, this.part, this.step);
+  }
+
 }

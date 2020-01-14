@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,12 +21,42 @@ import swim.codec.Writer;
 import swim.util.Murmur3;
 
 public final class HttpCharset extends HttpPart implements Debug {
+
+  private static int hashSeed;
+  private static HttpCharset star;
   final String name;
   final float weight;
 
   HttpCharset(String name, float weight) {
     this.name = name;
     this.weight = weight;
+  }
+
+  public static HttpCharset star() {
+    if (star == null) {
+      star = new HttpCharset("*", 1f);
+    }
+    return star;
+  }
+
+  public static HttpCharset from(String name, float weight) {
+    if (weight == 1f) {
+      return from(name);
+    } else {
+      return new HttpCharset(name, weight);
+    }
+  }
+
+  public static HttpCharset from(String name) {
+    if ("*".equals(name)) {
+      return star();
+    } else {
+      return new HttpCharset(name, 1f);
+    }
+  }
+
+  public static HttpCharset parse(String string) {
+    return Http.standardParser().parseCharsetString(string);
   }
 
   public boolean isStar() {
@@ -101,34 +131,4 @@ public final class HttpCharset extends HttpPart implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  private static HttpCharset star;
-
-  public static HttpCharset star() {
-    if (star == null) {
-      star = new HttpCharset("*", 1f);
-    }
-    return star;
-  }
-
-  public static HttpCharset from(String name, float weight) {
-    if (weight == 1f) {
-      return from(name);
-    } else {
-      return new HttpCharset(name, weight);
-    }
-  }
-
-  public static HttpCharset from(String name) {
-    if ("*".equals(name)) {
-      return star();
-    } else {
-      return new HttpCharset(name, 1f);
-    }
-  }
-
-  public static HttpCharset parse(String string) {
-    return Http.standardParser().parseCharsetString(string);
-  }
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,9 @@ import swim.structure.Item;
 import swim.structure.Kind;
 
 public abstract class UplinkInfo extends LinkInfo {
+
+  private static Form<UplinkInfo> uplinkForm;
+
   public static UplinkInfo from(LinkContext linkContext) {
     if (linkContext instanceof WarpContext) {
       return WarpUplinkInfo.from((WarpContext) linkContext);
@@ -29,8 +32,6 @@ public abstract class UplinkInfo extends LinkInfo {
     }
   }
 
-  private static Form<UplinkInfo> uplinkForm;
-
   @Kind
   public static Form<UplinkInfo> uplinkForm() {
     if (uplinkForm == null) {
@@ -38,9 +39,11 @@ public abstract class UplinkInfo extends LinkInfo {
     }
     return uplinkForm;
   }
+
 }
 
 final class UplinkInfoForm extends Form<UplinkInfo> {
+
   @Override
   public Class<?> type() {
     return UplinkInfo.class;
@@ -59,4 +62,5 @@ final class UplinkInfoForm extends Form<UplinkInfo> {
     }
     return null;
   }
+
 }

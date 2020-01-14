@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.structure.Item;
 import swim.structure.Value;
 
 final class ReconFormParser<T> extends Parser<T> {
+
   final ReconParser<Item, Value> recon;
   final Form<T> form;
   final Parser<Value> parser;
@@ -33,11 +34,6 @@ final class ReconFormParser<T> extends Parser<T> {
 
   ReconFormParser(ReconParser<Item, Value> recon, Form<T> form) {
     this(recon, form, null);
-  }
-
-  @Override
-  public Parser<T> feed(Input input) {
-    return parse(input, this.recon, this.form, this.parser);
   }
 
   static <T> Parser<T> parse(Input input, ReconParser<Item, Value> recon,
@@ -59,4 +55,10 @@ final class ReconFormParser<T> extends Parser<T> {
   static <T> Parser<T> parse(Input input, ReconParser<Item, Value> recon, Form<T> form) {
     return parse(input, recon, form, null);
   }
+
+  @Override
+  public Parser<T> feed(Input input) {
+    return parse(input, this.recon, this.form, this.parser);
+  }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -86,6 +86,7 @@ import swim.ws.WsPing;
 import swim.ws.WsPong;
 
 public class RemoteHost extends AbstractTierBinding implements HostBinding, WarpSocket {
+
   protected HostContext hostContext;
   protected WarpSocketContext warpSocketContext;
   final Uri requestUri;
@@ -1113,18 +1114,16 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
   }
 
   protected void disconnectUplinks() {
-    if (isConnected()) {
-      final Iterator<HashTrieMap<Uri, HashTrieSet<RemoteWarpUplink>>> nodeUplinksIterator = this.uplinks.valueIterator();
-      while (nodeUplinksIterator.hasNext()) {
-        final HashTrieMap<Uri, HashTrieSet<RemoteWarpUplink>> nodeUplinks = nodeUplinksIterator.next();
-        final Iterator<HashTrieSet<RemoteWarpUplink>> laneUplinksIterator = nodeUplinks.valueIterator();
-        while (laneUplinksIterator.hasNext()) {
-          final HashTrieSet<RemoteWarpUplink> laneUplinks = laneUplinksIterator.next();
-          final Iterator<RemoteWarpUplink> uplinksIterator = laneUplinks.iterator();
-          while (uplinksIterator.hasNext()) {
-            final RemoteWarpUplink uplink = uplinksIterator.next();
-            uplink.didDisconnect();
-          }
+    final Iterator<HashTrieMap<Uri, HashTrieSet<RemoteWarpUplink>>> nodeUplinksIterator = this.uplinks.valueIterator();
+    while (nodeUplinksIterator.hasNext()) {
+      final HashTrieMap<Uri, HashTrieSet<RemoteWarpUplink>> nodeUplinks = nodeUplinksIterator.next();
+      final Iterator<HashTrieSet<RemoteWarpUplink>> laneUplinksIterator = nodeUplinks.valueIterator();
+      while (laneUplinksIterator.hasNext()) {
+        final HashTrieSet<RemoteWarpUplink> laneUplinks = laneUplinksIterator.next();
+        final Iterator<RemoteWarpUplink> uplinksIterator = laneUplinks.iterator();
+        while (uplinksIterator.hasNext()) {
+          final RemoteWarpUplink uplink = uplinksIterator.next();
+          uplink.didDisconnect();
         }
       }
     }
@@ -1202,9 +1201,11 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
     }
     URI_RESOLUTION_CACHE_SIZE = uriResolutionCacheSize;
   }
+
 }
 
 final class RemoteHostMessageCont implements Cont<Envelope> {
+
   volatile RemoteHost host;
 
   RemoteHostMessageCont(RemoteHost host) {
@@ -1226,9 +1227,11 @@ final class RemoteHostMessageCont implements Cont<Envelope> {
       host.didPushMessage(null);
     }
   }
+
 }
 
 final class RemoteHostPull<E extends Envelope> implements PullRequest<E> {
+
   final RemoteHost host;
   final float prio;
   final E envelope;
@@ -1261,4 +1264,5 @@ final class RemoteHostPull<E extends Envelope> implements PullRequest<E> {
       }
     }
   }
+
 }

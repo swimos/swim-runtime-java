@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,12 +22,18 @@ import swim.structure.Value;
 import swim.util.Murmur3;
 
 public class EcCharacteristic2FieldDef extends EcFieldDef {
+
+  private static int hashSeed;
   protected final int size;
   protected final BigInteger basis;
 
   public EcCharacteristic2FieldDef(int size, BigInteger basis) {
     this.size = size;
     this.basis = basis;
+  }
+
+  public static EcCharacteristic2FieldDef from(ECFieldF2m field) {
+    return new EcCharacteristic2FieldDef(field.getM(), field.getReductionPolynomial());
   }
 
   public final int size() {
@@ -71,12 +77,7 @@ public class EcCharacteristic2FieldDef extends EcFieldDef {
       hashSeed = Murmur3.seed(EcCharacteristic2FieldDef.class);
     }
     return Murmur3.mash(Murmur3.mix(Murmur3.mix(hashSeed,
-          this.size), this.basis.hashCode()));
+        this.size), this.basis.hashCode()));
   }
 
-  private static int hashSeed;
-
-  public static EcCharacteristic2FieldDef from(ECFieldF2m field) {
-    return new EcCharacteristic2FieldDef(field.getM(), field.getReductionPolynomial());
-  }
 }

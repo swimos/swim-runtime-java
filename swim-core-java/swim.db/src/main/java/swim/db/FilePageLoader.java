@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,10 @@ import swim.concurrent.Cont;
 import swim.concurrent.Conts;
 
 final class FilePageLoader extends PageLoader {
+
+  @SuppressWarnings("unchecked")
+  static final AtomicReferenceFieldUpdater<FilePageLoader, HashTrieMap<Integer, FileChannel>> CHANNELS =
+      AtomicReferenceFieldUpdater.newUpdater(FilePageLoader.class, (Class<HashTrieMap<Integer, FileChannel>>) (Class<?>) HashTrieMap.class, "channels");
   final FileStore store;
   final TreeDelegate treeDelegate;
   final boolean isResident;
@@ -115,11 +119,8 @@ final class FilePageLoader extends PageLoader {
     } while (true);
   }
 
-  @SuppressWarnings("unchecked")
-  static final AtomicReferenceFieldUpdater<FilePageLoader, HashTrieMap<Integer, FileChannel>> CHANNELS =
-      AtomicReferenceFieldUpdater.newUpdater(FilePageLoader.class, (Class<HashTrieMap<Integer, FileChannel>>) (Class<?>) HashTrieMap.class, "channels");
-
   static final class LoadPage implements Cont<Zone> {
+
     final FilePageLoader pageLoader;
     final PageRef pageRef;
     final Cont<Page> cont;
@@ -147,5 +148,7 @@ final class FilePageLoader extends PageLoader {
     public void trap(Throwable error) {
       this.cont.trap(error);
     }
+
   }
+
 }

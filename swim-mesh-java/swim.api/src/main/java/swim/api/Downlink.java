@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.api.function.DidDisconnect;
 import swim.api.function.DidFail;
 
 public interface Downlink extends Link {
+
   @Override
   Downlink observe(Object observer);
 
@@ -35,4 +36,5 @@ public interface Downlink extends Link {
   Downlink didFail(DidFail didFail);
 
   Downlink open();
+
 }

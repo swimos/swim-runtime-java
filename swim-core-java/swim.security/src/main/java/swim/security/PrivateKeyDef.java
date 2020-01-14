@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import swim.structure.Item;
 import swim.structure.Kind;
 
 public abstract class PrivateKeyDef extends KeyDef {
-  public abstract PrivateKey privateKey();
 
   private static Form<PrivateKeyDef> privateKeyForm;
 
@@ -42,9 +41,13 @@ public abstract class PrivateKeyDef extends KeyDef {
     }
     return privateKeyForm;
   }
+
+  public abstract PrivateKey privateKey();
+
 }
 
 final class PrivateKeyForm extends Form<PrivateKeyDef> {
+
   @Override
   public Class<?> type() {
     return PrivateKeyDef.class;
@@ -67,4 +70,5 @@ final class PrivateKeyForm extends Form<PrivateKeyDef> {
     }
     return null;
   }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import swim.structure.Value;
 import swim.util.Murmur3;
 
 public final class InvokeOperator extends Operator {
+
+  private static int hashSeed;
   final Value func;
   final Value args;
   Object state;
@@ -131,5 +133,4 @@ public final class InvokeOperator extends Operator {
     output.debug(this.func).write('.').write("invoke").write('(').debug(this.args).write(')');
   }
 
-  private static int hashSeed;
 }

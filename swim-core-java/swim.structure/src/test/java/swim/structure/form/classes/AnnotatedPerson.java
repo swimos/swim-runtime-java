@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,17 +21,21 @@ import swim.util.Murmur3;
 @SuppressWarnings("checkstyle:VisibilityModifier")
 @Tag("person")
 public class AnnotatedPerson {
+
   @Member("firstName")
   public String first;
   @Member("lastName")
   public String last;
+
   public AnnotatedPerson(String first, String last) {
     this.first = first;
     this.last = last;
   }
+
   public AnnotatedPerson() {
     // Form.cast constructor
   }
+
   @Override
   public boolean equals(Object other) {
     if (other instanceof AnnotatedPerson) {
@@ -40,12 +44,15 @@ public class AnnotatedPerson {
     }
     return false;
   }
+
   @Override
   public int hashCode() {
     return Murmur3.mash(Murmur3.mix(this.first.hashCode(), this.last.hashCode()));
   }
+
   @Override
   public String toString() {
     return "AnnotatedPerson(" + this.first + ", " + this.last + ")";
   }
+
 }

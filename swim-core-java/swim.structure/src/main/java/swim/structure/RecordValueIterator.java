@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package swim.structure;
 import java.util.Iterator;
 
 final class RecordValueIterator implements Iterator<Value> {
+
   final Iterator<Item> iterator;
 
   RecordValueIterator(Iterator<Item> iterator) {
@@ -37,4 +38,5 @@ final class RecordValueIterator implements Iterator<Value> {
   public void remove() {
     this.iterator.remove();
   }
+
 }

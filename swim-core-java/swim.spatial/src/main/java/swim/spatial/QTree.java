@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import swim.util.Cursor;
 import swim.util.Murmur3;
 
 public class QTree<K, S, V> extends QTreeContext<K, S, V> implements SpatialMap<K, S, V>, Comparator<QTreeEntry<K, S, V>>, Cloneable, Debug {
+
+  private static int hashSeed;
   final Z2Form<S> shapeForm;
   QTreePage<K, S, V> root;
 
@@ -33,6 +35,10 @@ public class QTree<K, S, V> extends QTreeContext<K, S, V> implements SpatialMap<
 
   public QTree(Z2Form<S> shapeForm) {
     this(shapeForm, QTreePage.<K, S, V>empty());
+  }
+
+  public static <K, S, V> QTree<K, S, V> empty(Z2Form<S> shapeForm) {
+    return new QTree<K, S, V>(shapeForm);
   }
 
   @Override
@@ -276,9 +282,4 @@ public class QTree<K, S, V> extends QTreeContext<K, S, V> implements SpatialMap<
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  public static <K, S, V> QTree<K, S, V> empty(Z2Form<S> shapeForm) {
-    return new QTree<K, S, V>(shapeForm);
-  }
 }

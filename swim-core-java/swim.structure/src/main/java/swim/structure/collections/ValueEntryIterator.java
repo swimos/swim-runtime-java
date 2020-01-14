@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import swim.structure.Form;
 import swim.structure.Value;
 
 public final class ValueEntryIterator<K, V> implements Iterator<Map.Entry<K, V>> {
+
   final Iterator<Map.Entry<Value, Value>> inner;
   final Form<K> keyForm;
   final Form<V> valueForm;
@@ -73,4 +74,5 @@ public final class ValueEntryIterator<K, V> implements Iterator<Map.Entry<K, V>>
   public void remove() {
     this.inner.remove();
   }
+
 }

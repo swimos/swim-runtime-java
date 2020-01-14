@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package swim.dynamic;
  * host functional interface implementations that invoke guest functions.
  */
 public class BridgeGuest implements GuestWrapper {
+
   protected final Bridge bridge;
   protected final Object guest;
 
@@ -36,4 +37,5 @@ public class BridgeGuest implements GuestWrapper {
   public final Object unwrap() {
     return this.guest;
   }
+
 }

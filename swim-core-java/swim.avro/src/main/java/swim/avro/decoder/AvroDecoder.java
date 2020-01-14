@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import swim.codec.DecoderException;
 import swim.codec.InputBuffer;
 
 public class AvroDecoder {
+
   public <T> Decoder<T> decodeType(AvroType<T> type, InputBuffer input) {
     if (type instanceof AvroPrimitiveType<?>) {
       return decodePrimitive((AvroPrimitiveType<T>) type, input);
@@ -234,4 +235,5 @@ public class AvroDecoder {
   public <T> Decoder<T> fixedDecoder(AvroFixedType<T> type) {
     return new FixedDecoder<T>(type);
   }
+
 }

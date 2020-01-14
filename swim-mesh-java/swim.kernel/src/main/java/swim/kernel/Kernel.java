@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import swim.api.space.SpaceDef;
 import swim.structure.Item;
 
 public interface Kernel {
+
   /**
    * Returns the relative priority of this {@code Kernel} implementation.
    * Kernel implementations with greater priority inject into kernel stacks
@@ -93,4 +94,5 @@ public interface Kernel {
   void stop();
 
   void run();
+
 }

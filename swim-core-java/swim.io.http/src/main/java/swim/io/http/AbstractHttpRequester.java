@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import swim.io.IpContext;
 import swim.io.IpSocket;
 
 public abstract class AbstractHttpRequester<T> implements HttpRequester<T>, IpContext, FlowContext {
+
   protected HttpRequesterContext context;
 
   @Override
@@ -184,4 +185,5 @@ public abstract class AbstractHttpRequester<T> implements HttpRequester<T>, IpCo
   public void close() {
     this.context.close();
   }
+
 }

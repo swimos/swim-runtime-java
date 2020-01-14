@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import swim.io.IpSocket;
 import swim.mqtt.MqttPacket;
 
 public interface MqttSocketContext<I, O> extends IpContext, FlowContext {
+
   MqttSettings mqttSettings();
 
   <I2 extends I> void read(Decoder<I2> content);
@@ -30,4 +31,5 @@ public interface MqttSocketContext<I, O> extends IpContext, FlowContext {
   void become(IpSocket socket);
 
   void close();
+
 }

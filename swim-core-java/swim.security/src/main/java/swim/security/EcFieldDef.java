@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,9 +24,6 @@ import swim.structure.Kind;
 import swim.structure.Value;
 
 public abstract class EcFieldDef {
-  public abstract ECField toECField();
-
-  public abstract Value toValue();
 
   private static Form<EcFieldDef> form;
 
@@ -47,9 +44,15 @@ public abstract class EcFieldDef {
     }
     return form;
   }
+
+  public abstract ECField toECField();
+
+  public abstract Value toValue();
+
 }
 
 final class EcFieldForm extends Form<EcFieldDef> {
+
   @Override
   public String tag() {
     return "ECField";
@@ -82,4 +85,5 @@ final class EcFieldForm extends Form<EcFieldDef> {
     }
     return null;
   }
+
 }

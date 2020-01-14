@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.codec.EncoderException;
 import swim.codec.OutputBuffer;
 
 final class MqttDisconnectEncoder extends Encoder<Object, MqttDisconnect> {
+
   final MqttEncoder mqtt;
   final MqttDisconnect packet;
   final int length;
@@ -35,11 +36,6 @@ final class MqttDisconnectEncoder extends Encoder<Object, MqttDisconnect> {
 
   MqttDisconnectEncoder(MqttEncoder mqtt, MqttDisconnect packet) {
     this(mqtt, packet, 0, 0, 1);
-  }
-
-  @Override
-  public Encoder<Object, MqttDisconnect> pull(OutputBuffer<?> output) {
-    return encode(output, this.mqtt, this.packet, this.length, this.remaining, this.step);
   }
 
   static Encoder<Object, MqttDisconnect> encode(OutputBuffer<?> output, MqttEncoder mqtt,
@@ -84,4 +80,10 @@ final class MqttDisconnectEncoder extends Encoder<Object, MqttDisconnect> {
                                                 MqttDisconnect packet) {
     return encode(output, mqtt, packet, 0, 0, 1);
   }
+
+  @Override
+  public Encoder<Object, MqttDisconnect> pull(OutputBuffer<?> output) {
+    return encode(output, this.mqtt, this.packet, this.length, this.remaining, this.step);
+  }
+
 }

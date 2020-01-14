@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import swim.codec.EncoderException;
 import swim.codec.OutputBuffer;
 
 final class VarintEncoder extends Encoder<Number, Object> {
+
   final long value;
 
   VarintEncoder(long value) {
@@ -27,16 +28,6 @@ final class VarintEncoder extends Encoder<Number, Object> {
 
   VarintEncoder() {
     this(0L);
-  }
-
-  @Override
-  public Encoder<Number, Object> feed(Number input) {
-    return new VarintEncoder(input.longValue());
-  }
-
-  @Override
-  public Encoder<Number, Object> pull(OutputBuffer<?> output) {
-    return encode(output, this.value);
   }
 
   static int sizeOf(long value) {
@@ -65,4 +56,15 @@ final class VarintEncoder extends Encoder<Number, Object> {
     value = (value << 1) ^ (value >> 63);
     return encode(output, value);
   }
+
+  @Override
+  public Encoder<Number, Object> feed(Number input) {
+    return new VarintEncoder(input.longValue());
+  }
+
+  @Override
+  public Encoder<Number, Object> pull(OutputBuffer<?> output) {
+    return encode(output, this.value);
+  }
+
 }

@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package swim.codec;
 
 final class Base64Parser<O> extends Parser<O> {
+
   final Output<O> output;
   final Base64 base64;
   final int p;
@@ -35,14 +36,9 @@ final class Base64Parser<O> extends Parser<O> {
     this(output, base64, 0, 0, 0, 1);
   }
 
-  @Override
-  public Parser<O> feed(Input input) {
-    return parse(input, this.output.clone(), this.base64, this.p, this.q, this.r, this.step);
-  }
-
   static <O> Parser<O> parse(Input input, Output<O> output, Base64 base64, int p, int q, int r, int step) {
     int c = 0;
-    while (!input.isEmpty()) {
+    while (!input.isError() && !input.isEmpty()) {
       if (step == 1) {
         if (input.isCont()) {
           c = input.head();
@@ -152,4 +148,10 @@ final class Base64Parser<O> extends Parser<O> {
   static <O> Parser<O> parse(Input input, Output<O> output, Base64 base64) {
     return parse(input, output, base64, 0, 0, 0, 1);
   }
+
+  @Override
+  public Parser<O> feed(Input input) {
+    return parse(input, this.output.clone(), this.base64, this.p, this.q, this.r, this.step);
+  }
+
 }

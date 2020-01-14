@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,11 @@ package swim.uri;
 import swim.collections.HashTrieMap;
 
 abstract class UriTerminalPattern extends UriFragmentPattern {
+
+  static UriTerminalPattern compile(Uri pattern) {
+    return new UriConstantPattern(pattern);
+  }
+
   abstract HashTrieMap<String, String> unapply(HashTrieMap<String, String> args);
 
   @Override
@@ -35,7 +40,4 @@ abstract class UriTerminalPattern extends UriFragmentPattern {
     }
   }
 
-  static UriTerminalPattern compile(Uri pattern) {
-    return new UriConstantPattern(pattern);
-  }
 }

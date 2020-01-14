@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,6 +31,13 @@ import swim.codec.OutputBuffer;
 import swim.concurrent.Conts;
 
 class TcpSocket implements Transport, IpSocketContext {
+
+  static final int CLIENT = 1 << 0;
+  static final int SERVER = 1 << 1;
+  static final int CONNECTING = 1 << 2;
+  static final int CONNECTED = 1 << 3;
+  static final AtomicIntegerFieldUpdater<TcpSocket> STATUS =
+      AtomicIntegerFieldUpdater.newUpdater(TcpSocket.class, "status");
   final InetSocketAddress localAddress;
   final InetSocketAddress remoteAddress;
   final ByteBuffer readBuffer;
@@ -299,11 +306,4 @@ class TcpSocket implements Transport, IpSocketContext {
     close();
   }
 
-  static final int CLIENT = 1 << 0;
-  static final int SERVER = 1 << 1;
-  static final int CONNECTING = 1 << 2;
-  static final int CONNECTED = 1 << 3;
-
-  static final AtomicIntegerFieldUpdater<TcpSocket> STATUS =
-      AtomicIntegerFieldUpdater.newUpdater(TcpSocket.class, "status");
 }

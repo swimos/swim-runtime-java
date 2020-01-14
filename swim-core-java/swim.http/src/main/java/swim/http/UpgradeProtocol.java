@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,12 +21,42 @@ import swim.codec.Writer;
 import swim.util.Murmur3;
 
 public final class UpgradeProtocol extends HttpPart implements Debug {
+
+  private static int hashSeed;
+  private static UpgradeProtocol websocket;
   final String name;
   final String version;
 
   UpgradeProtocol(String name, String version) {
     this.name = name;
     this.version = version;
+  }
+
+  public static UpgradeProtocol websocket() {
+    if (websocket == null) {
+      websocket = new UpgradeProtocol("websocket", "");
+    }
+    return websocket;
+  }
+
+  public static UpgradeProtocol from(String name, String version) {
+    if ("".equals(version)) {
+      return from(name);
+    } else {
+      return new UpgradeProtocol(name, version);
+    }
+  }
+
+  public static UpgradeProtocol from(String name) {
+    if ("websocket".equals(name)) {
+      return websocket();
+    } else {
+      return new UpgradeProtocol(name, "");
+    }
+  }
+
+  public static UpgradeProtocol parse(String string) {
+    return Http.standardParser().parseUpgradeProtocolString(string);
   }
 
   public String name() {
@@ -89,34 +119,4 @@ public final class UpgradeProtocol extends HttpPart implements Debug {
     return Format.debug(this);
   }
 
-  private static int hashSeed;
-
-  private static UpgradeProtocol websocket;
-
-  public static UpgradeProtocol websocket() {
-    if (websocket == null) {
-      websocket = new UpgradeProtocol("websocket", "");
-    }
-    return websocket;
-  }
-
-  public static UpgradeProtocol from(String name, String version) {
-    if ("".equals(version)) {
-      return from(name);
-    } else {
-      return new UpgradeProtocol(name, version);
-    }
-  }
-
-  public static UpgradeProtocol from(String name) {
-    if ("websocket".equals(name)) {
-      return websocket();
-    } else {
-      return new UpgradeProtocol(name, "");
-    }
-  }
-
-  public static UpgradeProtocol parse(String string) {
-    return Http.standardParser().parseUpgradeProtocolString(string);
-  }
 }

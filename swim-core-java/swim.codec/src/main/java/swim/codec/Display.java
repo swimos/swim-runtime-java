@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,12 +21,14 @@ package swim.codec;
  * {@link OutputSettings#isStyled()} returns {@code true}.
  */
 public interface Display {
+
   /**
    * Writes a human readable, display-formatted string representation of this
    * object to {@code output}.
    *
    * @throws OutputException if the {@code output} exits the <em>cont</em>
-   *         state before the full display string has been written.
+   *                         state before the full display string has been written.
    */
   void display(Output<?> output);
+
 }

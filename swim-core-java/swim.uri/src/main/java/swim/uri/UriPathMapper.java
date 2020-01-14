@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,21 @@ package swim.uri;
 import swim.collections.HashTrieMap;
 
 abstract class UriPathMapper<T> extends UriAuthorityMapper<T> {
+
+  @SuppressWarnings("unchecked")
+  static <T> UriPathMapper<T> compile(Uri pattern, UriPath path, UriQuery query, UriFragment fragment, T value) {
+    if (!path.isEmpty()) {
+      final String segment = path.head();
+      if (!segment.isEmpty() && segment.charAt(0) == ':') {
+        return new UriPathMapping<T>(HashTrieMap.<String, UriPathMapper<T>>empty(), compile(pattern, path.tail(), query, fragment, value), (UriQueryMapper<T>) empty());
+      } else {
+        return new UriPathMapping<T>(HashTrieMap.<String, UriPathMapper<T>>empty().updated(segment, compile(pattern, path.tail(), query, fragment, value)), (UriPathMapper<T>) empty(), (UriQueryMapper<T>) empty());
+      }
+    } else {
+      return new UriPathMapping<T>(HashTrieMap.<String, UriPathMapper<T>>empty(), (UriPathMapper<T>) empty(), UriQueryMapper.compile(pattern, query, fragment, value));
+    }
+  }
+
   abstract UriMapper<T> getSuffix(UriPath path, UriQuery query, UriFragment fragment);
 
   @Override
@@ -60,17 +75,4 @@ abstract class UriPathMapper<T> extends UriAuthorityMapper<T> {
     }
   }
 
-  @SuppressWarnings("unchecked")
-  static <T> UriPathMapper<T> compile(Uri pattern, UriPath path, UriQuery query, UriFragment fragment, T value) {
-    if (!path.isEmpty()) {
-      final String segment = path.head();
-      if (!segment.isEmpty() && segment.charAt(0) == ':') {
-        return new UriPathMapping<T>(HashTrieMap.<String, UriPathMapper<T>>empty(), compile(pattern, path.tail(), query, fragment, value), (UriQueryMapper<T>) empty());
-      } else {
-        return new UriPathMapping<T>(HashTrieMap.<String, UriPathMapper<T>>empty().updated(segment, compile(pattern, path.tail(), query, fragment, value)), (UriPathMapper<T>) empty(), (UriQueryMapper<T>) empty());
-      }
-    } else {
-      return new UriPathMapping<T>(HashTrieMap.<String, UriPathMapper<T>>empty(), (UriPathMapper<T>) empty(), UriQueryMapper.compile(pattern, query, fragment, value));
-    }
-  }
 }

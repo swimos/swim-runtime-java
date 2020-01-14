@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,11 @@ package swim.math;
 import swim.structure.Form;
 
 public abstract class R2Form<T> extends Form<T> implements R2Boundary<T> {
+
+  public static <T> Z2Form<T> transformed(R2Form<T> form, R2ToZ2Function function) {
+    return new R2ToZ2Form<T>(form, function);
+  }
+
   @Override
   public abstract double getXMin(T object);
 
@@ -35,7 +40,4 @@ public abstract class R2Form<T> extends Form<T> implements R2Boundary<T> {
   @Override
   public abstract boolean intersects(T s, T t);
 
-  public static <T> Z2Form<T> transformed(R2Form<T> form, R2ToZ2Function function) {
-    return new R2ToZ2Form<T>(form, function);
-  }
 }

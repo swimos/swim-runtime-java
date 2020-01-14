@@ -1,4 +1,4 @@
-// Copyright 2015-2019 SWIM.AI inc.
+// Copyright 2015-2020 SWIM.AI inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,15 +22,16 @@ import swim.api.service.ServiceContext;
  * Thread-local context variables.
  */
 public final class SwimContext {
-  private SwimContext() {
-    // nop
-  }
 
   private static final ThreadLocal<ServiceContext> SERVICE_CONTEXT = new ThreadLocal<>();
   private static final ThreadLocal<PlaneContext> PLANE_CONTEXT = new ThreadLocal<>();
   private static final ThreadLocal<AgentContext> AGENT_CONTEXT = new ThreadLocal<>();
   private static final ThreadLocal<Lane> LANE = new ThreadLocal<>();
   private static final ThreadLocal<Link> LINK = new ThreadLocal<>();
+
+  private SwimContext() {
+    // nop
+  }
 
   public static ServiceContext getServiceContext() {
     return SERVICE_CONTEXT.get();
@@ -79,4 +80,5 @@ public final class SwimContext {
     LANE.remove();
     LINK.remove();
   }
+
 }
