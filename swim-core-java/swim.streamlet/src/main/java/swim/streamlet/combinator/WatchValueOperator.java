@@ -19,7 +19,7 @@ import swim.streamlet.AbstractInlet;
 public abstract class WatchValueOperator<I> extends AbstractInlet<I> {
 
   @Override
-  protected void onReconcileOutput(int version) {
+  protected void onRecohereOutput(int version) {
     if (this.input != null) {
       evaluate(this.input.get());
     }

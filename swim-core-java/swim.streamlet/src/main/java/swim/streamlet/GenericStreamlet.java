@@ -18,20 +18,20 @@ public interface GenericStreamlet<I, O> extends Streamlet<I, O> {
 
   O getOutput(Outlet<? super O> outlet);
 
-  void willInvalidateInlet(Inlet<? extends I> inlet);
+  void willDecohereInlet(Inlet<? extends I> inlet);
 
-  void didInvalidateInlet(Inlet<? extends I> inlet);
+  void didDecohereInlet(Inlet<? extends I> inlet);
 
-  void willReconcileInlet(Inlet<? extends I> inlet, int version);
+  void willRecohereInlet(Inlet<? extends I> inlet, int version);
 
-  void didReconcileInlet(Inlet<? extends I> inlet, int version);
+  void didRecohereInlet(Inlet<? extends I> inlet, int version);
 
-  void willInvalidateOutlet(Outlet<? super O> outlet);
+  void willDecohereOutlet(Outlet<? super O> outlet);
 
-  void didInvalidateOutlet(Outlet<? super O> outlet);
+  void didDecohereOutlet(Outlet<? super O> outlet);
 
-  void willReconcileOutlet(Outlet<? super O> outlet, int version);
+  void willRecohereOutlet(Outlet<? super O> outlet, int version);
 
-  void didReconcileOutlet(Outlet<? super O> outlet, int version);
+  void didRecohereOutlet(Outlet<? super O> outlet, int version);
 
 }

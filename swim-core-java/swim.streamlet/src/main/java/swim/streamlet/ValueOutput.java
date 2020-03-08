@@ -31,7 +31,7 @@ public class ValueOutput<I> extends AbstractInlet<I> {
   }
 
   @Override
-  protected void onReconcileOutput(int version) {
+  protected void onRecohereOutput(int version) {
     if (this.input != null) {
       this.state = this.input.get();
     }

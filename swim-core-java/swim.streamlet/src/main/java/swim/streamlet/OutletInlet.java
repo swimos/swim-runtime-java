@@ -15,9 +15,9 @@
 package swim.streamlet;
 
 /**
- * An {@code Inlet} that invalidates a parameterized {@code Outlet} whenever
- * the {@code Inlet} is invalidated, and that updates the parameterized {@code
- * Outlet} whenever the {@code Inlet} updates.
+ * An {@code Inlet} that decoheres a parameterized {@code Outlet} whenever
+ * the {@code Inlet} decoheres, and that recoheres the parameterized {@code
+ * Outlet} whenever the {@code Inlet} recoheres.
  */
 public class OutletInlet<I> extends AbstractInlet<I> {
 
@@ -32,13 +32,13 @@ public class OutletInlet<I> extends AbstractInlet<I> {
   }
 
   @Override
-  protected void onInvalidateOutput() {
-    this.outlet.invalidateInput();
+  protected void onDecohereOutput() {
+    this.outlet.decohereInput();
   }
 
   @Override
-  protected void onReconcileOutput(int version) {
-    this.outlet.reconcileInput(version);
+  protected void onRecohereOutput(int version) {
+    this.outlet.recohereInput(version);
   }
 
 }

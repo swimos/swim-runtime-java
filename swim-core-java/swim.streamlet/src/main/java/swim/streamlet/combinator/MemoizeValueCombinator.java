@@ -31,7 +31,7 @@ public class MemoizeValueCombinator<IO> extends AbstractInoutlet<IO, IO> {
   }
 
   @Override
-  protected void onReconcile(int version) {
+  protected void onRecohere(int version) {
     if (this.input != null) {
       this.state = this.input.get();
     }

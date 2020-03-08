@@ -32,7 +32,7 @@ public abstract class ReduceFieldsOperator<K, V, I, O> extends AbstractMapInletO
   }
 
   @Override
-  protected void onReconcileOutputKey(K key, KeyEffect effect, int version) {
+  protected void onRecohereOutputKey(K key, KeyEffect effect, int version) {
     if (effect == KeyEffect.UPDATE) {
       if (this.input != null) {
         final V value = this.input.get(key);

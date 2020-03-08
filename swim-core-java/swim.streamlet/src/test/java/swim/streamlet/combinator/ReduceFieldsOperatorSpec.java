@@ -47,11 +47,11 @@ public class ReduceFieldsOperatorSpec {
     output.bindInput(sum);
 
     input.put("two", 2);
-    input.reconcileInput(0); // reconcile forward
+    input.recohereInput(0); // recohere forward
     assertEquals(output.get().intValue(), 2);
 
     input.put("three", 3);
-    output.reconcileOutput(1); // reconcile backward
+    output.recohereOutput(1); // recohere backward
     assertEquals(output.get().intValue(), 5);
   }
 
@@ -63,11 +63,11 @@ public class ReduceFieldsOperatorSpec {
     output.bindInput(sum);
 
     input.put("two", 2);
-    input.reconcileInput(0); // reconcile forward
+    input.recohereInput(0); // recohere forward
     assertEquals(output.get().intValue(), 2);
 
     input.put("three", 3);
-    output.reconcileOutput(1); // reconcile backward
+    output.recohereOutput(1); // recohere backward
     assertEquals(output.get().intValue(), 5);
   }
 

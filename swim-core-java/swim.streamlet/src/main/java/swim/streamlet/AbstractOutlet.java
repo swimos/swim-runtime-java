@@ -98,53 +98,53 @@ public abstract class AbstractOutlet<O> implements Outlet<O> {
   }
 
   @Override
-  public void invalidateInput() {
+  public void decohereInput() {
     if (this.version >= 0) {
-      willInvalidateInput();
+      willDecohereInput();
       this.version = -1;
-      onInvalidateInput();
+      onDecohereInput();
       for (int i = 0, n = this.outputs != null ? this.outputs.length : 0; i < n; i += 1) {
-        this.outputs[i].invalidateOutput();
+        this.outputs[i].decohereOutput();
       }
-      didInvalidateInput();
+      didDecohereInput();
     }
   }
 
   @Override
-  public void reconcileInput(int version) {
+  public void recohereInput(int version) {
     if (this.version < 0) {
-      willReconcileInput(version);
+      willRecohereInput(version);
       this.version = version;
-      onReconcileInput(version);
+      onRecohereInput(version);
       for (int i = 0, n = this.outputs != null ? this.outputs.length : 0; i < n; i += 1) {
-        this.outputs[i].reconcileOutput(version);
+        this.outputs[i].recohereOutput(version);
       }
-      didReconcileInput(version);
+      didRecohereInput(version);
     }
   }
 
-  protected void willInvalidateInput() {
-    // stub
+  protected void willDecohereInput() {
+    // hook
   }
 
-  protected void onInvalidateInput() {
-    // stub
+  protected void onDecohereInput() {
+    // hook
   }
 
-  protected void didInvalidateInput() {
-    // stub
+  protected void didDecohereInput() {
+    // hook
   }
 
-  protected void willReconcileInput(int version) {
-    // stub
+  protected void willRecohereInput(int version) {
+    // hook
   }
 
-  protected void onReconcileInput(int version) {
-    // stub
+  protected void onRecohereInput(int version) {
+    // hook
   }
 
-  protected void didReconcileInput(int version) {
-    // stub
+  protected void didRecohereInput(int version) {
+    // hook
   }
 
 }

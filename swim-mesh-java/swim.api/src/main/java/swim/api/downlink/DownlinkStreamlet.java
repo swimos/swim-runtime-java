@@ -84,7 +84,7 @@ public class DownlinkStreamlet extends AbstractRecordStreamlet<Value, Value> {
 
   @SuppressWarnings("unchecked")
   @Override
-  protected void onReconcile(int version) {
+  protected void onRecohere(int version) {
     final String hostUri = this.castInput(this.hostUri, Form.forString());
     final String nodeUri = this.castInput(this.nodeUri, Form.forString());
     final String laneUri = this.castInput(this.laneUri, Form.forString());

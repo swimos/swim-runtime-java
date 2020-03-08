@@ -345,8 +345,8 @@ public class ValueDownlinkRecord extends DownlinkRecord implements DidSet<Value>
 
   @Override
   public void didSet(Value newValue, Value oldValue) {
-    this.invalidateInput();
-    this.reconcileInput(0); // TODO: debounce
+    this.decohereInput();
+    this.recohereInput(0); // TODO: debounce
   }
 
 }

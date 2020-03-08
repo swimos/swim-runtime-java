@@ -195,14 +195,14 @@ public class MapDownlinkRecord extends DownlinkRecord
 
   @Override
   public void didUpdate(Value key, Value newValue, Value oldValue) {
-    this.invalidateInputKey(key, KeyEffect.UPDATE);
-    this.reconcileInput(0); // TODO: debounce
+    this.decohereInputKey(key, KeyEffect.UPDATE);
+    this.recohereInput(0); // TODO: debounce
   }
 
   @Override
   public void didRemove(Value key, Value oldValue) {
-    this.invalidateInputKey(key, KeyEffect.REMOVE);
-    this.reconcileInput(0); // TODO: debounce
+    this.decohereInputKey(key, KeyEffect.REMOVE);
+    this.recohereInput(0); // TODO: debounce
   }
 
   @Override
