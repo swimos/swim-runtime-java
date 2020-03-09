@@ -12,29 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.api.downlink;
+package swim.dataflow;
 
-import swim.api.ref.SwimRef;
-import swim.dataflow.RecordModel;
-import swim.dataflow.Transmuter;
 import swim.structure.Record;
 
-final class DownlinkTransmuter extends Transmuter {
+public abstract class Reifier {
 
-  final SwimRef swim;
-
-  DownlinkTransmuter(SwimRef swim) {
-    this.swim = swim;
+  public static Reifier system() {
+    return null; // TODO
   }
 
-  @Override
-  public Record transmute(RecordModel model) {
-    if ("link".equals(model.tag())) {
-      final DownlinkStreamlet streamlet = new DownlinkStreamlet(this.swim, model);
-      streamlet.compile();
-      return streamlet;
-    }
-    return model;
-  }
+  public abstract Record reify(RecordModel model);
 
 }

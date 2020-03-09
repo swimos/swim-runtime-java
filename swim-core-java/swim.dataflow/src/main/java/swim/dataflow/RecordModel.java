@@ -442,10 +442,10 @@ public class RecordModel extends AbstractRecordOutlet {
     }
   }
 
-  public void transmute(Transmuter transmuter) {
+  public void reify(Reifier reifier) {
     int index = 0;
     for (Item oldItem : this) {
-      final Item newItem = transmuteItem(oldItem, transmuter);
+      final Item newItem = reifyItem(oldItem, reifier);
       if (oldItem != newItem) {
         setItem(index, newItem);
       }
@@ -453,21 +453,21 @@ public class RecordModel extends AbstractRecordOutlet {
     }
   }
 
-  public void transmute() {
-    transmute(Transmuter.system());
+  public void reify() {
+    reify(Reifier.system());
   }
 
-  public Item transmuteItem(Item item, Transmuter transmuter) {
+  public Item reifyItem(Item item, Reifier reifier) {
     if (item instanceof Field) {
-      return transmuteField((Field) item, transmuter);
+      return reifyField((Field) item, reifier);
     } else {
-      return transmuteValue((Value) item, transmuter);
+      return reifyValue((Value) item, reifier);
     }
   }
 
-  public Field transmuteField(Field field, Transmuter transmuter) {
+  public Field reifyField(Field field, Reifier reifier) {
     final Value oldValue = field.value();
-    final Value newValue = transmuteValue(oldValue, transmuter);
+    final Value newValue = reifyValue(oldValue, reifier);
     if (oldValue != newValue) {
       return field.updatedValue(newValue);
     } else {
@@ -475,11 +475,11 @@ public class RecordModel extends AbstractRecordOutlet {
     }
   }
 
-  public Value transmuteValue(Value oldValue, Transmuter transmuter) {
+  public Value reifyValue(Value oldValue, Reifier reifier) {
     if (oldValue instanceof RecordModel) {
-      Record newValue = this.transmuteModel((RecordModel) oldValue);
-      if (oldValue == newValue && transmuter != null) {
-        newValue = transmuter.transmute((RecordModel) oldValue);
+      Record newValue = this.reifyModel((RecordModel) oldValue);
+      if (oldValue == newValue && reifier != null) {
+        newValue = reifier.reify((RecordModel) oldValue);
       }
       return newValue;
     } else {
@@ -487,10 +487,10 @@ public class RecordModel extends AbstractRecordOutlet {
     }
   }
 
-  public Record transmuteModel(RecordModel model) {
+  public Record reifyModel(RecordModel model) {
     final StreamletScope<? extends Value> scope = streamletScope();
     if (scope instanceof RecordModel) {
-      return ((RecordModel) scope).transmuteModel(model);
+      return ((RecordModel) scope).reifyModel(model);
     } else {
       return model;
     }
