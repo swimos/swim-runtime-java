@@ -17,7 +17,10 @@ package swim.api.downlink;
 import swim.api.ref.SwimRef;
 import swim.dataflow.RecordModel;
 import swim.dataflow.Reifier;
+import swim.structure.Field;
+import swim.structure.Item;
 import swim.structure.Record;
+import swim.structure.Value;
 
 final class DownlinkReifier extends Reifier {
 
@@ -28,7 +31,33 @@ final class DownlinkReifier extends Reifier {
   }
 
   @Override
-  public Record reify(RecordModel model) {
+  public Item reify(Item item) {
+    if (item instanceof Field) {
+      return reifyField((Field) item);
+    } else {
+      return reifyValue((Value) item);
+    }
+  }
+
+  public Field reifyField(Field field) {
+    final Value oldValue = field.value();
+    final Value newValue = reifyValue(oldValue);
+    if (oldValue != newValue) {
+      return field.updatedValue(newValue);
+    } else {
+      return field;
+    }
+  }
+
+  public Value reifyValue(Value value) {
+    if (value instanceof RecordModel) {
+      return this.reifyModel((RecordModel) value);
+    } else {
+      return value;
+    }
+  }
+
+  public Record reifyModel(RecordModel model) {
     if ("link".equals(model.tag())) {
       final DownlinkStreamlet streamlet = new DownlinkStreamlet(this.swim, model);
       streamlet.compile();

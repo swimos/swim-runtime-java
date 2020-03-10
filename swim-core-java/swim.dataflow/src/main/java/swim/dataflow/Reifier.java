@@ -14,7 +14,7 @@
 
 package swim.dataflow;
 
-import swim.structure.Record;
+import swim.structure.Item;
 
 public abstract class Reifier {
 
@@ -22,6 +22,6 @@ public abstract class Reifier {
     return null; // TODO
   }
 
-  public abstract Record reify(RecordModel model);
+  public abstract Item reify(Item item);
 
 }

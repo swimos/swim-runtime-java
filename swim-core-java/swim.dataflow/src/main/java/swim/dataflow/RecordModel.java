@@ -458,41 +458,11 @@ public class RecordModel extends AbstractRecordOutlet {
   }
 
   public Item reifyItem(Item item, Reifier reifier) {
-    if (item instanceof Field) {
-      return reifyField((Field) item, reifier);
-    } else {
-      return reifyValue((Value) item, reifier);
-    }
-  }
-
-  public Field reifyField(Field field, Reifier reifier) {
-    final Value oldValue = field.value();
-    final Value newValue = reifyValue(oldValue, reifier);
-    if (oldValue != newValue) {
-      return field.updatedValue(newValue);
-    } else {
-      return field;
-    }
-  }
-
-  public Value reifyValue(Value oldValue, Reifier reifier) {
-    if (oldValue instanceof RecordModel) {
-      Record newValue = this.reifyModel((RecordModel) oldValue);
-      if (oldValue == newValue && reifier != null) {
-        newValue = reifier.reify((RecordModel) oldValue);
-      }
-      return newValue;
-    } else {
-      return oldValue;
-    }
-  }
-
-  public Record reifyModel(RecordModel model) {
     final StreamletScope<? extends Value> scope = streamletScope();
     if (scope instanceof RecordModel) {
-      return ((RecordModel) scope).reifyModel(model);
+      return ((RecordModel) scope).reifyItem(item, reifier);
     } else {
-      return model;
+      return item;
     }
   }
 
