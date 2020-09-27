@@ -170,6 +170,16 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
     }
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> T bottomHost(Class<T> hostClass) {
+    T host = this.hostContext.bottomHost(hostClass);
+    if (host == null && hostClass.isAssignableFrom(getClass())) {
+      host = (T) this;
+    }
+    return host;
+  }
+
   @Override
   public final HostContext hostContext() {
     return this.hostContext;
@@ -681,7 +691,7 @@ public class RemoteHost extends AbstractTierBinding implements HostBinding, Warp
 
         willPushMessage(resolvedMessage);
         this.hostContext.pushDown(new Push<Envelope>(Uri.empty(), Uri.empty(), nodeUri, laneUri,
-                                  0.0f, null, resolvedMessage, this.messageCont));
+                                                     0.0f, null, resolvedMessage, this.messageCont));
       } else if (directive.isForbidden()) {
         forbid();
       }

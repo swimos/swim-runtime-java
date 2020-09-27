@@ -15,6 +15,7 @@
 package swim.meta;
 
 import swim.api.space.Space;
+import swim.codec.ParserException;
 import swim.kernel.KernelContext;
 import swim.kernel.KernelProxy;
 import swim.recon.Recon;
@@ -79,36 +80,40 @@ public class MetaKernel extends KernelProxy {
 
   protected NodeBinding createMeta(EdgeBinding edge, UriPath nodePath) {
     if (!nodePath.isEmpty()) {
-      if ("meta:edge".equals(nodePath.head())) {
-        nodePath = nodePath.tail(); // drop meta:edge
-        if (!nodePath.isEmpty()) {
-          nodePath = nodePath.tail(); // drop /
+      try {
+        if ("meta:edge".equals(nodePath.head())) {
+          nodePath = nodePath.tail(); // drop meta:edge
+          if (!nodePath.isEmpty()) {
+            nodePath = nodePath.tail(); // drop /
+          }
+          return createMetaEdge(edge, nodePath);
+        } else if ("meta:mesh".equals(nodePath.head())) {
+          nodePath = nodePath.tail(); // drop meta:mesh
+          if (!nodePath.isEmpty()) {
+            nodePath = nodePath.tail(); // drop /
+          }
+          return createMetaMesh(edge, nodePath);
+        } else if ("meta:part".equals(nodePath.head())) {
+          nodePath = nodePath.tail(); // drop meta:part
+          if (!nodePath.isEmpty()) {
+            nodePath = nodePath.tail(); // drop /
+          }
+          return createMetaPart(edge, nodePath);
+        } else if ("meta:host".equals(nodePath.head())) {
+          nodePath = nodePath.tail(); // drop meta:host
+          if (!nodePath.isEmpty()) {
+            nodePath = nodePath.tail(); // drop /
+          }
+          return createMetaHost(edge, nodePath);
+        } else if ("meta:node".equals(nodePath.head())) {
+          nodePath = nodePath.tail(); // drop meta:node
+          if (!nodePath.isEmpty()) {
+            nodePath = nodePath.tail(); // drop /
+          }
+          return createMetaNode(edge, nodePath);
         }
-        return createMetaEdge(edge, nodePath);
-      } else if ("meta:mesh".equals(nodePath.head())) {
-        nodePath = nodePath.tail(); // drop meta:mesh
-        if (!nodePath.isEmpty()) {
-          nodePath = nodePath.tail(); // drop /
-        }
-        return createMetaMesh(edge, nodePath);
-      } else if ("meta:part".equals(nodePath.head())) {
-        nodePath = nodePath.tail(); // drop meta:part
-        if (!nodePath.isEmpty()) {
-          nodePath = nodePath.tail(); // drop /
-        }
-        return createMetaPart(edge, nodePath);
-      } else if ("meta:host".equals(nodePath.head())) {
-        nodePath = nodePath.tail(); // drop meta:host
-        if (!nodePath.isEmpty()) {
-          nodePath = nodePath.tail(); // drop /
-        }
-        return createMetaHost(edge, nodePath);
-      } else if ("meta:node".equals(nodePath.head())) {
-        nodePath = nodePath.tail(); // drop meta:node
-        if (!nodePath.isEmpty()) {
-          nodePath = nodePath.tail(); // drop /
-        }
-        return createMetaNode(edge, nodePath);
+      } catch (ParserException cause) {
+        // swallow
       }
     }
     return null;
