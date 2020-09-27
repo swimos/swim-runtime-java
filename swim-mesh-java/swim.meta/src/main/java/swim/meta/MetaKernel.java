@@ -117,23 +117,47 @@ public class MetaKernel extends KernelProxy {
   protected NodeBinding createMetaEdge(EdgeBinding edge, UriPath nodePath) {
     if (nodePath.isEmpty()) {
       return new MetaEdgeAgent(edge);
+    } else if ("mesh".equals(nodePath.head())) {
+      nodePath = nodePath.tail(); // drop mesh
+      if (!nodePath.isEmpty()) {
+        nodePath = nodePath.tail(); // drop /
+      }
+      return createMetaMesh(edge, nodePath);
+    } else if ("part".equals(nodePath.head())) {
+      nodePath = nodePath.tail(); // drop part
+      if (!nodePath.isEmpty()) {
+        nodePath = nodePath.tail(); // drop /
+      }
+      return createMetaPart(edge, nodePath);
+    } else if ("host".equals(nodePath.head())) {
+      nodePath = nodePath.tail(); // drop host
+      if (!nodePath.isEmpty()) {
+        nodePath = nodePath.tail(); // drop /
+      }
+      return createMetaHost(edge, nodePath);
+    } else if ("node".equals(nodePath.head())) {
+      nodePath = nodePath.tail(); // drop node
+      if (!nodePath.isEmpty()) {
+        nodePath = nodePath.tail(); // drop /
+      }
+      return createMetaNode(edge, nodePath);
     }
     return null;
   }
 
   protected NodeBinding createMetaMesh(EdgeBinding edge, UriPath nodePath) {
-    if (nodePath.isRelative()) {
-      final Uri meshUri = nodePath.isEmpty() ? Uri.empty() : Uri.parse(nodePath.head());
-      final MeshBinding mesh = edge.getMesh(meshUri);
-      if (mesh != null) {
+    final Uri meshUri = nodePath.isEmpty() || nodePath.isAbsolute() ? Uri.empty() : Uri.parse(nodePath.head());
+    final MeshBinding mesh = edge.getMesh(meshUri);
+    if (mesh != null) {
+      if (nodePath.isAbsolute()) {
+        nodePath = nodePath.tail(); // drop /
+      } else if (!nodePath.isEmpty()) {
+        nodePath = nodePath.tail(); // drop meshUri
         if (!nodePath.isEmpty()) {
-          nodePath = nodePath.tail(); // drop meshUri
-          if (!nodePath.isEmpty()) {
-            nodePath = nodePath.tail(); // drop /
-          }
+          nodePath = nodePath.tail(); // drop /
         }
-        return createMetaMesh(mesh, nodePath);
       }
+      return createMetaMesh(mesh, nodePath);
     }
     return null;
   }
@@ -172,18 +196,18 @@ public class MetaKernel extends KernelProxy {
   }
 
   public NodeBinding createMetaPart(MeshBinding mesh, UriPath nodePath) {
-    if (nodePath.isRelative()) {
-      final Value partKey = nodePath.isEmpty() ? Value.extant() : Recon.parse(nodePath.head());
-      final PartBinding part = mesh.getPart(partKey);
-      if (part != null) {
+    final Value partKey = nodePath.isEmpty() || nodePath.isAbsolute() ? Value.extant() : Recon.parse(nodePath.head());
+    final PartBinding part = mesh.getPart(partKey);
+    if (part != null) {
+      if (nodePath.isAbsolute()) {
+        nodePath = nodePath.tail(); // drop /
+      } else if (!nodePath.isEmpty()) {
+        nodePath = nodePath.tail(); // drop partKey
         if (!nodePath.isEmpty()) {
-          nodePath = nodePath.tail(); // drop partKey
-          if (!nodePath.isEmpty()) {
-            nodePath = nodePath.tail(); // drop /
-          }
+          nodePath = nodePath.tail(); // drop /
         }
-        return createMetaPart(part, nodePath);
       }
+      return createMetaPart(part, nodePath);
     }
     return null;
   }
@@ -224,18 +248,18 @@ public class MetaKernel extends KernelProxy {
   }
 
   public NodeBinding createMetaHost(PartBinding part, UriPath nodePath) {
-    if (nodePath.isRelative()) {
-      final Uri hostUri = nodePath.isEmpty() ? Uri.empty() : Uri.parse(nodePath.head());
-      final HostBinding host = part.getHost(hostUri);
-      if (host != null) {
+    final Uri hostUri = nodePath.isEmpty() || nodePath.isAbsolute() ? Uri.empty() : Uri.parse(nodePath.head());
+    final HostBinding host = part.getHost(hostUri);
+    if (host != null) {
+      if (nodePath.isAbsolute()) {
+        nodePath = nodePath.tail(); // drop /
+      } else if (!nodePath.isEmpty()) {
+        nodePath = nodePath.tail(); // drop hostUri
         if (!nodePath.isEmpty()) {
-          nodePath = nodePath.tail(); // drop hostUri
-          if (!nodePath.isEmpty()) {
-            nodePath = nodePath.tail(); // drop /
-          }
+          nodePath = nodePath.tail(); // drop /
         }
-        return createMetaHost(host, nodePath);
       }
+      return createMetaHost(host, nodePath);
     }
     return null;
   }

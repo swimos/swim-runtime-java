@@ -36,6 +36,7 @@ import swim.runtime.WarpContext;
 import swim.structure.Value;
 import swim.uri.Uri;
 import swim.warp.Envelope;
+import swim.warp.CommandMessage;
 
 class RemoteWarpUplink implements WarpContext, PullRequest<Envelope> {
 
@@ -256,6 +257,10 @@ class RemoteWarpUplink implements WarpContext, PullRequest<Envelope> {
         this.pullContext.push(remoteEnvelope);
         this.pullContext = null;
         push.bind();
+        if (remoteEnvelope instanceof CommandMessage) {
+          RemoteHost.UPLINK_COMMAND_DELTA.incrementAndGet(this.host);
+          this.host.didUpdateMetrics();
+        }
       }
     } else {
       push.trap(new LinkException("unsupported message: " + message));

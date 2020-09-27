@@ -37,6 +37,7 @@ import swim.runtime.WarpContext;
 import swim.structure.Value;
 import swim.uri.Uri;
 import swim.warp.Envelope;
+import swim.warp.EventMessage;
 import swim.warp.LinkRequest;
 import swim.warp.SyncRequest;
 
@@ -281,6 +282,10 @@ class RemoteWarpDownlink implements WarpBinding, PullRequest<Envelope> {
         if (pullContext != null) {
           pullContext.push(remoteEnvelope);
           this.pullContext = null;
+          if (remoteEnvelope instanceof EventMessage) {
+            RemoteHost.DOWNLINK_EVENT_DELTA.incrementAndGet(this.host);
+            this.host.didUpdateMetrics();
+          }
         }
       }
     } else {
