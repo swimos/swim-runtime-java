@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package swim.structure.selector;
+package swim.structure.func;
 
 import org.testng.annotations.Test;
 import swim.structure.Num;

@@ -37,4 +37,5 @@ module swim.runtime {
   exports swim.runtime.reflect;
   exports swim.runtime.router;
   exports swim.runtime.scope;
+  exports swim.runtime.warp;
 }

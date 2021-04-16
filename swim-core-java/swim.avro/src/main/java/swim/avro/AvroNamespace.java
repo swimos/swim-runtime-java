@@ -26,6 +26,7 @@ import swim.codec.Input;
 import swim.codec.Output;
 import swim.codec.Parser;
 import swim.codec.Unicode;
+import swim.util.Builder;
 import swim.util.Murmur3;
 
 public abstract class AvroNamespace implements Collection<String>, Comparable<AvroNamespace>, Debug, Display {
@@ -86,7 +87,7 @@ public abstract class AvroNamespace implements Collection<String>, Comparable<Av
     }
   }
 
-  public static AvroNamespaceBuilder builder() {
+  public static Builder<String, AvroNamespace> builder() {
     return new AvroNamespaceBuilder();
   }
 
