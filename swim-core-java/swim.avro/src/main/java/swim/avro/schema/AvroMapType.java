@@ -22,7 +22,7 @@ public abstract class AvroMapType<K, V, T> extends AvroComplexType<T> {
 
   public abstract Parser<K> parseKey(Input input);
 
-  public abstract AvroType<V> valueType();
+  public abstract AvroType<? extends V> valueType();
 
   public abstract PairBuilder<K, V, T> mapBuilder();
 

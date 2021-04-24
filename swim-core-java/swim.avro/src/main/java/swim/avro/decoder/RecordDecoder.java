@@ -47,8 +47,12 @@ final class RecordDecoder<T, R> extends Decoder<T> {
     do {
       if (valueDecoder == null) {
         if (fieldIndex < type.fieldCount()) {
-          final AvroFieldType<R, ?> fieldType = type.getField(fieldIndex);
-          valueDecoder = avro.decodeType(fieldType.valueType(), input);
+          final AvroFieldType<?, R> fieldType = type.getField(fieldIndex);
+          if (fieldType != null) {
+            valueDecoder = avro.decodeType(fieldType.valueType(), input);
+          } else {
+            return error(new DecoderException("unknown field: " + fieldIndex));
+          }
         } else {
           if (record == null) {
             record = type.create();
@@ -63,7 +67,7 @@ final class RecordDecoder<T, R> extends Decoder<T> {
         if (record == null) {
           record = type.create();
         }
-        final AvroFieldType<R, Object> fieldType = (AvroFieldType<R, Object>) type.getField(fieldIndex);
+        final AvroFieldType<Object, R> fieldType = (AvroFieldType<Object, R>) type.getField(fieldIndex);
         record = fieldType.updated(record, valueDecoder.bind());
         valueDecoder = null;
         fieldIndex += 1;

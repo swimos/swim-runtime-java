@@ -27,9 +27,9 @@ public abstract class AvroRecordType<T, R> extends AvroNamedType<T> {
   @Override
   public abstract AvroRecordType<T, R> alias(AvroName alias);
 
-  public abstract AvroFieldType<R, ?> getField(int index);
+  public abstract AvroFieldType<?, R> getField(int index);
 
-  public abstract AvroRecordType<T, R> field(AvroFieldType<R, ?> field);
+  public abstract AvroRecordType<T, R> field(AvroFieldType<?, R> field);
 
   public abstract R create();
 

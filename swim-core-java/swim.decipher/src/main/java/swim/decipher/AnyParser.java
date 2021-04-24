@@ -36,6 +36,11 @@ final class AnyParser<I, V> extends Parser<V> {
     this(decipher, null, null, null);
   }
 
+  @Override
+  public Parser<V> feed(Input input) {
+    return parse(input, this.decipher, this.xmlParser, this.jsonParser, this.reconParser);
+  }
+
   static <I, V> Parser<V> parse(Input input, DecipherParser<I, V> decipher, Parser<V> xmlParser,
                                 Parser<V> jsonParser, Parser<V> reconParser) {
     if (xmlParser == null || xmlParser.isCont()) {
@@ -90,11 +95,6 @@ final class AnyParser<I, V> extends Parser<V> {
 
   static <I, V> Parser<V> parse(Input input, DecipherParser<I, V> decipher) {
     return parse(input, decipher, null, null, null);
-  }
-
-  @Override
-  public Parser<V> feed(Input input) {
-    return parse(input, this.decipher, this.xmlParser, this.jsonParser, this.reconParser);
   }
 
 }

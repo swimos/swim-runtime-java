@@ -23,15 +23,15 @@ import swim.util.Builder;
 final class ArrayReflection<I> extends AvroArrayType<I, Object> {
 
   final Class<?> itemClass;
-  final AvroType<I> itemType;
+  final AvroType<? extends I> itemType;
 
-  ArrayReflection(Class<?> itemClass, AvroType<I> itemType) {
+  ArrayReflection(Class<?> itemClass, AvroType<? extends I> itemType) {
     this.itemClass = itemClass;
     this.itemType = itemType;
   }
 
   @Override
-  public AvroType<I> itemType() {
+  public AvroType<? extends I> itemType() {
     return this.itemType;
   }
 

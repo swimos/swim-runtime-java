@@ -75,7 +75,7 @@ checkstyle {
     maxWarnings = 0
   }
 
-  configFile = new File(rootDir, 'checkstyle.xml')
+  configFile = new File(gradle.swimSystemDir, 'checkstyle.xml')
   toolVersion "8.41.1"
 
   checkstyleMain {

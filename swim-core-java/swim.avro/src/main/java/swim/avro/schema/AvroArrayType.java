@@ -18,7 +18,7 @@ import swim.util.Builder;
 
 public abstract class AvroArrayType<I, T> extends AvroComplexType<T> {
 
-  public abstract AvroType<I> itemType();
+  public abstract AvroType<? extends I> itemType();
 
   public abstract Builder<I, T> arrayBuilder();
 

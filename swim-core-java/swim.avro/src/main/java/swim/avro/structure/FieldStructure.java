@@ -22,7 +22,7 @@ import swim.structure.Record;
 import swim.structure.Text;
 import swim.structure.Value;
 
-final class FieldStructure extends AvroFieldType<Record, Value> {
+final class FieldStructure extends AvroFieldType<Value, Record> {
 
   final Text name;
   final String doc;
@@ -56,7 +56,7 @@ final class FieldStructure extends AvroFieldType<Record, Value> {
   }
 
   @Override
-  public AvroFieldType<Record, Value> doc(String doc) {
+  public AvroFieldType<Value, Record> doc(String doc) {
     return new FieldStructure(this.name, doc, this.valueType, this.defaultValue,
         this.order, this.aliases);
   }
@@ -87,7 +87,7 @@ final class FieldStructure extends AvroFieldType<Record, Value> {
   }
 
   @Override
-  public AvroFieldType<Record, Value> alias(String alias) {
+  public AvroFieldType<Value, Record> alias(String alias) {
     return new FieldStructure(this.name, this.doc, this.valueType, this.defaultValue,
         this.order, this.aliases.appended(alias));
   }

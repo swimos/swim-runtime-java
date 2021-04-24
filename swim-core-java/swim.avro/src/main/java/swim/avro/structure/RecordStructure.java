@@ -25,10 +25,10 @@ final class RecordStructure extends AvroRecordType<Record, Record> {
   final AvroName fullName;
   final String doc;
   final FingerTrieSeq<AvroName> aliases;
-  final FingerTrieSeq<AvroFieldType<Record, ?>> fields;
+  final FingerTrieSeq<AvroFieldType<?, Record>> fields;
 
   RecordStructure(AvroName fullName, String doc, FingerTrieSeq<AvroName> aliases,
-                  FingerTrieSeq<AvroFieldType<Record, ?>> fields) {
+                  FingerTrieSeq<AvroFieldType<?, Record>> fields) {
     this.fullName = fullName;
     this.doc = doc;
     this.aliases = aliases;
@@ -75,12 +75,12 @@ final class RecordStructure extends AvroRecordType<Record, Record> {
   }
 
   @Override
-  public AvroFieldType<Record, ?> getField(int index) {
+  public AvroFieldType<?, Record> getField(int index) {
     return this.fields.get(index);
   }
 
   @Override
-  public AvroRecordType<Record, Record> field(AvroFieldType<Record, ?> field) {
+  public AvroRecordType<Record, Record> field(AvroFieldType<?, Record> field) {
     return new RecordStructure(this.fullName, this.doc, this.aliases, this.fields.appended(field));
   }
 

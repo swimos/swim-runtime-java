@@ -24,12 +24,12 @@ import swim.structure.Value;
  */
 public final class Decipher {
 
-  private static DecipherDecoder<Item, Value> structureDecoder;
-  private static DecipherParser<Item, Value> structureParser;
-
   private Decipher() {
     // static
   }
+
+  private static DecipherDecoder<Item, Value> structureDecoder;
+  private static DecipherParser<Item, Value> structureParser;
 
   static boolean isSpace(int c) {
     return c == 0x20 || c == 0x9;
