@@ -181,6 +181,10 @@ public abstract class ReconParser<I, V> {
     return StringParser.parse(input, this);
   }
 
+  public Parser<V> parseRawString(Input input) {
+    return RawStringParser.parse(input, this);
+  }
+
   public Parser<V> parseNumber(Input input) {
     return NumberParser.parse(input, this);
   }

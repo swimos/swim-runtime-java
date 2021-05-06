@@ -41,6 +41,12 @@ final class InfixOperatorWriter<I, V> extends Writer<Object, Object> {
     this.step = step;
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.recon, this.lhs, this.operator, this.rhs,
+                 this.precedence, this.part, this.step);
+  }
+
   static <I, V> int sizeOf(ReconWriter<I, V> recon, I lhs, String operator, I rhs, int precedence) {
     int size = 0;
     if (recon.precedence(lhs) < precedence) {
@@ -164,12 +170,6 @@ final class InfixOperatorWriter<I, V> extends Writer<Object, Object> {
   static <I, V> Writer<Object, Object> write(Output<?> output, ReconWriter<I, V> recon,
                                              I lhs, String operator, I rhs, int precedence) {
     return write(output, recon, lhs, operator, rhs, precedence, null, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.recon, this.lhs, this.operator, this.rhs,
-        this.precedence, this.part, this.step);
   }
 
 }

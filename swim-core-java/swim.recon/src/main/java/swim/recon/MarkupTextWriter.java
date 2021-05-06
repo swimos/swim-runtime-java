@@ -34,6 +34,11 @@ final class MarkupTextWriter extends Writer<Object, Object> {
     this.step = step;
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.text, this.index, this.escape, this.step);
+  }
+
   static int sizeOf(String text) {
     int size = 0;
     for (int i = 0, n = text.length(); i < n; i = text.offsetByCodePoints(i, 1)) {
@@ -124,11 +129,6 @@ final class MarkupTextWriter extends Writer<Object, Object> {
 
   static Writer<Object, Object> write(Output<?> output, String text) {
     return write(output, text, 0, 0, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.text, this.index, this.escape, this.step);
   }
 
 }

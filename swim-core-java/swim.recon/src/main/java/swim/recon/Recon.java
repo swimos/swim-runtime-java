@@ -31,12 +31,12 @@ import swim.structure.Value;
  */
 public final class Recon {
 
-  private static ReconParser<Item, Value> structureParser;
-  private static ReconWriter<Item, Value> structureWriter;
-
   private Recon() {
     // static
   }
+
+  private static ReconParser<Item, Value> structureParser;
+  private static ReconWriter<Item, Value> structureWriter;
 
   static boolean isSpace(int c) {
     return c == 0x20 || c == 0x9;

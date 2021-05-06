@@ -42,6 +42,12 @@ final class PrimaryWriter<I, V> extends Writer<Object, Object> {
     this.step = step;
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.recon, this.items, this.inParens, this.first,
+                 this.item, this.next, this.part, this.step);
+  }
+
   static <I, V> int sizeOf(ReconWriter<I, V> recon, Iterator<I> items) {
     int size = 0;
     boolean inParens = false;
@@ -180,12 +186,6 @@ final class PrimaryWriter<I, V> extends Writer<Object, Object> {
   static <I, V> Writer<Object, Object> write(Output<?> output, ReconWriter<I, V> recon,
                                              Iterator<I> items) {
     return write(output, recon, items, false, true, null, null, null, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.recon, this.items, this.inParens, this.first,
-        this.item, this.next, this.part, this.step);
   }
 
 }

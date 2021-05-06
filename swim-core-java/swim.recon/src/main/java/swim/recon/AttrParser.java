@@ -32,6 +32,11 @@ final class AttrParser<I, V> extends Parser<I> {
     this.step = step;
   }
 
+  @Override
+  public Parser<I> feed(Input input) {
+    return parse(input, this.recon, this.keyParser, this.valueParser, this.step);
+  }
+
   static <I, V> Parser<I> parse(Input input, ReconParser<I, V> recon, Parser<V> keyParser,
                                 Parser<V> valueParser, int step) {
     int c = 0;
@@ -142,11 +147,6 @@ final class AttrParser<I, V> extends Parser<I> {
 
   static <I, V> Parser<I> parse(Input input, ReconParser<I, V> recon) {
     return parse(input, recon, null, null, 1);
-  }
-
-  @Override
-  public Parser<I> feed(Input input) {
-    return parse(input, this.recon, this.keyParser, this.valueParser, this.step);
   }
 
 }

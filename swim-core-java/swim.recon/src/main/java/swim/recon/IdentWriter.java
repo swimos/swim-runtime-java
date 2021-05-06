@@ -33,6 +33,11 @@ final class IdentWriter extends Writer<Object, Object> {
     return Utf8.sizeOf(ident);
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.ident, this.index);
+  }
+
   static Writer<Object, Object> write(Output<?> output, String ident, int index) {
     int c;
     final int length = ident.length();
@@ -68,11 +73,6 @@ final class IdentWriter extends Writer<Object, Object> {
 
   static Writer<Object, Object> write(Output<?> output, String ident) {
     return write(output, ident, 0);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.ident, this.index);
   }
 
 }

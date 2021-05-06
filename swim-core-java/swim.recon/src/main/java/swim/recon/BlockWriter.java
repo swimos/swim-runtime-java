@@ -51,6 +51,13 @@ final class BlockWriter<I, V> extends Writer<Object, Object> {
     this.step = step;
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.recon, this.items, this.inBlock, this.inMarkup,
+                 this.inBraces, this.inBrackets, this.first, this.markupSafe,
+                 this.item, this.next, this.part, this.step);
+  }
+
   static <I, V> int sizeOf(ReconWriter<I, V> recon, Iterator<I> items,
                            boolean inBlock, boolean inMarkup) {
     int size = 0;
@@ -379,13 +386,6 @@ final class BlockWriter<I, V> extends Writer<Object, Object> {
     } else {
       return recon.writeItem(item, output);
     }
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.recon, this.items, this.inBlock, this.inMarkup,
-        this.inBraces, this.inBrackets, this.first, this.markupSafe,
-        this.item, this.next, this.part, this.step);
   }
 
 }

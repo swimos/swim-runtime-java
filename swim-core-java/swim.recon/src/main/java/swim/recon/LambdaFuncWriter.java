@@ -34,6 +34,11 @@ final class LambdaFuncWriter<I, V> extends Writer<Object, Object> {
     this.step = step;
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.recon, this.bindings, this.template, this.part, this.step);
+  }
+
   static <I, V> int sizeOf(ReconWriter<I, V> recon, V bindings, V template) {
     int size = 0;
     size += recon.sizeOfPrimary(bindings);
@@ -96,11 +101,6 @@ final class LambdaFuncWriter<I, V> extends Writer<Object, Object> {
   static <I, V> Writer<Object, Object> write(Output<?> output, ReconWriter<I, V> recon,
                                              V bindings, V template) {
     return write(output, recon, bindings, template, null, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.recon, this.bindings, this.template, this.part, this.step);
   }
 
 }

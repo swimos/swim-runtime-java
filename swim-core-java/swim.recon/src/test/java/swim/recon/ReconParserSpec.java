@@ -117,6 +117,35 @@ public class ReconParserSpec {
   }
 
   @Test
+  public void parseEmptyRawStrings() {
+    assertParses("``", Text.empty());
+    assertParses(" `` ", Text.empty());
+    assertParses("``````", Text.empty());
+    assertParses(" `````` ", Text.empty());
+  }
+
+  @Test
+  public void parseNonEmptyRawStrings() {
+    assertParses("`test`", Text.from("test"));
+    assertParses("```test```", Text.from("test"));
+  }
+
+  @Test
+  public void parseRawStringsWithBackticks() {
+    assertParses("``` ` ```", Text.from(" ` "));
+    assertParses("``` `` ```", Text.from(" `` "));
+    assertParses("``` \\` ```", Text.from(" ` "));
+    assertParses("``` \\`\\` ```", Text.from(" `` "));
+    assertParses("``` \\`\\`\\` ```", Text.from(" ``` "));
+  }
+
+  @Test
+  public void parseRawStringsWithBackslashes() {
+    assertParses("``` \\ ```", Text.from(" \\ "));
+    assertParses("``` \\\\` ```", Text.from(" \\` "));
+  }
+
+  @Test
   public void parseIdentifiers() {
     assertParses("test", Text.from("test"));
   }

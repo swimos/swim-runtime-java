@@ -34,6 +34,11 @@ final class FilterSelectorWriter<I, V> extends Writer<Object, Object> {
     this.step = step;
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.recon, this.predicate, this.then, this.part, this.step);
+  }
+
   static <I, V> int sizeOf(ReconWriter<I, V> recon, V predicate, V then) {
     int size = 2; // '$' '['
     size += recon.sizeOfValue(predicate);
@@ -92,11 +97,6 @@ final class FilterSelectorWriter<I, V> extends Writer<Object, Object> {
 
   static <I, V> Writer<Object, Object> writeThen(Output<?> output, ReconWriter<I, V> recon, V predicate, V then) {
     return write(output, recon, predicate, then, null, 2);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.recon, this.predicate, this.then, this.part, this.step);
   }
 
 }

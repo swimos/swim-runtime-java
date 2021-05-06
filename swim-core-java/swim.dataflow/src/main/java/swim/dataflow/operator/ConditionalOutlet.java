@@ -50,7 +50,7 @@ public final class ConditionalOutlet extends AbstractOutlet<Value> {
     if (ifInput != null) {
       final Value ifTerm = ifInput.get();
       if (ifTerm != null) {
-        if (ifTerm.booleanValue(false)) {
+        if (ifTerm.isDefinite()) {
           final Outlet<? extends Value> thenInput = this.thenInlet.input();
           if (thenInput != null) {
             final Value thenTerm = thenInput.get();

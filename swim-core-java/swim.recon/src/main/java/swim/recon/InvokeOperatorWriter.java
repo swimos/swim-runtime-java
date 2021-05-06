@@ -34,6 +34,11 @@ final class InvokeOperatorWriter<I, V> extends Writer<Object, Object> {
     this.step = step;
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.recon, this.func, this.args, this.part, this.step);
+  }
+
   static <I, V> int sizeOf(ReconWriter<I, V> recon, V func, V args) {
     int size = 0;
     size += recon.sizeOfValue(func);
@@ -90,11 +95,6 @@ final class InvokeOperatorWriter<I, V> extends Writer<Object, Object> {
   static <I, V> Writer<Object, Object> write(Output<?> output, ReconWriter<I, V> recon,
                                              V func, V args) {
     return write(output, recon, func, args, null, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.recon, this.func, this.args, this.part, this.step);
   }
 
 }

@@ -19,15 +19,8 @@ import swim.util.Murmur3;
 
 public final class Extant extends Value {
 
-  private static final Extant VALUE = new Extant();
-  private static int hashSeed;
-
   private Extant() {
     // stub
-  }
-
-  public static Extant extant() {
-    return VALUE;
   }
 
   /**
@@ -44,6 +37,14 @@ public final class Extant extends Value {
    */
   @Override
   public boolean isDistinct() {
+    return false;
+  }
+
+  /**
+   * Always returns {@code false} because {@code Extant} is not a definite value.
+   */
+  @Override
+  public boolean isDefinite() {
     return false;
   }
 
@@ -133,5 +134,13 @@ public final class Extant extends Value {
   public void debug(Output<?> output) {
     output = output.write("Value").write('.').write("extant").write('(').write(')');
   }
+
+  public static Extant extant() {
+    return VALUE;
+  }
+
+  private static final Extant VALUE = new Extant();
+
+  private static int hashSeed;
 
 }

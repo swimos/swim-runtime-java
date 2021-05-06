@@ -32,6 +32,11 @@ final class DataWriter extends Writer<Object, Object> {
     this.step = step;
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.buffer, this.part, this.step);
+  }
+
   static int sizeOf(int length) {
     return 1 + (((length * 4 / 3) + 3) & ~3);
   }
@@ -65,11 +70,6 @@ final class DataWriter extends Writer<Object, Object> {
 
   static Writer<Object, Object> write(Output<?> output, ByteBuffer buffer) {
     return write(output, buffer, null, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.buffer, this.part, this.step);
   }
 
 }

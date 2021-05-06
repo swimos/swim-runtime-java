@@ -36,6 +36,11 @@ final class SelectorParser<I, V> extends Parser<V> {
     this.step = step;
   }
 
+  @Override
+  public Parser<V> feed(Input input) {
+    return parse(input, this.recon, this.builder, this.selector, this.valueParser, this.step);
+  }
+
   static <I, V> Parser<V> parse(Input input, ReconParser<I, V> recon, Builder<I, V> builder,
                                 V selector, Parser<V> valueParser, int step) {
     int c = 0;
@@ -260,11 +265,6 @@ final class SelectorParser<I, V> extends Parser<V> {
 
   static <I, V> Parser<V> parse(Input input, ReconParser<I, V> recon, Builder<I, V> builder) {
     return parse(input, recon, builder, null, null, 1);
-  }
-
-  @Override
-  public Parser<V> feed(Input input) {
-    return parse(input, this.recon, this.builder, this.selector, this.valueParser, this.step);
   }
 
 }

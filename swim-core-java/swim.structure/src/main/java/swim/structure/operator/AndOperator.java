@@ -43,7 +43,7 @@ public final class AndOperator extends BinaryOperator {
     interpreter.willOperate(this);
     final Item result;
     final Item argument1 = this.operand1.evaluate(interpreter);
-    if (argument1.booleanValue(false)) {
+    if (argument1.isDefinite()) {
       final Item argument2 = this.operand2.evaluate(interpreter);
       result = argument2;
     } else {

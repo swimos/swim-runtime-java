@@ -34,6 +34,11 @@ final class StringWriter extends Writer<Object, Object> {
     this.step = step;
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.string, this.index, this.escape, this.step);
+  }
+
   static int sizeOf(String string) {
     int size = 0;
     size += 1; // '"';
@@ -134,11 +139,6 @@ final class StringWriter extends Writer<Object, Object> {
 
   static Writer<Object, Object> write(Output<?> output, String string) {
     return write(output, string, 0, 0, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.string, this.index, this.escape, this.step);
   }
 
 }

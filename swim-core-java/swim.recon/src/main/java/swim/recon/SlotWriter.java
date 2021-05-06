@@ -34,6 +34,11 @@ final class SlotWriter<I, V> extends Writer<Object, Object> {
     this.step = step;
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.recon, this.key, this.value, this.part, this.step);
+  }
+
   static <I, V> int sizeOf(ReconWriter<I, V> recon, V key, V value) {
     int size = 0;
     size += recon.sizeOfValue(key);
@@ -90,11 +95,6 @@ final class SlotWriter<I, V> extends Writer<Object, Object> {
   static <I, V> Writer<Object, Object> write(Output<?> output, ReconWriter<I, V> recon,
                                              V key, V value) {
     return write(output, recon, key, value, null, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.recon, this.key, this.value, this.part, this.step);
   }
 
 }

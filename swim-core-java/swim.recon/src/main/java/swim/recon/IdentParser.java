@@ -31,6 +31,11 @@ final class IdentParser<I, V> extends Parser<V> {
     this.step = step;
   }
 
+  @Override
+  public Parser<V> feed(Input input) {
+    return parse(input, this.recon, this.output, this.step);
+  }
+
   static <I, V> Parser<V> parse(Input input, ReconParser<I, V> recon, Output<V> output, int step) {
     int c = 0;
     if (step == 1) {
@@ -76,11 +81,6 @@ final class IdentParser<I, V> extends Parser<V> {
 
   static <I, V> Parser<V> parse(Input input, ReconParser<I, V> recon) {
     return parse(input, recon, null, 1);
-  }
-
-  @Override
-  public Parser<V> feed(Input input) {
-    return parse(input, this.recon, this.output, this.step);
   }
 
 }

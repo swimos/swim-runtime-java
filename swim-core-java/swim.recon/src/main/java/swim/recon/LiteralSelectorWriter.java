@@ -34,6 +34,11 @@ final class LiteralSelectorWriter<I, V> extends Writer<Object, Object> {
     this.step = step;
   }
 
+  @Override
+  public Writer<Object, Object> pull(Output<?> output) {
+    return write(output, this.recon, this.item, this.then, this.part, this.step);
+  }
+
   static <I, V> int sizeOf(ReconWriter<I, V> recon, I item, V then) {
     int size = 0;
     if (recon.precedence(item) < recon.precedence(recon.item(then))) {
@@ -96,11 +101,6 @@ final class LiteralSelectorWriter<I, V> extends Writer<Object, Object> {
 
   static <I, V> Writer<Object, Object> write(Output<?> output, ReconWriter<I, V> recon, I item, V then) {
     return write(output, recon, item, then, null, 1);
-  }
-
-  @Override
-  public Writer<Object, Object> pull(Output<?> output) {
-    return write(output, this.recon, this.item, this.then, this.part, this.step);
   }
 
 }

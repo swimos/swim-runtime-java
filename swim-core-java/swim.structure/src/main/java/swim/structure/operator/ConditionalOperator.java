@@ -61,7 +61,7 @@ public final class ConditionalOperator extends Operator {
     interpreter.willOperate(this);
     final Item result;
     final Item ifTerm = this.ifTerm.evaluate(interpreter);
-    if (ifTerm.booleanValue(false)) {
+    if (ifTerm.isDefinite()) {
       final Item thenTerm = this.thenTerm.evaluate(interpreter);
       result = thenTerm;
     } else {

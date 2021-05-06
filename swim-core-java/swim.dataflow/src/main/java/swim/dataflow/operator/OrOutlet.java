@@ -42,7 +42,7 @@ public final class OrOutlet extends AbstractOutlet<Value> {
   public Value get() {
     final Outlet<? extends Value> operand1Input = this.operand1Inlet.input();
     final Value argument1 = operand1Input != null ? operand1Input.get() : null;
-    if (argument1 != null && argument1.booleanValue(false)) {
+    if (argument1 != null && argument1.isDefinite()) {
       return argument1;
     }
     final Outlet<? extends Value> operand2Input = this.operand2Inlet.input();

@@ -37,6 +37,11 @@ final class MarkupParser<I, V> extends Parser<V> {
     this.step = step;
   }
 
+  @Override
+  public Parser<V> feed(Input input) {
+    return parse(input, this.recon, this.builder, this.textOutput, this.valueParser, this.step);
+  }
+
   static <I, V> Parser<V> parse(Input input, ReconParser<I, V> recon, Builder<I, V> builder,
                                 Output<V> textOutput, Parser<V> valueParser, int step) {
     int c = 0;
@@ -194,11 +199,6 @@ final class MarkupParser<I, V> extends Parser<V> {
 
   static <I, V> Parser<V> parse(Input input, ReconParser<I, V> recon) {
     return parse(input, recon, null, null, null, 1);
-  }
-
-  @Override
-  public Parser<V> feed(Input input) {
-    return parse(input, this.recon, this.builder, this.textOutput, this.valueParser, this.step);
   }
 
 }

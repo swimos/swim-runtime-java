@@ -40,21 +40,6 @@ import swim.structure.selector.ValuesSelector;
  */
 public abstract class Selector extends Expression {
 
-  public static Selector identity() {
-    return IdentitySelector.identity();
-  }
-
-  /**
-   * Lifts {@code item} into a {@link LiteralSelector} if it is not already a
-   * {@code Selector}.
-   */
-  public static Selector literal(Item item) {
-    if (item instanceof Selector) {
-      return (Selector) item;
-    }
-    return new LiteralSelector(item, Selector.identity());
-  }
-
   @Override
   public boolean isConstant() {
     return false;
@@ -261,6 +246,21 @@ public abstract class Selector extends Expression {
   }
 
   protected abstract int compareTo(Selector that);
+
+  public static Selector identity() {
+    return IdentitySelector.identity();
+  }
+
+  /**
+   * Lifts {@code item} into a {@link LiteralSelector} if it is not already a
+   * {@code Selector}.
+   */
+  public static Selector literal(Item item) {
+    if (item instanceof Selector) {
+      return (Selector) item;
+    }
+    return new LiteralSelector(item, Selector.identity());
+  }
 
 }
 

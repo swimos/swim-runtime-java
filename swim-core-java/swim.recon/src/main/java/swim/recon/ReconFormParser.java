@@ -36,6 +36,11 @@ final class ReconFormParser<T> extends Parser<T> {
     this(recon, form, null);
   }
 
+  @Override
+  public Parser<T> feed(Input input) {
+    return parse(input, this.recon, this.form, this.parser);
+  }
+
   static <T> Parser<T> parse(Input input, ReconParser<Item, Value> recon,
                              Form<T> form, Parser<Value> parser) {
     if (parser == null) {
@@ -54,11 +59,6 @@ final class ReconFormParser<T> extends Parser<T> {
 
   static <T> Parser<T> parse(Input input, ReconParser<Item, Value> recon, Form<T> form) {
     return parse(input, recon, form, null);
-  }
-
-  @Override
-  public Parser<T> feed(Input input) {
-    return parse(input, this.recon, this.form, this.parser);
   }
 
 }
