@@ -1,10 +1,10 @@
 plugins {
-  id 'SwimSystemLibrary'
-  id 'SwimSystemPublish'
+  id 'SwimRuntimeLibrary'
+  id 'SwimRuntimePublish'
 }
 
 description = 'Rich object model for working with Uniform Resource Identifiers, URI subcomponents, and URI patterns, including an efficient and safe codec for parsing and writing compliant URI strings'
-ext.homepage = 'https://github.com/swimos/swim/tree/master/swim-system-java/swim-core-java/swim.uri'
+ext.homepage = 'https://github.com/swimos/swim/tree/main/swim-java/swim-runtime-java/swim-core-java/swim.uri'
 ext.moduleName = 'swim.uri'
 
 dependencies {

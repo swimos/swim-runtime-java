@@ -1,20 +1,20 @@
 plugins {
-  id 'SwimSystemFramework'
-  id 'SwimSystemPublish'
+  id 'SwimRuntimeFramework'
+  id 'SwimRuntimePublish'
 }
 
-description = 'Swim System'
-ext.homepage = 'https://github.com/swimos/swim/tree/master/swim-system-java'
+description = 'Swim Runtime'
+ext.homepage = 'https://github.com/swimos/swim/tree/main/swim-java/swim-runtime-java'
 ext.moduleName = null
 
 dependencies {
   api project(':swim-core')
-  api project(':swim-mesh')
+  api project(':swim-host')
   api project(':swim-polyglot')
 }
 
 javadoc {
-  title 'Swim System'
+  title 'Swim Runtime'
   options.overview = "${projectDir}/overview.html"
   options.group('Core',
                 'swim.args',
@@ -48,7 +48,7 @@ javadoc {
                 'swim.web',
                 'swim.ws',
                 'swim.xml')
-  options.group('Mesh',
+  options.group('Host',
                 'swim.api',
                 'swim.auth',
                 'swim.cli',
@@ -58,13 +58,13 @@ javadoc {
                 'swim.kernel',
                 'swim.meta',
                 'swim.remote',
-                'swim.runtime',
                 'swim.server',
                 'swim.service',
                 'swim.service.web',
                 'swim.store',
                 'swim.store.db',
-                'swim.store.mem')
+                'swim.store.mem',
+                'swim.system')
   options.group('Polyglot',
                 'swim.dynamic',
                 'swim.dynamic.api',
@@ -87,7 +87,7 @@ javadoc {
 
   options.addStringOption('-module-source-path', [
                           "${projectDir}/swim-core-java/*/src/main/java",
-                          "${projectDir}/swim-mesh-java/*/src/main/java",
+                          "${projectDir}/swim-host-java/*/src/main/java",
                           "${projectDir}/swim-polyglot-java/*/src/main/java"].join(':'))
 }
 

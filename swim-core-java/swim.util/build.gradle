@@ -1,8 +1,8 @@
 plugins {
-  id 'SwimSystemLibrary'
-  id 'SwimSystemPublish'
+  id 'SwimRuntimeLibrary'
+  id 'SwimRuntimePublish'
 }
 
 description = 'Extended collection, iterator, and builder interfaces, lightweight cache sets and maps, and other foundational utilities'
-ext.homepage = 'https://github.com/swimos/swim/tree/master/swim-system-java/swim-core-java/swim.util'
+ext.homepage = 'https://github.com/swimos/swim/tree/main/swim-java/swim-runtime-java/swim-core-java/swim.util'
 ext.moduleName = 'swim.util'

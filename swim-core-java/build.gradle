@@ -1,10 +1,10 @@
 plugins {
-  id 'SwimSystemFramework'
-  id 'SwimSystemPublish'
+  id 'SwimRuntimeFramework'
+  id 'SwimRuntimePublish'
 }
 
 description = 'Swim Core Framework'
-ext.homepage = 'https://github.com/swimos/swim/tree/master/swim-system-java/swim-core-java'
+ext.homepage = 'https://github.com/swimos/swim/tree/main/swim-java/swim-runtime-java/swim-core-java'
 ext.moduleName = null
 
 dependencies {

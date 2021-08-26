@@ -1,10 +1,10 @@
 plugins {
-  id 'SwimSystemLibrary'
-  id 'SwimSystemPublish'
+  id 'SwimRuntimeLibrary'
+  id 'SwimRuntimePublish'
 }
 
 description = 'Incremental I/O; functional parsers and writers; display, debug, and diagnostic formatters; and Unicode and binary codecs'
-ext.homepage = 'https://github.com/swimos/swim/tree/master/swim-system-java/swim-core-java/swim.codec'
+ext.homepage = 'https://github.com/swimos/swim/tree/main/swim-java/swim-runtime-java/swim-core-java/swim.codec'
 ext.moduleName = 'swim.codec'
 
 dependencies {

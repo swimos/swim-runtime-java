@@ -1,4 +1,4 @@
-// Copyright 2015-2021 Swim inc.
+// Copyright 2015-2021 Swim Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import swim.dynamic.java.JavaBase;
 import swim.dynamic.observable.SwimObservable;
 import swim.dynamic.structure.SwimStructure;
 import swim.kernel.KernelProxy;
-import swim.runtime.NodeBinding;
 import swim.structure.Item;
 import swim.structure.Text;
 import swim.structure.Value;
+import swim.system.NodeBinding;
 import swim.uri.UriPath;
 import swim.vm.js.JsCachedModuleResolver;
 import swim.vm.js.JsHostRuntime;

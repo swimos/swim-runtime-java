@@ -1,10 +1,10 @@
 plugins {
-  id 'SwimSystemLibrary'
-  id 'SwimSystemPublish'
+  id 'SwimRuntimeLibrary'
+  id 'SwimRuntimePublish'
 }
 
 description = 'Explicitly flow-controlled, non-blocking, parallel I/O engine, with swim-codec-modulated socket modems, and TCP and TLS transports'
-ext.homepage = 'https://github.com/swimos/swim/tree/master/swim-system-java/swim-core-java/swim.io'
+ext.homepage = 'https://github.com/swimos/swim/tree/main/swim-java/swim-runtime-java/swim-core-java/swim.io'
 ext.moduleName = 'swim.io'
 
 dependencies {

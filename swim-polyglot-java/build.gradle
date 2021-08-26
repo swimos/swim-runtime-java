@@ -1,10 +1,10 @@
 plugins {
-  id 'SwimSystemFramework'
-  id 'SwimSystemPublish'
+  id 'SwimRuntimeFramework'
+  id 'SwimRuntimePublish'
 }
 
 description = 'Swim Polyglot Framework'
-ext.homepage = 'https://github.com/swimos/swim/tree/master/swim-system-java/swim-polyglot-java'
+ext.homepage = 'https://github.com/swimos/swim/tree/main/swim-java/swim-runtime-java/swim-polyglot-java'
 ext.moduleName = null
 
 dependencies {
@@ -24,5 +24,5 @@ javadoc {
   options.addStringOption('-module-source-path', [
                           "${projectDir}/*/src/main/java",
                           "${projectDir}/../swim-core-java/*/src/main/java",
-                          "${projectDir}/../swim-mesh-java/*/src/main/java"].join(':'))
+                          "${projectDir}/../swim-host-java/*/src/main/java"].join(':'))
 }
